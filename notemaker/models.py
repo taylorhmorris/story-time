@@ -12,6 +12,14 @@ class Note(models.Model):
     def __str__(self):
         return self.word
     
+    def save(self, *args, **kwargs):
+        results = super().save(*args, **kwargs)
+        i2w = CardType.objects.get(card_type_name="ImageToWord")
+        w2i = CardType.objects.get(card_type_name="WordToImage")
+        Card(note=self, card_type=i2w).save()
+        Card(note=self, card_type=w2i).save()
+        return results
+    
 class SearchResult(models.Model):
     word = models.CharField(max_length=50, unique=True)
     data = models.TextField(null=True, blank=True)
