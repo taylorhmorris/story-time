@@ -7,6 +7,8 @@ class Note(models.Model):
     grammar = models.CharField(max_length=50, blank=True)
     definition = models.CharField(max_length=50, blank=True)
     example = models.CharField(max_length=50, blank=True)
+    expression = models.CharField(max_length=50, blank=True)
+    expression_meaning = models.CharField(max_length=50, blank=True)
     image = models.TextField(blank=True)
     
     def __str__(self):
