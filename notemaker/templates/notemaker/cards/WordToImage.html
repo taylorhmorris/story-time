@@ -1,0 +1,7 @@
+{% extends "notemaker/cards/BasicNoteBase.html" %}
+{% load static %}
+
+{% block front %}
+What does this word mean:<br>
+<b>{{ card.note.word }}</b> /{{ card.note.ipa }}/ <a class='mp3' msg='{{ card.note.word }}' href='#'>&#128265;</a><br>
+{% endblock %}
