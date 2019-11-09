@@ -199,7 +199,6 @@ def query_all(word):
     #ipa, mp3_url = "DUMMY_IPA", "MP3_URL"
     #ipa, mp3_url = query_collins(word) ## collins is blocking scraping
     ipa = Epitran('fra-Latn').transliterate(word)
-    mp3_url = 'This service is down'
     #grammar, definitions, examples = "dummy_grammar", ["Def 1", "Def 2"], ["Example 1", "Example 2"]
     larousse = QueryLarousse().query(word)
     linguee = QueryLinguee().query(word)
@@ -215,7 +214,6 @@ def query_all(word):
     data = {
         'word': word,
         'ipa': ipa,
-        'mp3_url': mp3_url,
         'definitions': larousse['definitions'],
         'grammar': larousse['grammar'],
         'examples': linguee['examples'],
