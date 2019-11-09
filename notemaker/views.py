@@ -71,14 +71,20 @@ def ajax_anki_create_note(request):
     sr_data = json.decoder.JSONDecoder().decode(sr)
     
     new_note = Note(word=word)
-    if 'ipa_val' in form:
-        new_note.ipa = sr_data['ipa']
-    if 'grammar' in form:
-        new_note.grammar = sr_data['grammar']
+    
+    new_note.ipa = sr_data['ipa']
+    new_note.grammar = sr_data['grammar']
     new_note.definition = sr_data['definitions'][int(form['def'])]['definition']
     new_note.example = sr_data['examples'][int(form['example'])]['source']
     new_note.image = sr_data['images'][int(form['selectedImg'])]
     new_note.save()
+    
+    i2w = CardType.objects.get(card_type_name="ImageToWord")
+    Card(note=new_note, card_type=i2w).save()
+        
+    w2i = CardType.objects.get(card_type_name="WordToImage")
+    Card(note=new_note, card_type=w2i).save()
+        
     return JsonResponse(data)
 
 def ajax_anki_generate_note(request):

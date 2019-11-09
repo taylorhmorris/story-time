@@ -12,14 +12,6 @@ class Note(models.Model):
     def __str__(self):
         return self.word
     
-    def save(self, *args, **kwargs):
-        results = super().save(*args, **kwargs)
-        i2w = CardType.objects.get(card_type_name="ImageToWord")
-        w2i = CardType.objects.get(card_type_name="WordToImage")
-        Card(note=self, card_type=i2w).save()
-        Card(note=self, card_type=w2i).save()
-        return results
-    
 class SearchResult(models.Model):
     word = models.CharField(max_length=50, unique=True)
     data = models.TextField(null=True, blank=True)
@@ -34,8 +26,8 @@ class CardType(models.Model):
         return self.card_type_name
     
 class Card(models.Model):
-    note = models.ForeignKey(Note, on_delete='models.CASCADE')
-    card_type = models.ForeignKey(CardType, on_delete='models.CASCADE')
+    note = models.ForeignKey(Note, on_delete=models.CASCADE)
+    card_type = models.ForeignKey(CardType, on_delete=models.CASCADE)
     due_date = models.DateTimeField(auto_now=True)
     success = models.IntegerField(default=0)
     failure = models.IntegerField(default=0)

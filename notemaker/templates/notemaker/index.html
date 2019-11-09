@@ -40,7 +40,7 @@ function drawCard(data){
         result_text += "<option class='example' name='example' value='"+x+"'>" + data.examples[x]['source'] + "</option>"
     }
     result_text += "</select></label><br><br>"
-    result_text += "<span class='imgs'>Selected Image: <input name='selectedImg' size='1' readonly=true><br>"
+    result_text += "<span class='imgs'>Selected Image: <input name='selectedImg' size='1' value='0' readonly=true><br>"
     for (let x=0; x<data.images.length; x++){
         result_text += "<img value='"+x+"' class='image' src='data:image/jpg;base64, " + data.images[x] + "'>"
     }
