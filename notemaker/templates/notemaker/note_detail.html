@@ -1,0 +1,15 @@
+{% load static %}
+
+<html>
+<head>
+<script src="{% static 'notemaker/js/jquery-3.1.0.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'notemaker/js/tts.js' %}"></script>
+</head>
+
+<b>{{ note.word }}</b> /{{ note.ipa }}/ <a class='mp3' msg='{{ note.word }}' href='#'>&#128265;</a><br>
+Definition: {{ note.definition }}<br>
+Example: {{ note.example }}<br>
+Image: <img src="data:image/jpg;base64, {{ note.image }}"><br>
+
+</html>
+

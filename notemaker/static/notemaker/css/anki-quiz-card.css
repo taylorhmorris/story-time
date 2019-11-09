@@ -1,0 +1,12 @@
+body {
+    background-color: pink;
+}
+
+#front {
+    background-color: lightgreen;
+}
+
+#back {
+    display: none;
+    background-color: blue;
+}

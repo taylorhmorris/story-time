@@ -1,0 +1,37 @@
+{
+  "n_results": 2,
+  "page_number": 1,
+  "results_per_page": 10,
+  "n_pages": 1,
+  "available_n_pages": 1,
+  "results": [
+    {
+      "id": "FR_DE00115982",
+      "language": "fr",
+      "headword": {
+        "text": "manger",
+        "pos": "verb"
+      },
+      "senses": [
+        {
+          "id": "FR_SE00010786",
+          "definition": "avaler, consommer des aliments"
+        }
+      ]
+    },
+    {
+      "id": "FR_DE00115983",
+      "language": "fr",
+      "headword": {
+        "text": "manger",
+        "pos": "verb"
+      },
+      "senses": [
+        {
+          "id": "FR_SE00010787",
+          "definition": "se nourrir"
+        }
+      ]
+    }
+  ]
+}

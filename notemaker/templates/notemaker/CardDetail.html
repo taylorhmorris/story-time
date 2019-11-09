@@ -1,0 +1,18 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/anki-quiz-card.css' %}">
+<script src="{% static 'notemaker/js/jquery-3.1.0.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'notemaker/js/tts.js' %}"></script>
+
+{% with template_name=template|stringformat:"s"|add:".html" %}
+    {% include 'notemaker/'|add:template_name %}
+{% endwith %}
+
+<button id="showAnswer">Show Answer</button>
+
+<script>
+$( document ).on('click', '#showAnswer', function(){
+    console.log("flipping card");
+    $("#front").toggle();
+    $("#back").toggle();
+});
+</script>

@@ -1,0 +1,12 @@
+{% load static %}
+<div id="front">
+What does this word mean:<br>
+<b>{{ card.note.word }}</b> /{{ card.note.ipa }}/ <a class='mp3' msg='{{ card.note.word }}' href='#'>&#128265;</a><br>
+</div>
+<div id="back">
+<b>{{ card.note.word }}</b> /{{ card.note.ipa }}/ <a class='mp3' msg='{{ card.note.word }}' href='#'>&#128265;</a><br>
+Definition: {{ card.note.definition }}<br>
+Example: {{ card.note.example }}<br>
+Image: <img src="data:image/jpg;base64, {{ card.note.image }}"><br>
+
+</div>

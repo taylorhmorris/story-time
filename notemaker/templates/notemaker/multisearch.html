@@ -1,0 +1,62 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body style="background-color:grey">
+
+<p>What French word would you like to multisearch? Type below, then press enter please.</p>
+<input type="text" id="boxu" autofocus>
+<br><br>Select Sites to Search:<br>
+
+<div id="site_selection">
+</div>
+
+<script type="text/javascript">
+selections = document.getElementById("site_selection");
+sites = [
+    ["larousse","Larousee","https://www.larousse.fr/dictionnaires/francais/","/"],
+    ["linguee", "Linguee","http://www.linguee.com/english-french/search?source=french&query=",""],
+    ["wikitionary", "Wiktionary","http://fr.wiktionary.org/wiki/",""],
+    ["tatoeba","Tatoeba","https://tatoeba.org/eng/sentences/search?query=", "&from=fra&to=eng"],
+    ["conjugate","Conjugate","http://conjugator.reverso.net/conjugation-french-verb-", ".html"],
+    /*["gimagest", "Google Images Translated","http://translate.google.com/translate?hl=en&sl=fr&tl=en&u=http%3A%2F%2Fwww.google.fr%2Fsearch%3Fq%3D","%26num%3D10%26hl%3Dfr%26site%3Dimghp%26tbm%3Disch%26sout%3D1%26biw%3D1242%26bih%3D640"],*/
+    ["gimages", "Google Images","https://www.google.fr/search?tbm=isch&source=hp&biw=681&bih=598&ei=m_R2XN6bH6fi0gLN74KACg&q=","&gs_l=img.3..0l8j0i10j0.2271.2899..3038...0.0..0.116.592.4j2......2....1..gws-wiz-img.....0..35i39.3w7tEkx3O6Y"],
+    ["forvo", "Forvo","http://fr.forvo.com/word/", "/#fr"],
+    ["collins", "Collins","https://www.collinsdictionary.com/dictionary/french-english/",""],
+    ];
+text = "";
+for(i=0; i<sites.length; i++){
+    url = sites[i][2];
+    url = url.replace('http://','').replace('https://','').split(/[/?#]/)[0];
+   /* text += "<img src='https://www.google.com/s2/favicons?domain="+url+"'> " + sites[i][1] + "<input type='checkbox' id='" + sites[i][0] + "'><br>"; */
+   text += sites[i][1] + "<input type='checkbox' id='" + sites[i][0] + "'><br>";
+}
+selections.innerHTML = text;
+
+// document.getElementById("linguee").checked = true;
+document.getElementById("gimages").checked = true;
+document.getElementById("forvo").checked = true;
+document.getElementById("collins").checked = true;
+
+document.getElementById("boxu").onkeydown = function(e) {searchy(e)};
+function searchy(e) 
+{
+   /* if (e.which == 13)
+    {
+        var q = encodeURIComponent(document.getElementById("boxu").value);
+        
+        for(i=0; i<sites.length; i++){
+            if (document.getElementById(sites[i][0]).checked){
+                window.open(sites[i][2]+q+sites[i][3]);                
+            }
+        }
+        document.getElementById("boxu").value = "";	
+    } */
+}
+</script>
+</body>
+</html>
+
+
