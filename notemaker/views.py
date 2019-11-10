@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views import generic
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_text, force_bytes, smart_text, smart_bytes
@@ -29,6 +30,12 @@ class FakeWebsiteView(TemplateView):
     
 class NoteDetailView(DetailView):
     model = Note
+    
+class NoteListView(ListView):
+    model = Note
+    
+class CardListView(ListView):
+    model = Card
     
 def test_ajax(request):
     rec = request.GET.get('rec', None)
@@ -108,6 +115,23 @@ def ajax_note_detail_view(request):
     note_id = request.GET.get('note_id', None)
     context = {'note': Note.objects.get(pk=note_id)}
     return render(request, "notemaker/note_detail.html", context)
+
+def ajax_rate_card_view(request):
+    card_id = request.GET.get('card_id', None)
+    card = Card.objects.get(pk=card_id)
+    rating = request.GET.get('rating', None)
+    if rating == '0':
+        card.failure += 1
+        card.fails_in_a_row += 1
+        card.success_in_a_row = 0
+    else:
+        card.success += 1
+        card.success_in_a_row += int(rating)
+        card.fails_in_a_row = 0
+    card.save()
+    new_date = card.schedule()
+    data = {'success': 'true', 'new_date': new_date}
+    return JsonResponse(data)
 
 def card_detail_view(request, pk):
     card_obj = Card.objects.get(pk=pk)

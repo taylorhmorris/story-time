@@ -1,5 +1,7 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
+
 from django.db import models
+from django.utils import timezone
 
 class Note(models.Model):
     word = models.CharField(max_length=50)
@@ -30,7 +32,7 @@ class CardType(models.Model):
 class Card(models.Model):
     note = models.ForeignKey(Note, on_delete=models.CASCADE)
     card_type = models.ForeignKey(CardType, on_delete=models.CASCADE)
-    due_date = models.DateTimeField(auto_now=True)
+    due_date = models.DateTimeField(default=datetime.now)
     success = models.IntegerField(default=0)
     failure = models.IntegerField(default=0)
     fails_in_a_row = models.IntegerField(default=0)
@@ -39,5 +41,21 @@ class Card(models.Model):
     def __str__(self):
         return f"{self.note} - {self.card_type}"
     
-    def set_due_date(self):
-        self.due_date += timedelta(days=self.success_in_a_row*1)
+    def schedule(self):
+        srs = [0, 15, 12*60, 24*60, 48*60, 5*24*60, 10*24*60]
+        if self.success_in_a_row < len(srs):
+            td = timedelta(minutes=srs[self.success_in_a_row])
+        else:
+            td = timedelta(minutes=srs[-1]*(self.success_in_a_row-len(srs)))
+        print(f"{td} + {self.due_date} = {self.due_date + td}")
+        self.due_date = timezone.now() + td
+        self.save()
+        return (td, self.due_date)
+    
+    def reset(self):
+        self.success = 0
+        self.failure = 0
+        self.success_in_a_row = 0
+        self.fails_in_a_row = 0
+        self.due_date = timezone.now()
+        self.save()
