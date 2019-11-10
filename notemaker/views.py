@@ -76,6 +76,8 @@ def ajax_anki_create_note(request):
     new_note.grammar = sr_data['grammar']
     new_note.definition = sr_data['definitions'][int(form['def'])]['definition']
     new_note.example = sr_data['examples'][int(form['example'])]['source']
+    new_note.expression = sr_data['expressions'][int(form['expression'])]['expression']
+    new_note.expression_meaning = sr_data['expressions'][int(form['expression'])]['definition']
     new_note.image = sr_data['images'][int(form['selectedImg'])]
     new_note.save()
     
@@ -94,7 +96,7 @@ def ajax_anki_generate_note(request):
         sr = SearchResult.objects.values_list('data', flat=True).get(word=word)
         data = json.decoder.JSONDecoder().decode(sr)
     except:
-        print("Oops, nothing there, querying as normal")
+        print(f"No Saved Result. Asking thscraper for {word}")
         data = thscraper.query_all(word)
         b64images = [base64.b64encode(requests.get(img).content).decode()
                      for img in data['images']]
