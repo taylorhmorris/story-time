@@ -41,7 +41,6 @@ function viewNote(note_id){
         dataType: 'html',
         success: function (data) {
             $("#resultWindow").html( data );
-            $("#resultModal").show();
         }
     });    
 }
@@ -70,7 +69,6 @@ $( document ).ready(function() {
         'images': ["iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==", ],
     };
     //drawCard(test_data);
-    $("#resultWindow").hide();
 });
 
 $("#resultWindow").on('click', '#cardButton', function(){
@@ -96,6 +94,10 @@ $( document ).on('click', '.image', function(){
 });
 
 $( document ).on('click', '.close', function(){
+    $(".modal").hide();
+});
+
+$( ".modal" ).click(function(){
     $(".modal").hide();
 });
 
