@@ -33,7 +33,10 @@ class NoteListView(ListView):
     
 class CardListView(ListView):
     model = Card
-    
+
+class DashboardView(TemplateView):
+    template_name = "notemaker/dashboard.html"
+
 def test_ajax(request):
     rec = request.GET.get('rec', None)
     data = {
@@ -138,3 +141,7 @@ def card_detail_view(request, pk):
     return render(request,
                "notemaker/card_detail.html",
                context)
+
+def ajax_card_detail_view(request):
+    card_id = request.GET.get('card_id', None)
+    return card_detail_view(request, card_id.pk)

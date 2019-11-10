@@ -1,0 +1,70 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/ankicard.css' %}">
+</head>
+<body>
+
+<button id="startReview">Start Review</button>
+
+<div id="resultModal" class="modal">
+    <div id="modal" class="modal-content">
+        <span class="close">&times;</span>
+        <div id="resultWindow" class="modal-content">
+            Card Not Loading
+        <button id="cardButton">Test</button>
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static 'notemaker/js/jquery-3.1.0.min.js' %}"></script>
+<!-- <script src="{% static 'notemaker/js/anki-display' %}"></script> -->
+<script type="text/javascript">
+function drawCard(data){
+    $("#resultWindow").html( data );
+    $("#resultModal").show();
+}
+
+function reviewCard(card_id){
+    $.ajax({
+        url: "{% url 'ajax-card-detail' %}",
+        data: {'card_id': card_id},
+        dataType: 'html',
+        success: function (data) {
+            drawCard( data );
+        }
+    });    
+}
+
+$( document ).ready(function() {
+    $("#resultModal").hide();
+});
+
+function startReview(){
+    console.log("Starting review ;)");
+}
+
+$("#startReview").click(function(){
+    startReview();
+});
+
+$( document ).on('click', '.close', function(){
+    $(".modal").hide();
+});
+
+$( ".modal" ).click(function(){
+    $(".modal").hide();
+});
+
+
+
+</script>
+<script type="text/javascript" src="{% static 'notemaker/js/tts.js' %}"></script>
+
+</body>
+</html>
+
+

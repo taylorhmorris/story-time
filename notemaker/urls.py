@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
+    path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
     path('note/<int:pk>/', views.NoteDetailView.as_view(), name='note-detail'),
     path('note/', views.NoteListView.as_view(), name='note-list'),
     path('card/<int:pk>/', views.card_detail_view, name='card-detail'),
@@ -14,5 +15,6 @@ urlpatterns = [
     path('ajax/anki_create_note/', views.ajax_anki_create_note, name='ajax_anki_create_note'),
     path('ajax/get_note/', views.ajax_note_detail_view, name='ajax-note-detail'),
     path('ajax/rate_card/', views.ajax_rate_card_view, name='ajax-rate-card'),
+    path('ajax/card_detail/', views.ajax_card_detail_view, name='ajax-card-detail'),
     
 ]
