@@ -113,6 +113,6 @@ def card_detail_view(request, pk):
     context = {'card': card_obj,
                'template': card_type_obj.card_type_name}
     r = render(request,
-               "notemaker/CardDetail.html",
+               "notemaker/card_detail.html",
                context)
     return r
