@@ -4,7 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
-    path('fake/', views.FakeWebsiteView.as_view(), name='fake_website'),
     path('note/<int:pk>/', views.NoteDetailView.as_view(), name='note-detail'),
     path('note/', views.NoteListView.as_view(), name='note-list'),
     path('card/<int:pk>/', views.card_detail_view, name='card-detail'),

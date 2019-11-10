@@ -25,9 +25,6 @@ from .models import Note, SearchResult, Card, CardType
 class IndexView(TemplateView):
     template_name = "notemaker/index.html"
     
-class FakeWebsiteView(TemplateView):
-    template_name = "notemaker/fake.html"
-    
 class NoteDetailView(DetailView):
     model = Note
     
