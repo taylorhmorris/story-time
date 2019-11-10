@@ -11,5 +11,6 @@ urlpatterns = [
     path('ajax/testing/', views.test_ajax, name='test_ajax'),
     path('ajax/anki_generate_note/', views.ajax_anki_generate_note, name='ajax_anki_generate_note'),
     path('ajax/anki_create_note/', views.ajax_anki_create_note, name='ajax_anki_create_note'),
+    path('ajax/get_note/', views.ajax_note_detail_view, name='ajax-note-detail'),
     
 ]

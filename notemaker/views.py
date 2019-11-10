@@ -58,14 +58,6 @@ def deserialize(serial):
 def ajax_anki_create_note(request):
     word = request.GET.get('word', None)
     form = deserialize(request.GET.get('form', None))
-    #defs = form['def']
-    #ipa = form['ipa_val']
-    data = {
-        'word': word,
-        'form': form,
-        #'defs': defs,
-        #'ipa': ipa,
-        }
     
     sr = SearchResult.objects.values_list('data', flat=True).get(word=word)
     sr_data = json.decoder.JSONDecoder().decode(sr)
@@ -86,7 +78,11 @@ def ajax_anki_create_note(request):
         
     w2i = CardType.objects.get(card_type_name="WordToImage")
     Card(note=new_note, card_type=w2i).save()
-        
+    
+    data = {
+        'note_id': new_note.id,
+        }
+    
     return JsonResponse(data)
 
 def ajax_anki_generate_note(request):
@@ -104,15 +100,20 @@ def ajax_anki_generate_note(request):
         new_search = SearchResult(word=word)
         new_search.data = json.dumps(data)
         new_search.save()
-    
-    return JsonResponse(data)
+    context = {'data': data}
+    #return JsonResponse(data)
+    return render(request, "notemaker/note_create.html", context)
+
+def ajax_note_detail_view(request):
+    note_id = request.GET.get('note_id', None)
+    context = {'note': Note.objects.get(pk=note_id)}
+    return render(request, "notemaker/note_detail.html", context)
 
 def card_detail_view(request, pk):
     card_obj = Card.objects.get(pk=pk)
     card_type_obj = CardType.objects.get(pk=card_obj.card_type.pk)
     context = {'card': card_obj,
                'template': card_type_obj.card_type_name}
-    r = render(request,
+    return render(request,
                "notemaker/card_detail.html",
                context)
-    return r

@@ -9,7 +9,7 @@
 
 <p>What French word would you like to multisearch? Type below, then press enter please.</p>
 <input type="text" id="boxu" autofocus="">
-<br><br>Select Sites to Search:<br>
+<br><br><br>
 
 <div id="site_selection">
 </div>
@@ -25,37 +25,29 @@
 <!-- <script src="{% static 'notemaker/js/anki-display' %}"></script> -->
 <script type="text/javascript">
 function drawCard(data){
-    console.log(data);
-    result_text = "<form id='cardForm'>";
-    result_text += "<span class='word field'>" + data.word + "</span>  " +
-        "<input type='checkbox' class='field' name='ipa_val' value='true'><span class='ipa'>/" + data.ipa + "/</span>";
-    result_text += "<input type='checkbox'  class='field' name='mp3_url' value='" + data.mp3_url +"'><a class='mp3' msg='" + data.word + "' href='#'>&#128265;</a><br>";
-    result_text += "<input type='checkbox'  class='field' name='grammar' value='" + data.grammar + "'><span class='grammar'>" + data.grammar + "</span><br><br>" +
-        "<label class='field'>Definitions: <select class='definitions' name='def'>";
-    for (let x=0; x<data.definitions.length; x++){
-        result_text += "<option class='definition' name='def' value='"+x+"'>" + data.definitions[x]['definition'] + "</option>"
-    }
-    result_text += "</select></label><br><br><label class='field'>Examples: <select class='examples' name='example'>";
-    for (let x=0; x<data.examples.length; x++){
-        result_text += "<option class='example' name='example' value='"+x+"'>" + data.examples[x]['source'] + "</option>"
-    }
-    result_text += "</select></label><br><br>"
-    result_text += "<label class='field'>Expressions: <select class='expressions' name='expression'>";
-    for (let x=0; x<data.expressions.length; x++){
-        result_text += "<option class='expression' name='expression' value='"+x+"'>" + data.expressions[x][
-        'expression'] + "(" + data.expressions[x][
-        'definition'] + ")</option>"
-    }
-    result_text += "</select></label><br><br>"
-    result_text += "<span class='imgs'>Selected Image: <input name='selectedImg' size='1' value='0' readonly=true><br>"
-    for (let x=0; x<data.images.length; x++){
-        result_text += "<img value='"+x+"' class='image' src='data:image/jpg;base64, " + data.images[x] + "'>"
-    }
-    result_text += "</span>"
-    result_text += "</form><button id='cardButton'>Submit</button>";
-
-    $("#result_window").html( result_text );
+    $("#result_window").html( data );
+    $("#result_window").show();
 }
+
+function closeNewNoteForm(){
+    $("#result_window").hide();
+}
+
+function viewNote(note_id){
+    $.ajax({
+        url: "{% url 'ajax-note-detail' %}",
+        data: {'note_id': note_id},
+        dataType: 'html',
+        success: function (data) {
+            console.log(data);
+            closeNewNoteForm();
+            $("#result_window").html( data );
+            $("#result_window").show();
+        }
+    });
+    
+}
+
 
 $("#boxu").change(function () {
     $.ajax({
@@ -63,7 +55,7 @@ $("#boxu").change(function () {
         data: {
             'word': $(this).val()
         },
-        dataType: 'json',
+        dataType: 'html',
         success: function (data) {
             drawCard(data)
         }
@@ -93,6 +85,7 @@ $("#result_window").on('click', '#cardButton', function(){
         dataType: 'json',
         success: function (data) {
             console.log(data);
+            viewNote(data['note_id']);
         }
     });
 });
