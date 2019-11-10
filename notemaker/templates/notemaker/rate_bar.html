@@ -1,0 +1,20 @@
+<div id="rate_bar_show">
+<button class="flipCard">Show Answer</button>
+</div>
+
+<div id="rate_bar_rate" style="display: none;">
+<button id="rate_0">Incorrect</button>
+<button id="rate_1">Correct</button>
+<button id="rate_2">Easy</button>
+<button class="flipCard">Flip Card</div>
+</div>
+
+<script>
+$( document ).on('click', '.flipCard', function(){
+    console.log("flipping card");
+    $("#front").toggle();
+    $("#back").toggle();
+    $("#rate_bar_show").toggle();
+    $("#rate_bar_rate").toggle();
+});
+</script>

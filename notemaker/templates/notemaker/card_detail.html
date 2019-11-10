@@ -7,17 +7,4 @@
     {% include 'notemaker/cards/'|add:template_name %}
 {% endwith %}
 
-<button id="showAnswer">Show Answer</button>
-
-<script>
-$( document ).on('click', '#showAnswer', function(){
-    console.log("flipping card");
-    $("#front").toggle();
-    $("#back").toggle();
-    if ($("#showAnswer").text() === "Show Answer"){
-        $("#showAnswer").text("Show Front");
-    } else {
-        $("#showAnswer").text("Show Answer");
-    }
-});
-</script>
+{% include 'notemaker/rate_bar.html' %}
