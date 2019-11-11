@@ -16,5 +16,6 @@ urlpatterns = [
     path('ajax/get_note/', views.ajax_note_detail_view, name='ajax-note-detail'),
     path('ajax/rate_card/', views.ajax_rate_card_view, name='ajax-rate-card'),
     path('ajax/card_detail/', views.ajax_card_detail_view, name='ajax-card-detail'),
+    path('ajax/review/', views.ajax_review_cards, name='ajax-review-cards'),
     
 ]

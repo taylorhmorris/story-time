@@ -1,3 +1,4 @@
+{% load static %}
 <div id="rate_bar_show">
 <button class="flipCard">Show Answer</button>
 </div>
@@ -6,28 +7,7 @@
 <button id="rate_0" class="rate_button">Incorrect</button>
 <button id="rate_1" class="rate_button">Correct</button>
 <button id="rate_2" class="rate_button">Easy</button>
-<button class="flipCard">Flip Card</div>
+<button class="flipCard">Flip Card</button>
 </div>
 
-<script>
-$( document ).on('click', '.flipCard', function(){
-    $("#front").toggle();
-    $("#back").toggle();
-    $("#rate_bar_show").toggle();
-    $("#rate_bar_rate").toggle();
-});
-
-$(".rate_button").click(function(){
-    let value = $(this).attr('id')[5];
-    console.log(value);
-    $.ajax({
-        url: "{% url 'ajax-rate-card' %}",
-        data: {'card_id': {{ card.id }},
-               'rating': value},
-        dataType: 'json',
-        success: function (data) {
-            console.log(data);
-        }
-    }); 
-});
-</script>
+<script type="text/javascript" src="{% static 'notemaker/js/rating.js' %}"></script>

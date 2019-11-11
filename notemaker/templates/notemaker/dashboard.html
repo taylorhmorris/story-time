@@ -13,30 +13,43 @@
     <div id="modal" class="modal-content">
         <span class="close">&times;</span>
         <div id="resultWindow" class="modal-content">
-            Card Not Loading
-        <button id="cardButton">Test</button>
+            <div id="front"></div>
+            <div id="back"></div>
+            <div id="rate_bar_show">
+                <button class="flipCard">Show Answer</button>
+            </div>
+
+            <div id="rate_bar_rate" style="display: none;">
+                <button id="rate_0" class="rate_button">Incorrect</button>
+                <button id="rate_1" class="rate_button">Correct</button>
+                <button id="rate_2" class="rate_button">Easy</button>
+                <button class="flipCard">Flip Card</button>
+            </div>
         </div>
     </div>
 </div>
 
+<div id="holdingBay" style="display: block;">
+    <div class="upcomingReview">Placeholder Review</div>
+</div>
+
 
 <script src="{% static 'notemaker/js/jquery-3.1.0.min.js' %}"></script>
-<!-- <script src="{% static 'notemaker/js/anki-display' %}"></script> -->
+<script type="text/javascript" src="{% static 'notemaker/js/tts.js' %}"></script>
+<script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}"></script>
+
 <script type="text/javascript">
-function drawCard(data){
-    $("#resultWindow").html( data );
+function drawCard(card){
+    let h = card.getHTML();
+    console.log( h );
+    $("#resultWindow").html( h );
     $("#resultModal").show();
 }
 
-function reviewCard(card_id){
-    $.ajax({
-        url: "{% url 'ajax-card-detail' %}",
-        data: {'card_id': card_id},
-        dataType: 'html',
-        success: function (data) {
-            drawCard( data );
-        }
-    });    
+function reviewCard(card){
+    console.log(card.note.word);
+    var flashcard = new FlashCard(card);
+    drawCard(flashcard);
 }
 
 $( document ).ready(function() {
@@ -45,6 +58,16 @@ $( document ).ready(function() {
 
 function startReview(){
     console.log("Starting review ;)");
+    $.ajax({
+        url: "{% url 'ajax-review-cards' %}",
+        data: {'max_number': 10},
+        dataType: 'json',
+        success: function (data) {
+            console.log( data['cards'] );
+            console.log( data['cards'][0] );
+            reviewCard( data['cards'][0] );
+        }
+    });   
 }
 
 $("#startReview").click(function(){
@@ -55,14 +78,16 @@ $( document ).on('click', '.close', function(){
     $(".modal").hide();
 });
 
-$( ".modal" ).click(function(){
-    $(".modal").hide();
+$( document ).on('click', '#resultModal', function(event){
+    event.stopPropagation();
+    if (event.target.id == 'resultModal'){
+        $(".modal").hide();
+    };
 });
 
 
 
 </script>
-<script type="text/javascript" src="{% static 'notemaker/js/tts.js' %}"></script>
 
 </body>
 </html>

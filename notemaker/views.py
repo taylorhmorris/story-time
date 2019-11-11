@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_text, force_bytes, smart_text, smart_bytes
 from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 
 import json
 from bs4 import BeautifulSoup
@@ -144,4 +145,15 @@ def card_detail_view(request, pk):
 
 def ajax_card_detail_view(request):
     card_id = request.GET.get('card_id', None)
-    return card_detail_view(request, card_id.pk)
+    return card_detail_view(request, card_id)
+
+def ajax_review_cards(request):
+    data = request.GET.get('data', None)
+    #max_number = int(data['max_number'])
+    max_number = int(request.GET.get('max_number', None))
+    cards = Card.objects.order_by('due_date','note')[:max_number]
+    #card_array = [card.id for card in cards]
+    #cards_json = serializers.serialize('json', cards)
+    cards_json = [card.get_dict() for card in cards]
+    results = {'cards': cards_json}
+    return JsonResponse(results)

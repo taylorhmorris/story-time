@@ -23,6 +23,15 @@ body {
     margin-left: 2rem;
 }
 
+#front {
+    background-color: lightgreen;
+}
+
+#back {
+    display: none;
+    background-color: blue;
+}
+
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */

@@ -16,6 +16,16 @@ class Note(models.Model):
     def __str__(self):
         return self.word
     
+    def get_dict(self):
+        return {'word': self.word,
+                'ipa': self.ipa,
+                'grammar': self.grammar,
+                'definition': self.definition,
+                'example': self.example,
+                'expression': self.expression,
+                'expression_meaning': self.expression_meaning,
+                'image': self.image}
+    
 class SearchResult(models.Model):
     word = models.CharField(max_length=50, unique=True)
     data = models.TextField(null=True, blank=True)
@@ -25,6 +35,10 @@ class SearchResult(models.Model):
 
 class CardType(models.Model):
     card_type_name = models.CharField(max_length=30)
+    
+    @property
+    def name(self):
+        return self.card_type_name
     
     def __str__(self):
         return self.card_type_name
@@ -41,6 +55,11 @@ class Card(models.Model):
     def __str__(self):
         return f"{self.note} - {self.card_type}"
     
+    def get_dict(self):
+        return {'id': self.id, 'card_type': self.card_type.name,
+                'due_date': self.due_date,
+                'note': self.note.get_dict()}
+        
     def schedule(self):
         srs = [0, 15, 12*60, 24*60, 48*60, 5*24*60, 10*24*60]
         if self.success_in_a_row < len(srs):
