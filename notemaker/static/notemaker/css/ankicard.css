@@ -23,11 +23,11 @@ body {
     margin-left: 2rem;
 }
 
-#front {
+.front {
     background-color: lightgreen;
 }
 
-#back {
+.back {
     display: none;
     background-color: blue;
 }
