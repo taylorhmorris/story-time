@@ -4,7 +4,8 @@ body {
 
 #cardForm {
     background-color: white;
-    width: 500px;
+    width: 425px;
+    border: solid;
 }
 
 #cardForm .word {
@@ -25,6 +26,17 @@ body {
 
 .field {
     margin-left: 2rem;
+}
+
+select {
+    width: 250px;
+}
+option {
+    width: 250px;
+}
+
+.image {
+    width: 100px;
 }
 
 .front {
