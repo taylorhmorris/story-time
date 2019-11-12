@@ -8,6 +8,7 @@
 <body>
 
 <button id="startReview">Start Review</button>
+<button id="hardResetButton">Hard Reset</button>
 
 <div id="resultModal" class="modal">
     <div id="modal" class="modal-content">
@@ -41,7 +42,6 @@
 <script type="text/javascript">
 function drawCard(card){
     let h = card.getHTML();
-    console.log( h );
     $("#resultWindow").html( h );
     $("#resultModal").show();
 }
@@ -63,15 +63,31 @@ function startReview(){
         data: {'max_number': 10},
         dataType: 'json',
         success: function (data) {
-            console.log( data['cards'] );
-            console.log( data['cards'][0] );
-            reviewCard( data['cards'][0] );
+            if (data['success'] === true){
+                console.log( data['cards'] );
+                reviewCard( data['cards'][0] );
+            }
+            else{
+                console.log(data['message']);
+            }
         }
     });   
 }
 
 $("#startReview").click(function(){
     startReview();
+});
+
+$("#hardResetButton").click(function(){
+    $.ajax({
+        url: "{% url 'api' %}",
+        data: {'request': 'reset',
+                'flags': ['hard',]},
+        dataType: 'json',
+        success: function (data) {
+            console.log( data );
+        }
+    });   
 });
 
 $( document ).on('click', '.close', function(){

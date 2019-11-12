@@ -27,13 +27,16 @@ function FlashCard(card) {
     this.drawImageToWord = function(){
         let result = "<div id='front'>";
         result += "What word goes with this image:<br><img src='data:image/jpg;base64, "+ this.image +"'></div>";
+        
         result += this.drawAnswerButton();
         result += this.drawBack();
         return result;
     };
     
     this.drawWordToImage = function(){
-        let result = "What word goes with this image:<br><img src='data:image/jpg;base64, "+ this.image +"'>";
+        let result = "What does this word mean:<br><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br>"
+        
+        result += this.drawAnswerButton();
         result += this.drawBack();
         return result;
     };

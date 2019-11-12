@@ -43,6 +43,12 @@ class CardType(models.Model):
     def __str__(self):
         return self.card_type_name
     
+class CardManager(models.Manager):
+    def are_due(self):
+        cards = Card.objects.order_by('due_date','note')
+        ids = [card.id for card in cards if card.is_due()]
+        return cards.filter(id__in=ids)
+    
 class Card(models.Model):
     note = models.ForeignKey(Note, on_delete=models.CASCADE)
     card_type = models.ForeignKey(CardType, on_delete=models.CASCADE)
@@ -52,6 +58,9 @@ class Card(models.Model):
     fails_in_a_row = models.IntegerField(default=0)
     success_in_a_row = models.IntegerField(default=0)
     
+    objects = models.Manager()
+    custom_objects = CardManager()
+    
     def __str__(self):
         return f"{self.note} - {self.card_type}"
     
@@ -59,6 +68,9 @@ class Card(models.Model):
         return {'id': self.id, 'card_type': self.card_type.name,
                 'due_date': self.due_date,
                 'note': self.note.get_dict()}
+    
+    def is_due(self):
+        return self.due_date <= timezone.now()
         
     def schedule(self):
         srs = [0, 15, 12*60, 24*60, 48*60, 5*24*60, 10*24*60]

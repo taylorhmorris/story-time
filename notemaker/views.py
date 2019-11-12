@@ -148,12 +148,29 @@ def ajax_card_detail_view(request):
     return card_detail_view(request, card_id)
 
 def ajax_review_cards(request):
-    data = request.GET.get('data', None)
+    #data = request.GET.get('data', None)
     #max_number = int(data['max_number'])
     max_number = int(request.GET.get('max_number', None))
-    cards = Card.objects.order_by('due_date','note')[:max_number]
+    #cards = Card.objects.order_by('due_date','note')[:max_number]
+    cards = Card.custom_objects.are_due()[:max_number]
     #card_array = [card.id for card in cards]
     #cards_json = serializers.serialize('json', cards)
-    cards_json = [card.get_dict() for card in cards]
-    results = {'cards': cards_json}
+    if len(cards) > 0:
+        cards_json = [card.get_dict() for card in cards]
+        results = {'success': True, 'message': 'All good',
+                   'cards': cards_json}
+    else:
+        results = {'success': False, 'message': 'No cards due'}
     return JsonResponse(results)
+
+def api_view(request):
+    #data = request.GET.get('data', None)
+    request_type = request.GET.get('request', None)
+    if request_type == 'reset':# and 'hard' in data['flags']:
+        for card in Card.objects.all():
+            card.reset()
+            results = {'success': True, 'message': 'All cards reset'}
+    else:
+        results = {'success': False, 'message': 'Invalid Command'}
+    return JsonResponse(results)
+    
