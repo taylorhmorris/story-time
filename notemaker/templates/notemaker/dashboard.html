@@ -7,27 +7,15 @@
 </head>
 <body>
 
-<button id="startReview">Start Review</button>
+<button id="startReview">Start Review</button><br>
+<button id="addWordButton">Add Words</button><input type='text' id='boxu' class='unique-display' autofocus=''><br>
 <button id="hardResetButton">Hard Reset</button>
 
 <div id="resultModal" class="modal">
     <div id="modal" class="modal-content">
         <span class="close">&times;</span>
         <div id="resultWindow" class="modal-content">
-            <span class="flashcard">
-                <div id="front"></div>
-                <div id="back"></div>
-                <div id="rate_bar_show">
-                    <button class="flipCard">Show Answer</button>
-                </div>
-
-                <div id="rate_bar_rate" style="display: none;">
-                    <button id="rate_0" class="rate_button">Incorrect</button>
-                    <button id="rate_1" class="rate_button">Correct</button>
-                    <button id="rate_2" class="rate_button">Easy</button>
-                    <button class="flipCard">Flip Card</button>
-                </div>
-            </span>
+            <span class="flashcard"></span>
         </div>
     </div>
 </div>
@@ -41,12 +29,6 @@
 <script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}"></script>
 
 <script type="text/javascript">
-function drawCard(card){
-    let h = card.getHTML();
-    $("#resultWindow").html( h );
-    $("#resultModal").show();
-}
-
 function openModal(card){
     $("#resultModal").show();
 }
@@ -57,6 +39,7 @@ function queueCards(cards){
         let h = flashcard.getHTML();
         $("#holdingBay").append(h);        
     }
+    $("#resultWindow").html( "<span class='flashcard'></span>" );
     $( "#resultModal" ).trigger( "finish-card", [-1] );
     openModal();
 }
@@ -67,6 +50,7 @@ $( document ).ready(function() {
 
 function startReview(){
     console.log("Starting review ;)");
+    $( ".unique-display" ).hide();
     $.ajax({
         url: "{% url 'ajax-review-cards' %}",
         data: {'max_number': 10},
@@ -77,15 +61,23 @@ function startReview(){
                 queueCards(data['cards']);
             }
             else{
-                $( "#resultWindow span" ).html(data['message']);
+                $( "#resultWindow" ).html(data['message']);
                 openModal();
             }
         }
     });   
 }
 
+function addWord(){
+    $( "#boxu" ).show();
+}
+
 $("#startReview").click(function(){
     startReview();
+});
+
+$("#addWordButton").click(function(){
+    addWord();
 });
 
 $("#hardResetButton").click(function(){
@@ -121,6 +113,59 @@ $( document ).on('finish-card', '#resultModal', function(event, message){
         $( "#resultModal" ).trigger('click')
     }
 });
+
+function drawCard(data){
+    $("#resultWindow").html( data );
+    openModal();
+}
+
+function viewNote(note_id){
+    $.ajax({
+        url: "{% url 'ajax-note-detail' %}",
+        data: {'note_id': note_id},
+        dataType: 'html',
+        success: function (data) {
+            $("#resultWindow").html( data );
+        }
+    });    
+}
+
+$( document ).on('change', '#boxu', function () {
+    console.log("Boxu changed");
+    $.ajax({
+        url: "{% url 'ajax_anki_generate_note' %}",
+        data: {
+            'word': $(this).val()
+        },
+        dataType: 'html',
+        success: function (data) {
+            drawCard(data)
+        }
+    });
+});
+
+$( document ).on('click', '#cardButton', function(){
+    console.log('Clicked');
+    $.ajax({
+        url: "{% url 'ajax_anki_create_note' %}",
+        data: {'word': $("#cardForm .word").text(),
+            'form': $( "form" ).serialize()
+            },
+        dataType: 'json',
+        success: function (data) {
+            viewNote(data['note_id']);
+        }
+    });
+});
+
+$( document ).on('click', '.image', function(){
+    console.log('Selecting Image');
+    $("input[name=selectedImg]").val($( this ).attr("value"))
+    msg_text = $("input[name=selectedImg]").val();
+    console.log(msg_text);
+    
+});
+
 
 
 

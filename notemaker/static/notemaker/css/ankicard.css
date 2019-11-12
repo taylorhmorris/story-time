@@ -19,6 +19,10 @@ body {
     margin: 5px;
 }
 
+.unique-display {
+    display: none;
+}
+
 .field {
     margin-left: 2rem;
 }
