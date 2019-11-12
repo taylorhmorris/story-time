@@ -5,7 +5,7 @@ function FlashCard(card) {
     this.word = card.note.word;
     this.ipa = card.note.ipa;
     this.grammar = card.note.grammar;
-    this.definition = card.note.defintion;
+    this.definition = card.note.definition;
     this.example = card.note.example;
     this.expression = card.note.expression;
     this.expression_meaning = card.note.expression_meaning;
