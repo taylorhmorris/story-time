@@ -52,7 +52,7 @@ class CardManager(models.Manager):
 class Card(models.Model):
     note = models.ForeignKey(Note, on_delete=models.CASCADE)
     card_type = models.ForeignKey(CardType, on_delete=models.CASCADE)
-    due_date = models.DateTimeField(default=datetime.now)
+    due_date = models.DateTimeField(default=timezone.now)
     success = models.IntegerField(default=0)
     failure = models.IntegerField(default=0)
     fails_in_a_row = models.IntegerField(default=0)
