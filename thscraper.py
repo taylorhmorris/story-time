@@ -106,8 +106,8 @@ class QueryLinguee(Query):
         for e in expression_group:
             if e != '':
                 pairs = e.split(':')[-1].strip('\n').split('—')
-                expressions.append({'expression': pairs[0], 'translation': pairs[1].replace('\n','')})
-
+                if len(pairs) >= 2:
+                    expressions.append({'expression': pairs[0], 'translation': pairs[1].replace('\n','')})
         results = {'examples': examples, 'expressions': expressions}
         return results
 
@@ -158,10 +158,24 @@ class QueryLarousse(Query):
                 
             citations = []
             for c in soup.findAll(class_="ListeCitations"):
-                citations.append({"Author": c.find(class_="AuteurCitation").text,
-                                  "Info": c.find(class_="InfoAuteurCitation").text,
-                                  "Text": c.find(class_="TexteCitation").text,
-                                  "Reference": c.find(class_="ReferenceCitation").text})
+                c_dict = {}
+                try:
+                    c_dict["Author"] = c.find(class_="AuteurCitation").text
+                except:
+                    c_dict["Author"] = ""
+                try:
+                    c_dict["Info"] = c.find(class_="InfoAuteurCitation").text
+                except:
+                    c_dict["Info"] = ""
+                try:
+                    c_dict["Text"] = c.find(class_="TexteCitation").text
+                except:
+                    c_dict["Text"] = ""
+                try:
+                    c_dict["Reference"] = c.find(class_="ReferenceCitation").text
+                except:
+                    c_dict["Reference"] = ""
+                citations.append(c_dict)
             
             
             results = {"grammar": grammar, "definitions": formatted_definitions,
