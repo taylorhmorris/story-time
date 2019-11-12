@@ -14,24 +14,25 @@
     <div id="modal" class="modal-content">
         <span class="close">&times;</span>
         <div id="resultWindow" class="modal-content">
-            <div id="front"></div>
-            <div id="back"></div>
-            <div id="rate_bar_show">
-                <button class="flipCard">Show Answer</button>
-            </div>
+            <span class="flashcard">
+                <div id="front"></div>
+                <div id="back"></div>
+                <div id="rate_bar_show">
+                    <button class="flipCard">Show Answer</button>
+                </div>
 
-            <div id="rate_bar_rate" style="display: none;">
-                <button id="rate_0" class="rate_button">Incorrect</button>
-                <button id="rate_1" class="rate_button">Correct</button>
-                <button id="rate_2" class="rate_button">Easy</button>
-                <button class="flipCard">Flip Card</button>
-            </div>
+                <div id="rate_bar_rate" style="display: none;">
+                    <button id="rate_0" class="rate_button">Incorrect</button>
+                    <button id="rate_1" class="rate_button">Correct</button>
+                    <button id="rate_2" class="rate_button">Easy</button>
+                    <button class="flipCard">Flip Card</button>
+                </div>
+            </span>
         </div>
     </div>
 </div>
 
 <div id="holdingBay" style="display: block;">
-    <div class="upcomingReview">Placeholder Review</div>
 </div>
 
 
@@ -46,10 +47,18 @@ function drawCard(card){
     $("#resultModal").show();
 }
 
-function reviewCard(card){
-    console.log(card.note.word);
-    var flashcard = new FlashCard(card);
-    drawCard(flashcard);
+function openModal(card){
+    $("#resultModal").show();
+}
+
+function queueCards(cards){
+    for (card of cards){
+        let flashcard = new FlashCard(card);
+        let h = flashcard.getHTML();
+        $("#holdingBay").append(h);        
+    }
+    $( "#resultModal" ).trigger( "finish-card", [-1] );
+    openModal();
 }
 
 $( document ).ready(function() {
@@ -65,7 +74,7 @@ function startReview(){
         success: function (data) {
             if (data['success'] === true){
                 console.log( data['cards'] );
-                reviewCard( data['cards'][0] );
+                queueCards(data['cards']);
             }
             else{
                 console.log(data['message']);
@@ -91,14 +100,25 @@ $("#hardResetButton").click(function(){
 });
 
 $( document ).on('click', '.close', function(){
-    $(".modal").hide();
+    $( "#resultModal" ).trigger('click')
 });
 
 $( document ).on('click', '#resultModal', function(event){
     event.stopPropagation();
     if (event.target.id == 'resultModal'){
         $(".modal").hide();
+        $("#holdingBay").empty();
     };
+});
+
+$( document ).on('finish-card', '#resultModal', function(event, message){
+    console.log(event);
+    console.log(message);
+    if ( $("#holdingBay span").first().length ){
+        $("#resultWindow").find(".flashcard").replaceWith( $("#holdingBay span").first() );
+    } else {
+        $( "#resultModal" ).trigger('click')
+    }
 });
 
 

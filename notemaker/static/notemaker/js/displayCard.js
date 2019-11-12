@@ -17,37 +17,40 @@ function FlashCard(card) {
     };
     
     this.drawBack = function(){
-        return "<div id='back'><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br>Definition: "+ this.definition +"<br>Example: "+ this.example +"<br>Image: <img src='data:image/jpg;base64, "+ this.image +"'><br></div><div id='rate_bar_rate' style='display: none;'><button id='rate_0' class='rate_button' card_id='"+this.id+"'>Incorrect</button><button id='rate_1' class='rate_button' card_id='"+this.id+"'>Correct</button><button id='rate_2' class='rate_button' card_id='"+this.id+"'>Easy</button><button class='flipCard'>Flip Card</button></div>";
+        return "<div class='back'><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br>Definition: "+ this.definition +"<br>Example: "+ this.example +"<br>Image: <img src='data:image/jpg;base64, "+ this.image +"'><br></div><div class='rate_bar_rate' style='display: none;'><button id='rate_0' class='rate_button' card_id='"+this.id+"'>Incorrect</button><button id='rate_1' class='rate_button' card_id='"+this.id+"'>Correct</button><button id='rate_2' class='rate_button' card_id='"+this.id+"'>Easy</button><button class='flipCard'>Flip Card</button></div>";
     };
     
     this.drawAnswerButton = function(){
-        return "<div id='rate_bar_show'><button class='flipCard'>Show Answer</button></div>";
+        return "<div class='rate_bar_show'><button class='flipCard'>Show Answer</button></div>";
     }
     
     this.drawImageToWord = function(){
-        let result = "<div id='front'>";
+        let result = "<span class='flashcard'><div class='front'>";
         result += "What word goes with this image:<br><img src='data:image/jpg;base64, "+ this.image +"'></div>";
         
         result += this.drawAnswerButton();
         result += this.drawBack();
+        result += "</span>";
         return result;
     };
     
     this.drawWordToImage = function(){
-        let result = "What does this word mean:<br><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br>"
+        let result = "<span class='flashcard'><div class='front'>";
+        result += "What does this word mean:<br><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br></div>"
         
         result += this.drawAnswerButton();
         result += this.drawBack();
+        result += "</span>";
         return result;
     };
 };
 
 $( document ).on('click', '.flipCard', function(){
     console.log("flipping card");
-    $("#front").toggle();
-    $("#back").toggle();
-    $("#rate_bar_show").toggle();
-    $("#rate_bar_rate").toggle();
+    $("#resultWindow").find(".front").toggle();
+    $("#resultWindow").find(".back").toggle();
+    $("#resultWindow").find(".rate_bar_show").toggle();
+    $("#resultWindow").find(".rate_bar_rate").toggle();
 });
 
 $( document ).on('click', '.rate_button', function(){
@@ -59,6 +62,7 @@ $( document ).on('click', '.rate_button', function(){
         dataType: 'json',
         success: function (data) {
             console.log(data);
+            $( "#resultModal" ).trigger( "finish-card", [value] );
         }
     }); 
 });
