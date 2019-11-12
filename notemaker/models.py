@@ -73,11 +73,11 @@ class Card(models.Model):
         return self.due_date <= timezone.now()
         
     def schedule(self):
-        srs = [0, 15, 12*60, 24*60, 48*60, 5*24*60, 10*24*60]
+        srs = [0, 10, 24*60, 4*24*60, 8*24*60, 15*24*60, 30*24*60, 90*24*60]
         if self.success_in_a_row < len(srs):
             td = timedelta(minutes=srs[self.success_in_a_row])
         else:
-            td = timedelta(minutes=srs[-1]*(self.success_in_a_row-len(srs)))
+            td = timedelta(minutes=srs[-1]*(2+self.success_in_a_row-len(srs)))
         print(f"{td} + {self.due_date} = {self.due_date + td}")
         self.due_date = timezone.now() + td
         self.save()
