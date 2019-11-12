@@ -77,7 +77,8 @@ function startReview(){
                 queueCards(data['cards']);
             }
             else{
-                console.log(data['message']);
+                $( "#resultWindow span" ).html(data['message']);
+                openModal();
             }
         }
     });   
