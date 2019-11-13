@@ -7,9 +7,15 @@
 </head>
 <body>
 
-<span class="singleWord">This</span> <span class="singleWord">is</span> <span class="singleWord">a</span> <span class="singleWord">test</span>.
+<div id="story">A l'orée d'une grande forêt vivaient un pauvre bûcheron, sa femme et ses deux enfants. Le garçon s'appelait Hansel et la fille Grethel. La famille ne mangeait guère.
 
-<div id="story">This is a more complex dynamic test. With multiple sentences! I'm adding other punctuation, too. Just for funè.</div>
+Une année que la famine régnait dans le pays et que le pain lui-même vint à manquer, le bûcheron ruminait des idées noires, une nuit, dans son lit et remâchait ses soucis. Il dit à sa femme - Qu'allons-nous devenir ? Comment nourrir nos pauvres enfants, quand nous n'avons plus rien pour nous-mêmes ? - Eh bien, mon homme, dit la femme, sais-tu ce que nous allons faire ?
+
+Dès l'aube, nous conduirons les enfants au plus profond de la forêt nous leur allumerons un feu et leur donnerons à chacun un petit morceau de pain. Puis nous irons à notre travail et les laisserons seuls. Ils ne retrouveront plus leur chemin et nous en serons débarrassés. - Non, femme, dit le bûcheron. je ne ferai pas cela ! Comment pourrais-je me résoudre à laisser nos enfants tout seuls dans la forêt ! Les bêtes sauvages ne tarderaient pas à les dévorer. - Oh ! fou, rétorqua-t-elle, tu préfères donc que nous mourions de faim tous les quatre ? Alors, il ne te reste qu'à raboter les planches de nos cercueils.
+
+Elle n'eut de cesse qu'il n'acceptât ce qu'elle proposait. - Mais j'ai quand même pitié de ces pauvres enfants, dit le bûcheron. Les deux petits n'avaient pas pu s'endormir tant ils avaient faim. Ils avaient entendu ce que la marâtre disait à leur père. Grethel pleura des larmes amères et dit à son frère : - C'en est fait de nous - Du calme, Grethel, dit Hansel. Ne t'en fais pas ; Je trouverai un moyen de nous en tirer.
+
+Quand les parents furent endormis, il se leva, enfila ses habits, ouvrit la chatière et se glissa dehors. La lune brillait dans le ciel et les graviers blancs, devant la maison, étincelaient comme des diamants. Hansel se pencha et en mit dans ses poches autant qu'il put. Puis il rentra dans la maison et dit à Grethel : - Aie confiance, chère petite sœur, et dors tranquille. Dieu ne nous abandonnera pas. Et lui-même se recoucha.</div>
 
 <div id="resultModal" class="modal">
     <div id="modal" class="modal-content">
@@ -19,10 +25,6 @@
         </div>
     </div>
 </div>
-
-<div id="holdingBay" style="display: block;">
-</div>
-
 
 <script src="{% static 'notemaker/js/jquery-3.1.0.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'notemaker/js/tts.js' %}"></script>
@@ -34,9 +36,17 @@ function openModal(card){
     $("#resultModal").show();
 };
 
+function spanifyWords(div){
+    let text = div.html();
+    div.html( "<span class='singleWord'>" + text.replace(/[ \n\r\s\t]/g, "</span> <span class='singleWord'>") + "</span>" );
+}
+
 function spanifyStory(){
-    let text = "<span class='singleWord'>" + $("#story").text().replace(/[ ]/g, "</span> <span class='singleWord'>") + "</span>";
+    let text = "<span class='singleSentence'>" + $("#story").text().replace(/[.!?][ \n\r\s\t]/g, function(m){return m[0]+"</span>"+m[1]+"<span class='singleSentence'>"}) + "</span>";
     $("#story").html(text);
+    $(".singleSentence").each( function( i ) {spanifyWords( $( this ) )} );
+    //$("#story").html(text);
+    console.log($("#story").html());
     
 };
 
@@ -60,16 +70,17 @@ $( document ).on('click', '#resultModal', function(event){
 $( document ).on('click', '.singleWord', function () {
     let word = $( this ).text().toLowerCase().replace(/[^a-zÀ-ú ']/gi, "");
     console.log("Word selected: \""+ word +"\"");
-    /*$.ajax({
+    console.log("Sentence selected: \""+ $( this ).parent().text() +"\"");
+    $.ajax({
         url: "{% url 'ajax_anki_generate_note' %}",
         data: {
-            'word': $(this).text()
+            'word': word
         },
         dataType: 'html',
         success: function (data) {
             drawCard(data)
         }
-    });*/
+    });
 });
 
 
