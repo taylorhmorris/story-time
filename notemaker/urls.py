@@ -10,6 +10,8 @@ urlpatterns = [
     path('card/<int:pk>/', views.card_detail_view, name='card-detail'),
     path('card/', views.CardListView.as_view(), name='card-list'),
     
+    path('workshop/', views.WorkshopView.as_view(), name='workshop'),
+    
     path('ajax/testing/', views.test_ajax, name='test_ajax'),
     path('ajax/anki_generate_note/', views.ajax_anki_generate_note, name='ajax_anki_generate_note'),
     path('ajax/anki_create_note/', views.ajax_anki_create_note, name='ajax_anki_create_note'),

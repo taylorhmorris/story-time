@@ -37,6 +37,9 @@ class CardListView(ListView):
 
 class DashboardView(TemplateView):
     template_name = "notemaker/dashboard.html"
+    
+class WorkshopView(TemplateView):
+    template_name = "notemaker/workshop.html"
 
 def test_ajax(request):
     rec = request.GET.get('rec', None)
