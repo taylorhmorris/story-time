@@ -17,7 +17,7 @@ function FlashCard(card) {
     };
     
     this.drawBack = function(){
-        return "<div class='back'><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br>Definition: "+ this.definition +"<br>Example: "+ this.example +"<br>Image: <img src='data:image/jpg;base64, "+ this.image +"'><br></div><div class='rate_bar_rate' style='display: none;'><button id='rate_0' class='rate_button' card_id='"+this.id+"'>Incorrect</button><button id='rate_1' class='rate_button' card_id='"+this.id+"'>Correct</button><button id='rate_2' class='rate_button' card_id='"+this.id+"'>Easy</button><button class='rate_button' id='rate_9'>Skip Card</button></div>";
+        return "<div class='back'><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br>Definition: "+ this.definition +"<br>Example: "+ this.example +"<br><img src='data:image/jpg;base64, "+ this.image +"'><br></div><div class='rate_bar_rate' style='display: none;'><button id='rate_0' class='rate_button' card_id='"+this.id+"'>Incorrect</button><button id='rate_1' class='rate_button' card_id='"+this.id+"'>Correct</button><button id='rate_2' class='rate_button' card_id='"+this.id+"'>Easy</button><button class='rate_button' id='rate_9'>Skip Card</button></div>";
     };
     
     this.drawAnswerButton = function(){
@@ -36,10 +36,24 @@ function FlashCard(card) {
     
     this.drawWordToImage = function(){
         let result = "<span class='flashcard'><div class='front'>";
-        result += "What does this word mean:<br><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br></div>"
+        result += "What does this word mean:<br><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a></div>"
+        
+        result += this.drawAnswerButton();        
+        result += this.drawBack();        
+        result += "</span>";
+        return result;
+    };
+    
+    this.drawFillInTheBlank = function(){
+        let blankedExample = this.example.replace(this.word, "____");
+        let result = "<span class='flashcard'><div class='front'>";
+        result += "Fill in the Blank:<br>"+ blankedExample +"</div>";
         
         result += this.drawAnswerButton();
-        result += this.drawBack();
+        
+        let boldedExample = this.example.replace(this.word, "<b>"+this.word+"</b>");
+        result += "<div class='back'>"+ boldedExample +"<br><br><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br>Definition: "+ this.definition +"<br><img src='data:image/jpg;base64, "+ this.image +"'><br></div><div class='rate_bar_rate' style='display: none;'><button id='rate_0' class='rate_button' card_id='"+this.id+"'>Incorrect</button><button id='rate_1' class='rate_button' card_id='"+this.id+"'>Correct</button><button id='rate_2' class='rate_button' card_id='"+this.id+"'>Easy</button><button class='rate_button' id='rate_9'>Skip Card</button></div>";
+        
         result += "</span>";
         return result;
     };

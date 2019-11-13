@@ -87,6 +87,9 @@ def ajax_anki_create_note(request):
     w2i = CardType.objects.get(card_type_name="WordToImage")
     Card(note=new_note, card_type=w2i).save()
     
+    fitb = CardType.objects.get(card_type_name="FillInTheBlank")
+    Card(note=new_note, card_type=fitb).save()
+    
     data = {
         'note_id': new_note.id,
         }
