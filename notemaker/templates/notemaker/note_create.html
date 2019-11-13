@@ -1,10 +1,7 @@
 <form id='cardForm'>
-    <span class='word field'>{{ data.word }}</span>
-    <input type='checkbox' class='field' name='ipa_val' value='true'>
-    <span class='ipa'>/{{ data.ipa }}/</span>
-    <input type='checkbox'  class='field' name='mp3_url' value='" + data.mp3_url +"'>
-    <a class='mp3' msg='{{ data.word }}' href='#'>&#128265;</a><br>
-    <input type='checkbox'  class='field' name='grammar' value='{{ data.grammar }}'>
+    <a class='mp3' msg='{{ data.word }}' href='#'>&#128265;</a>
+    <span class='word field'>{{ data.word }}</span>&emsp;
+    <span class='ipa'>/{{ data.ipa }}/</span>&emsp;&emsp;
     <span class='grammar'>{{ data.grammar }}</span><br><br>
     <label class='field'>Definitions: <select class='definitions' name='def'>
     {% for def in data.definitions %}
@@ -22,9 +19,13 @@
     {% endfor %}
     </select></label><br><br>
 
-    <span class='imgs'>Selected Image: <input name='selectedImg' size='1' value='0' readonly=true><br>
+    <span class='imgs'><span style='display: none;'>Selected Image: <input name='selectedImg' size='1' value='0' readonly=true><br></span>
     {% for img in data.images %}
+        {% if forloop.counter0 == 0 %}
+        <img value='{{ forloop.counter0 }}' id='selectedImage' class='image' src='data:image/jpg;base64, {{ img }}'>
+        {% else %}
         <img value='{{ forloop.counter0 }}' class='image' src='data:image/jpg;base64, {{ img }}'>
+        {% endif %}
     {% endfor %}
     </span>
-    </form><button id='cardButton'>Submit</button>
+</form><button id='cardButton'>Submit</button>

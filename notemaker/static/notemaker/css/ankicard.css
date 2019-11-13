@@ -20,6 +20,11 @@ body {
     margin: 5px;
 }
 
+#selectedImage {
+    border: solid;
+    border-color: blue;
+}
+
 .unique-display {
     display: none;
 }

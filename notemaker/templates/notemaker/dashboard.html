@@ -168,7 +168,9 @@ $( document ).on('click', '#cardButton', function(){
 
 $( document ).on('click', '.image', function(){
     console.log('Selecting Image');
-    $("input[name=selectedImg]").val($( this ).attr("value"))
+    $("#selectedImage").removeAttr('id');
+    $("input[name=selectedImg]").val($( this ).attr("value"));
+    $( this ).attr('id', 'selectedImage');
     msg_text = $("input[name=selectedImg]").val();
     console.log(msg_text);
     
