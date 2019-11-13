@@ -17,7 +17,7 @@ function FlashCard(card) {
     };
     
     this.drawBack = function(){
-        return "<div class='back'><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br>Definition: "+ this.definition +"<br>Example: "+ this.example +"<br>Image: <img src='data:image/jpg;base64, "+ this.image +"'><br></div><div class='rate_bar_rate' style='display: none;'><button id='rate_0' class='rate_button' card_id='"+this.id+"'>Incorrect</button><button id='rate_1' class='rate_button' card_id='"+this.id+"'>Correct</button><button id='rate_2' class='rate_button' card_id='"+this.id+"'>Easy</button><button class='flipCard'>Flip Card</button></div>";
+        return "<div class='back'><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br>Definition: "+ this.definition +"<br>Example: "+ this.example +"<br>Image: <img src='data:image/jpg;base64, "+ this.image +"'><br></div><div class='rate_bar_rate' style='display: none;'><button id='rate_0' class='rate_button' card_id='"+this.id+"'>Incorrect</button><button id='rate_1' class='rate_button' card_id='"+this.id+"'>Correct</button><button id='rate_2' class='rate_button' card_id='"+this.id+"'>Easy</button><button class='rate_button' id='rate_9'>Skip Card</button></div>";
     };
     
     this.drawAnswerButton = function(){
@@ -45,24 +45,34 @@ function FlashCard(card) {
     };
 };
 
-$( document ).on('click', '.flipCard', function(){
+function flipCard(){
     console.log("flipping card");
     $("#resultWindow").find(".front").toggle();
     $("#resultWindow").find(".back").toggle();
     $("#resultWindow").find(".rate_bar_show").toggle();
     $("#resultWindow").find(".rate_bar_rate").toggle();
+};
+
+$( document ).on('click', '.flipCard', function(){
+    flipCard();
 });
 
 $( document ).on('click', '.rate_button', function(){
     let value = $(this).attr('id')[5];
-    console.log(value);
-    $.ajax({
-        url: "../ajax/rate_card/",
-        data: {'card_id': $(this).attr('card_id'), 'rating': value},
-        dataType: 'json',
-        success: function (data) {
-            console.log(data);
-            $( "#resultModal" ).trigger( "finish-card", [value] );
-        }
-    }); 
+    //console.log(value);
+    if (value == '9'){
+        console.log("This would be a 9 string");
+        flipCard();
+        $( "#resultModal" ).trigger( "finish-card", [value] );
+    } else{
+        $.ajax({
+            url: "../ajax/rate_card/",
+            data: {'card_id': $(this).attr('card_id'), 'rating': value},
+            dataType: 'json',
+            success: function (data) {
+                //console.log(data);
+                $( "#resultModal" ).trigger( "finish-card", [value] );
+            }
+        });
+    }
 });

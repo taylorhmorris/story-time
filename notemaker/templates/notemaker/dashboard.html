@@ -107,6 +107,14 @@ $( document ).on('click', '#resultModal', function(event){
 $( document ).on('finish-card', '#resultModal', function(event, message){
     console.log(event);
     console.log(message);
+    if (message == '9'){
+        console.log("Skipping card");
+        h = $("#resultWindow").html();
+        $("#holdingBay").append(h); 
+        $("#resultWindow").html( "<span class='flashcard'></span>" );
+        $( "#resultModal" ).trigger( "finish-card", [-1] );
+        openModal();
+    }
     if ( $("#holdingBay span").first().length ){
         $("#resultWindow").find(".flashcard").replaceWith( $("#holdingBay span").first() );
     } else {
