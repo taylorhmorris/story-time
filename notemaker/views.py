@@ -79,8 +79,11 @@ def ajax_anki_create_note(request):
     new_note.grammar = sr_data['grammar']
     new_note.definition = sr_data['definitions'][int(form['def'])]['definition']
     new_note.example = sr_data['examples'][int(form['example'])]['source']
-    new_note.expression = sr_data['expressions'][int(form['expression'])]['expression']
-    new_note.expression_meaning = sr_data['expressions'][int(form['expression'])]['definition']
+    try:
+        new_note.expression = sr_data['expressions'][int(form['expression'])]['expression']
+        new_note.expression_meaning = sr_data['expressions'][int(form['expression'])]['definition']
+    except KeyError:
+        pass
     new_note.image = sr_data['images'][int(form['selectedImg'])]
     new_note.save()
     
