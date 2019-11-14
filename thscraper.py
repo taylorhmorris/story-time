@@ -101,7 +101,10 @@ class QueryLinguee(Query):
             examples.append({"source": source,
                              "translation": translation})
 
-        expression_group = soup.findAll(class_="example_lines")[-1].text.split('\n\n\n\n')
+        try:
+            expression_group = soup.findAll(class_="example_lines")[-1].text.split('\n\n\n\n')
+        except IndexError:
+            expression_group = []
         expressions = []
         for e in expression_group:
             if e != '':

@@ -113,8 +113,6 @@ $( document ).on('finish-card', '#resultModal', function(event, message){
         h = $("#resultWindow").html();
         $("#holdingBay").append(h); 
         $("#resultWindow").html( "<span class='flashcard'></span>" );
-        $( "#resultModal" ).trigger( "finish-card", [-1] );
-        openModal();
     }
     if ( $("#holdingBay span").first().length ){
         $("#resultWindow").find(".flashcard").replaceWith( $("#holdingBay span").first() );

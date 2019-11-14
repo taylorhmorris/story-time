@@ -78,7 +78,10 @@ def ajax_anki_create_note(request):
     new_note.ipa = sr_data['ipa']
     new_note.grammar = sr_data['grammar']
     new_note.definition = sr_data['definitions'][int(form['def'])]['definition']
-    new_note.example = sr_data['examples'][int(form['example'])]['source']
+    try:
+        new_note.example = sr_data['examples'][int(form['example'])]['source']
+    except:
+        pass
     try:
         new_note.expression = sr_data['expressions'][int(form['expression'])]['expression']
         new_note.expression_meaning = sr_data['expressions'][int(form['expression'])]['definition']

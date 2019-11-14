@@ -17,11 +17,11 @@ function FlashCard(card) {
     };
     
     this.drawBack = function(){
-        return "<div class='back'><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br>Definition: "+ this.definition +"<br>Example: "+ this.example +"<br><img src='data:image/jpg;base64, "+ this.image +"'><br></div><div class='rate_bar_rate' style='display: none;'><button id='rate_0' class='rate_button' card_id='"+this.id+"'>Incorrect</button><button id='rate_1' class='rate_button' card_id='"+this.id+"'>Correct</button><button id='rate_2' class='rate_button' card_id='"+this.id+"'>Easy</button><button class='rate_button' id='rate_9'>Skip Card</button></div>";
+        return "<div class=\'back\'><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class=\'mp3\' msg=\'"+ this.word.replace(/[']/ig, "") +"\' href=\'#\'>&#128265;</a><br>Definition: "+ this.definition +"<br>Example: "+ this.example +"<br><img src=\'data:image/jpg;base64, "+ this.image +"\'><br></div><div class=\'rate_bar_rate\' style=\'display: none;\'><button id=\'rate_0\' class=\'rate_button\' card_id=\'"+this.id+"\'>Incorrect</button><button id=\'rate_1\' class=\'rate_button\' card_id=\'"+this.id+"\'>Correct</button><button id=\'rate_2\' class=\'rate_button\' card_id=\'"+this.id+"\'>Easy</button><button class=\'rate_button\' id=\'rate_9\'>Skip Card</button></div>";
     };
     
     this.drawAnswerButton = function(){
-        return "<div class='rate_bar_show'><button class='flipCard'>Show Answer</button></div>";
+        return "<div class='rate_bar_show'><button class='flipCard'>Show Answer</button><button class='rate_button' id='rate_9'>Skip Card</button></div>";
     }
     
     this.drawImageToWord = function(){
@@ -36,7 +36,7 @@ function FlashCard(card) {
     
     this.drawWordToImage = function(){
         let result = "<span class='flashcard'><div class='front'>";
-        result += "What does this word mean:<br><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a></div>"
+        result += "What does this word mean:<br><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word.replace(/[']/ig, "") +"' href='#'>&#128265;</a></div>"
         
         result += this.drawAnswerButton();        
         result += this.drawBack();        
@@ -52,7 +52,7 @@ function FlashCard(card) {
         result += this.drawAnswerButton();
         
         let boldedExample = this.example.replace(this.word, "<b>"+this.word+"</b>");
-        result += "<div class='back'>"+ boldedExample +"<br><br><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word +"' href='#'>&#128265;</a><br>Definition: "+ this.definition +"<br><img src='data:image/jpg;base64, "+ this.image +"'><br></div><div class='rate_bar_rate' style='display: none;'><button id='rate_0' class='rate_button' card_id='"+this.id+"'>Incorrect</button><button id='rate_1' class='rate_button' card_id='"+this.id+"'>Correct</button><button id='rate_2' class='rate_button' card_id='"+this.id+"'>Easy</button><button class='rate_button' id='rate_9'>Skip Card</button></div>";
+        result += "<div class='back'>"+ boldedExample +"<a class='mp3' msg='"+ this.example.replace(/[']/ig, "") +"' href='#'>&#128265;</a><br><br><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class='mp3' msg='"+ this.word.replace(/[']/ig, "") +"' href='#'>&#128265;</a><br>Definition: "+ this.definition +"<br><img src='data:image/jpg;base64, "+ this.image +"'><br></div><div class='rate_bar_rate' style='display: none;'><button id='rate_0' class='rate_button' card_id='"+this.id+"'>Incorrect</button><button id='rate_1' class='rate_button' card_id='"+this.id+"'>Correct</button><button id='rate_2' class='rate_button' card_id='"+this.id+"'>Easy</button><button class='rate_button' id='rate_9'>Skip Card</button></div>";
         
         result += "</span>";
         return result;
@@ -67,6 +67,13 @@ function flipCard(){
     $("#resultWindow").find(".rate_bar_rate").toggle();
 };
 
+function showFrontOfCard(){
+    $("#resultWindow").find(".front").show();
+    $("#resultWindow").find(".back").hide();
+    $("#resultWindow").find(".rate_bar_show").show();
+    $("#resultWindow").find(".rate_bar_rate").hide();
+}
+
 $( document ).on('click', '.flipCard', function(){
     flipCard();
 });
@@ -76,7 +83,7 @@ $( document ).on('click', '.rate_button', function(){
     //console.log(value);
     if (value == '9'){
         console.log("This would be a 9 string");
-        flipCard();
+        showFrontOfCard();
         $( "#resultModal" ).trigger( "finish-card", [value] );
     } else{
         $.ajax({
