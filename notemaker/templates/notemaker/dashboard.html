@@ -7,15 +7,21 @@
 </head>
 <body>
 
-<button id="startReview">Start Review</button><br>
-<button id="addWordButton">Add Words</button><input type='text' id='boxu' class='unique-display' autofocus=''><br>
+<nav class='col-12 col-s-12'>
+<button id="startReview">Start Review</button>
+<button id="addWordButton">Add Words</button><input type='text' id='boxu' class='unique-display' autofocus=''>
 <button id="hardResetButton">Hard Reset</button>
+</nav>
 
 <div id="resultModal" class="modal">
-    <div id="modal" class="modal-content">
-        <span class="close">&times;</span>
-        <div id="resultWindow" class="modal-content">
-            <span class="flashcard"></span>
+    <div class="modalGridBox">
+        <div id="modal" class="modal-content">
+            <div class="modalGridBox">
+                <span class="close">&times;</span>
+                <div id="resultWindow" class="result-content">
+                    <span class="flashcard"></span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -70,7 +76,7 @@ function startReview(){
 }
 
 function addWord(){
-    $( "#boxu" ).show();
+    $( "#boxu" ).toggle();
 }
 
 $("#startReview").click(function(){
