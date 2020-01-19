@@ -59,7 +59,7 @@ function startReview(){
     console.log("Starting review ;)");
     $( ".unique-display" ).hide();
     $.ajax({
-        url: "{% url 'ajax-review-cards' %}",
+        url: "{% url 'notemaker:ajax-review-cards' %}",
         data: {'max_number': 10},
         dataType: 'json',
         success: function (data) {
@@ -89,7 +89,7 @@ $("#addWordButton").click(function(){
 
 $("#hardResetButton").click(function(){
     $.ajax({
-        url: "{% url 'api' %}",
+        url: "{% url 'notemaker:api' %}",
         data: {'request': 'reset',
                 'flags': ['hard',]},
         dataType: 'json',
@@ -130,7 +130,7 @@ $( document ).on('finish-card', '#resultModal', function(event, message){
 $( document ).on('change', '#boxu', function () {
     console.log("Boxu changed");
     $.ajax({
-        url: "{% url 'ajax_anki_generate_note' %}",
+        url: "{% url 'notemaker:ajax_anki_generate_note' %}",
         data: {
             'word': $(this).val()
         },

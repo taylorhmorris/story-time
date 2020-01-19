@@ -36,7 +36,7 @@ function drawCard(data){
 
 function viewNote(note_id){
     $.ajax({
-        url: "{% url 'ajax-note-detail' %}",
+        url: "{% url 'notemaker:ajax-note-detail' %}",
         data: {'note_id': note_id},
         dataType: 'html',
         success: function (data) {
@@ -47,7 +47,7 @@ function viewNote(note_id){
 
 $("#boxu").change(function () {
     $.ajax({
-        url: "{% url 'ajax_anki_generate_note' %}",
+        url: "{% url 'notemaker:ajax_anki_generate_note' %}",
         data: {
             'word': $(this).val()
         },
@@ -74,7 +74,7 @@ $( document ).ready(function() {
 $("#resultWindow").on('click', '#cardButton', function(){
     console.log('Clicked');
     $.ajax({
-        url: "{% url 'ajax_anki_create_note' %}",
+        url: "{% url 'notemaker:ajax_anki_create_note' %}",
         data: {'word': $("#cardForm .word").text(),
             'form': $( "form" ).serialize()
             },
