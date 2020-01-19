@@ -32,7 +32,7 @@
     <div id="story-holder">
       {% for story in stories %}
         <a class="story-tile"
-        href="{% url 'story' lang=lang pk=story.pk %}"><h3>{{ story.title }}</h3>{{ story.description }}
+        href="{% url 'story_slug' lang=lang slug=story.slug %}"><h3>{{ story.title }}</h3>{{ story.description }}
         </a>
         {% empty %}
             Sorry, no stories in this list

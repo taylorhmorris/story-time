@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.template.defaultfilters import slugify
 
 # Create your models here.
 class Story(models.Model):
@@ -34,7 +35,8 @@ class Translation(models.Model):
     
     def save(self, *args, **kwargs):
         value = self.title
-        self.slug = slugify(value, allow_unicode=True)
+        if not self.id:
+            self.slug = slugify(f"{self.title}-{self.story.original_source_author}")
         super().save(*args, **kwargs)
     
     def __str__(self):
