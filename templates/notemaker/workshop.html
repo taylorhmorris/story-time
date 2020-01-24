@@ -72,7 +72,7 @@ $( document ).on('click', '.singleWord', function () {
     console.log("Word selected: \""+ word +"\"");
     console.log("Sentence selected: \""+ $( this ).parent().text() +"\"");
     $.ajax({
-        url: "{% url 'ajax_anki_generate_note' %}",
+        url: "{% url 'notemaker:ajax_anki_generate_note' %}",
         data: {
             'word': word
         },
