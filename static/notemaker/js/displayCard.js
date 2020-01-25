@@ -76,6 +76,7 @@ function showFrontOfCard(){
 
 $( document ).on('click', '.flipCard', function(){
     flipCard();
+    $("#resultWindow").trigger('isFlipped');
 });
 
 $( document ).on('click', '.rate_button', function(){
