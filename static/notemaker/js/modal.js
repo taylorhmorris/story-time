@@ -7,7 +7,7 @@ $( document ).ready(function() {
 });
 
 $( document ).on('click', '.close', function(){
-    $( "#resultModal" ).trigger('click')
+    $( "#resultModal" ).trigger('click');
 });
 
 $( document ).on('click', '#resultModal', function(event){
@@ -16,4 +16,10 @@ $( document ).on('click', '#resultModal', function(event){
         $(".modal").hide();
         $("#holdingBay").empty();
     };
+});
+
+$( document ).on('keydown', function (e) {
+    if ( e.which == 27 ) {
+        $( "#resultModal" ).trigger('click');
+    }
 });
