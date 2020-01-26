@@ -14,14 +14,10 @@
 </nav>
 
 <div id="resultModal" class="modal">
-    <div class="modalGridBox">
-        <div id="modal" class="modal-content">
-            <div class="modalGridBox">
-                <span class="close">&times;</span>
-                <div id="resultWindow" class="result-content">
-                    <span class="flashcard"></span>
-                </div>
-            </div>
+    <div id="modal" class="modal-content">
+        <span class="close">&times;</span>
+        <div id="resultWindow" class="result-content">
+            <span class="flashcard"></span>
         </div>
     </div>
 </div>
@@ -35,11 +31,9 @@
 <script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}"></script>
 <script type="text/javascript" src="{% static 'notemaker/js/createNote.js' %}"></script>
 
-<script type="text/javascript">
-function openModal(card){
-    $("#resultModal").show();
-}
+<script type="text/javascript" src="{% static 'notemaker/js/modal.js' %}"></script>
 
+<script type="text/javascript">
 function queueCards(cards){
     for (card of cards){
         let flashcard = new FlashCard(card);
@@ -50,10 +44,6 @@ function queueCards(cards){
     $( "#resultModal" ).trigger( "finish-card", [-1] );
     openModal();
 }
-
-$( document ).ready(function() {
-    $("#resultModal").hide();
-});
 
 function startReview(){
     console.log("Starting review ;)");
@@ -97,18 +87,6 @@ $("#hardResetButton").click(function(){
             console.log( data );
         }
     });   
-});
-
-$( document ).on('click', '.close', function(){
-    $( "#resultModal" ).trigger('click')
-});
-
-$( document ).on('click', '#resultModal', function(event){
-    event.stopPropagation();
-    if (event.target.id == 'resultModal'){
-        $(".modal").hide();
-        $("#holdingBay").empty();
-    };
 });
 
 $( document ).on('finish-card', '#resultModal', function(event, message){

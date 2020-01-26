@@ -31,10 +31,9 @@ Quand les parents furent endormis, il se leva, enfila ses habits, ouvrit la chat
 <script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}"></script>
 <script type="text/javascript" src="{% static 'notemaker/js/createNote.js' %}"></script>
 
+<script type="text/javascript" src="{% static 'notemaker/js/modal.js' %}"></script>
+
 <script type="text/javascript">
-function openModal(card){
-    $("#resultModal").show();
-};
 
 function spanifyWords(div){
     let text = div.html();
@@ -51,20 +50,7 @@ function spanifyStory(){
 };
 
 $( document ).ready(function() {
-    $("#resultModal").hide();
     spanifyStory();
-});
-
-$( document ).on('click', '.close', function(){
-    $( "#resultModal" ).trigger('click')
-});
-
-$( document ).on('click', '#resultModal', function(event){
-    event.stopPropagation();
-    if (event.target.id == 'resultModal'){
-        $(".modal").hide();
-        $("#holdingBay").empty();
-    };
 });
 
 $( document ).on('click', '.singleWord', function () {
