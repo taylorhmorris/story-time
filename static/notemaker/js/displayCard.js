@@ -21,7 +21,7 @@ function FlashCard(card) {
     };
     
     this.drawAnswerButton = function(){
-        return "<div class='rate_bar_show'><button class='flipCard'>Show Answer</button><button class='rate_button' id='rate_9'>Skip Card</button></div>";
+        return "<div class='rate_bar_show'><button class='flipCard'>Show Answer</button><button class='rate_button' id='rate_9'>Skip Card</button><button class='delete_button' card_id=\'"+this.id+"\'>Delete</button></div>";
     }
     
     this.drawImageToWord = function(){
@@ -96,5 +96,19 @@ $( document ).on('click', '.rate_button', function(){
                 $( "#resultModal" ).trigger( "finish-card", [value] );
             }
         });
+    }
+});
+
+$( document ).on('click', '.delete_button', function(){
+    let r = confirm("Are you sure you want to delete this card? (This action CANNOT be undone)");
+    if (r == true) {
+        $.ajax({
+            url: "../ajax/delete_card/",
+            data: {'card_id': $(this).attr('card_id')},
+            dataType: 'json',
+            success: function (data) {
+                $( "#resultModal" ).trigger( "finish-card", [0] );
+            }
+        });    
     }
 });

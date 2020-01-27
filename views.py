@@ -148,6 +148,16 @@ def ajax_rate_card_view(request):
     data = {'success': 'true', 'new_date': new_date}
     return JsonResponse(data)
 
+def ajax_delete_card_view(request):
+    card_id = request.GET.get('card_id', None)
+    card = Card.objects.get(pk=card_id)
+    try:
+        card.delete()
+        data = {'success': 'true', 'result': f'Card {card_id} was deleted'}
+    except:
+        data = {'success': 'false', 'result': f'Card {card_id} could not be deleted due to an unknown error.'}
+    return JsonResponse(data)
+
 def card_detail_view(request, pk):
     card_obj = Card.objects.get(pk=pk)
     card_type_obj = CardType.objects.get(pk=card_obj.card_type.pk)
