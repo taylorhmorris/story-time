@@ -1,3 +1,16 @@
+import json
+from bs4 import BeautifulSoup
+import base64
+from random import shuffle
+import requests
+from io import StringIO
+import html
+
+from PIL import Image
+from pprint import pprint as pp
+
+import thscraper
+
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views import generic
@@ -9,17 +22,6 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_text, force_bytes, smart_text, smart_bytes
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
-
-import json
-from bs4 import BeautifulSoup
-import base64
-import requests
-from PIL import Image
-from io import StringIO
-import html
-
-import thscraper
-from pprint import pprint as pp
 
 from .models import Note, SearchResult, Card, CardType
 
