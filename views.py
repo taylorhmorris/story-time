@@ -171,6 +171,7 @@ def ajax_review_cards(request):
     #cards_json = serializers.serialize('json', cards)
     if len(cards) > 0:
         cards_json = [card.get_dict() for card in cards]
+        shuffle(cards_json)
         results = {'success': True, 'message': 'All good',
                    'cards': cards_json}
     else:
