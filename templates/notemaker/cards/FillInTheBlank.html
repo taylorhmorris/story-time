@@ -1,0 +1,8 @@
+{% extends "notemaker/cards/BasicNoteBase.html" %}
+{% load static %}
+
+{% block front %}
+WARNING: FILL IN THE BLANK CARDS ARE NOT YET SUPPORTED IN THIS VIEW. ASK YOUR ADMIN TO MODIFY FILLINTHEBLANK.HTML<br><br>
+Fill In The Blank:<br>
+<b>{{ card.note.word }}</b> /{{ card.note.ipa }}/ <a class='mp3' msg='{{ card.note.word }}' href='#'>&#128265;</a><br>
+{% endblock %}
