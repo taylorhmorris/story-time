@@ -17,7 +17,7 @@ function FlashCard(card) {
     };
     
     this.drawBack = function(){
-        return "<div class=\'back\'><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class=\'mp3\' msg=\'"+ this.word.replace(/[']/ig, "") +"\' href=\'#\'>&#128265;</a><br>Definition: "+ this.definition +"<br>Example: "+ this.example +"<br><img src=\'data:image/jpg;base64, "+ this.image +"\'><br></div><div class=\'rate_bar_rate\' style=\'display: none;\'><button id=\'rate_0\' class=\'rate_button\' card_id=\'"+this.id+"\'>Incorrect</button><button id=\'rate_1\' class=\'rate_button\' card_id=\'"+this.id+"\'>Correct</button><button id=\'rate_2\' class=\'rate_button\' card_id=\'"+this.id+"\'>Easy</button><button class=\'rate_button\' id=\'rate_9\'>Skip Card</button></div>";
+        return "<div class=\'back\'><b>"+ this.word +"</b> /"+ this.ipa +"/ <a class=\'mp3\' msg=\'"+ this.word.replace(/[']/ig, "") +"\' href=\'#\'>&#128265;</a><br>Definition: "+ this.definition +"<br>Example: "+ this.example +"<br><img src=\'data:image/jpg;base64, "+ this.image +"\'><br></div><div class=\'rate_bar_rate\' style=\'display: none;\'><button id=\'rate_0\' class=\'rate_button\' card_id=\'"+this.id+"\'>Incorrect</button><button id=\'rate_1\' class=\'rate_button\' card_id=\'"+this.id+"\'>Correct</button><button id=\'rate_2\' class=\'rate_button\' card_id=\'"+this.id+"\'>Easy</button><button class=\'rate_button\' id=\'rate_9\'>Skip Card</button><button class='delete_button' card_id=\'"+this.id+"\'>Delete</button></div>";
     };
     
     this.drawAnswerButton = function(){
