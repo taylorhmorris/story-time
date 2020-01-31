@@ -7,10 +7,10 @@ class Note(models.Model):
     word = models.CharField(max_length=50)
     ipa = models.CharField(max_length=50, blank=True)
     grammar = models.CharField(max_length=50, blank=True)
-    definition = models.CharField(max_length=50, blank=True)
-    example = models.CharField(max_length=50, blank=True)
-    expression = models.CharField(max_length=50, blank=True)
-    expression_meaning = models.CharField(max_length=50, blank=True)
+    definition = models.CharField(max_length=200, blank=True)
+    example = models.CharField(max_length=200, blank=True)
+    expression = models.CharField(max_length=200, blank=True)
+    expression_meaning = models.CharField(max_length=200, blank=True)
     image = models.TextField(blank=True)
     
     def __str__(self):
@@ -24,7 +24,8 @@ class Note(models.Model):
                 'example': self.example,
                 'expression': self.expression,
                 'expression_meaning': self.expression_meaning,
-                'image': self.image}
+                'image': self.image,
+                'id': self.id}
     
 class SearchResult(models.Model):
     word = models.CharField(max_length=50, unique=True)

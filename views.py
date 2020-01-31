@@ -17,7 +17,7 @@ from django.views import generic
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.template.loader import render_to_string
 from django.utils.encoding import force_text, force_bytes, smart_text, smart_bytes
 from django.core import serializers
@@ -30,6 +30,12 @@ class IndexView(TemplateView):
     
 class NoteDetailView(DetailView):
     model = Note
+    
+class NoteUpdateView(generic.edit.UpdateView):
+    model = Note
+    fields = '__all__'
+    template_name_suffix = '_update_form'
+    success_url = reverse_lazy('notemaker:dashboard')
     
 class NoteListView(ListView):
     model = Note
@@ -127,6 +133,11 @@ def ajax_anki_generate_note(request):
     return render(request, "notemaker/note_create.html", context)
 
 def ajax_note_detail_view(request):
+    note_id = request.GET.get('note_id', None)
+    context = {'note': Note.objects.get(pk=note_id)}
+    return render(request, "notemaker/note_detail.html", context)
+
+def ajax_note_update_view(request):
     note_id = request.GET.get('note_id', None)
     context = {'note': Note.objects.get(pk=note_id)}
     return render(request, "notemaker/note_detail.html", context)

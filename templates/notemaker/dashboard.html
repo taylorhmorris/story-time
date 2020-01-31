@@ -54,7 +54,7 @@ function startReview(){
         dataType: 'json',
         success: function (data) {
             if (data['success'] === true){
-                console.log( data['cards'] );
+                //console.log( data['cards'] );
                 queueCards(data['cards']);
             }
             else{
