@@ -45,6 +45,11 @@ class Query():
         fp = requests.get(URL)
         soup = BeautifulSoup(fp.content, features="html.parser")
         results = self.parse_soup(soup)
+        if "word" in results:
+            if results["word"] == None:
+                results['word'] = search_string
+            else:
+                self.store_in_cache(results['word'], results)
         self.store_in_cache(search_string, results)
         return results
 
@@ -134,9 +139,11 @@ class QueryLarousse(Query):
             return soup
         try:
             word = soup(class_="AdresseDefinition")[0].find(text=True, recursive=False)
-            print(f'Changing word to base form: {word}')
+            if "," in word:
+                word = word.split(',')[0]
+            print(f'Using base form: {word}')
         except IndexError as e:
-            raise e
+            word = None
         try:
             grammar = soup(class_="CatgramDefinition")[0].find(text=True, recursive=False)
         except IndexError:
