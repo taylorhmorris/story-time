@@ -157,7 +157,7 @@ class QueryLarousse(Query):
             if "," in word:
                 word = word.split(',')[0]
             print(f'Using base form: {word}')
-        except IndexError:
+        except IndexError as e:
             word = None
         try:
             grammar = soup(class_="CatgramDefinition")[0].find(text=True, recursive=False)
