@@ -1,0 +1,8 @@
+{
+	"preset": "crockford",
+	"requireLineFeedAtFileEnd": false,
+	"validateIndentation": "\t",
+	"excludeFiles": [
+		"jquery*",
+	]
+}
