@@ -1,0 +1,9 @@
+{% load static %}
+Notes:
+<ul>
+Word - CardType - Due Date - SiaR - FiaR
+{% for card in object_list %}
+<li><a href="{% url 'notemaker:card-detail' card.id %}">{{ card }}</a> - {{ card.due_date }} - {{ card.success_in_a_row }} - {{ card.fails_in_a_row }}<br>
+    </li>
+{% endfor %}
+</ul>

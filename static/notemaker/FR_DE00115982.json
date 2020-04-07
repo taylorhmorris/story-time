@@ -1,0 +1,168 @@
+{
+  "id": "FR_DE00115982",
+  "source": "global",
+  "language": "fr",
+  "version": 1,
+  "headword": {
+    "text": "manger",
+    "pronunciation": {
+      "value": "mɑ̃ʒe"
+    },
+    "pos": "verb"
+  },
+  "senses": [
+    {
+      "id": "FR_SE00010786",
+      "definition": "avaler, consommer des aliments",
+      "synonyms": [
+        "consommer"
+      ],
+      "translations": {
+        "ar": {
+          "text": "أكل",
+          "pronunciation": {
+            "value": "ʔa׳kala"
+          }
+        },
+        "br": {
+          "text": "comer"
+        },
+        "de": {
+          "text": "essen"
+        },
+        "dk": {
+          "text": "spise"
+        },
+        "el": {
+          "text": "τρώω",
+          "pronunciation": {
+            "value": "'troo"
+          }
+        },
+        "en": {
+          "text": "to eat"
+        },
+        "es": {
+          "text": "comer",
+          "pronunciation": {
+            "value": "ko'mer"
+          }
+        },
+        "he": {
+          "text": "לצרוך",
+          "pronunciation": {
+            "value": "lit͡sˈʁox"
+          },
+          "alternative_scripts": {
+            "hebrew-nikud": "לִצְרֹךְ"
+          }
+        },
+        "it": {
+          "text": "mangiare"
+        },
+        "ja": {
+          "text": "～を食（た）べる",
+          "alternative_scripts": {
+            "romaji": "~o taberu"
+          }
+        },
+        "nl": [
+          {
+            "text": "eten"
+          },
+          {
+            "text": "opeten"
+          }
+        ],
+        "no": {
+          "text": "å spise"
+        },
+        "pl": {
+          "text": "z/jeść"
+        },
+        "pt": {
+          "text": "comer"
+        },
+        "ru": {
+          "text": "есть"
+        },
+        "sv": {
+          "text": "äta"
+        },
+        "tr": {
+          "text": "yemek"
+        },
+        "zh": {
+          "text": "吃,食用",
+          "alternative_scripts": {
+            "pinyin": "chī，shíyòng"
+          }
+        }
+      },
+      "examples": [
+        {
+          "text": "J'ai mangé une pomme.",
+          "translations": {
+            "ar": {
+              "text": "أكلت تفاحة."
+            },
+            "br": {
+              "text": "Eu comi uma maçã."
+            },
+            "de": {
+              "text": "Ich habe einen Apfel gegessen."
+            },
+            "dk": {
+              "text": "Jeg har spist et æble."
+            },
+            "el": {
+              "text": "Έφαγα ένα μήλο."
+            },
+            "en": {
+              "text": "I ate an apple."
+            },
+            "he": {
+              "text": "אכלתי תפוח"
+            },
+            "ja": {
+              "text": "私（わたし）はリンゴを一（ひと）つ食べた。",
+              "alternative_scripts": {
+                "romaji": "Watashi wa ringo o hitotsu tabeta."
+              }
+            },
+            "nl": {
+              "text": "Ik heb een appel gegeten."
+            },
+            "no": {
+              "text": "Jeg har spist et eple."
+            },
+            "pl": {
+              "text": "Zjadłem jabłko."
+            },
+            "pt": {
+              "text": "Comi uma maçã."
+            },
+            "ru": {
+              "text": "Я съе́л/а я́блоко."
+            },
+            "sv": {
+              "text": "Jag har ätit ett äpple."
+            },
+            "tr": {
+              "text": "Bir elma yedim."
+            },
+            "zh": {
+              "text": "我吃了一个苹果.",
+              "alternative_scripts": {
+                "pinyin": "Wŏ chīle yī gè píngguŏ."
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "related_entries": [
+    "FR_DE00115983"
+  ]
+}

@@ -1,0 +1,14 @@
+{% load static %}
+
+<div id="front">
+{% block front %}
+What does this word mean:<br>
+<b>{{ card.note.word }}</b> /{{ card.note.ipa }}/ <a class='mp3' msg='{{ card.note.word }}' href='#'>&#128265;</a><br>
+{% endblock %}
+</div>
+
+<div id="back">
+{% block back %}
+{% include "notemaker/cards/BasicNoteBack.html" %}
+{% endblock %}
+</div>

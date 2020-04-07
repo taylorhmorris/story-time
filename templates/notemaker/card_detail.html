@@ -1,0 +1,10 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/anki-quiz-card.css' %}">
+<script src="{% static 'notemaker/js/jquery-3.1.0.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'notemaker/js/tts.js' %}"></script> 
+
+{% with template_name=template|stringformat:"s"|add:".html" %}
+    {% include 'notemaker/cards/'|add:template_name %}
+{% endwith %}
+
+{% include 'notemaker/rate_bar.html' %}

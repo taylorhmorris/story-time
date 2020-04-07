@@ -1,0 +1,130 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/ankicard.css' %}">
+</head>
+<body>
+
+<nav class='col-12 col-s-12'>
+<button id="startReview">Start Review</button>
+<button id="addWordButton">Add Words</button><input type='text' id='boxu' class='unique-display' autofocus=''>
+<button id="hardResetButton">Hard Reset</button>
+</nav>
+
+<div id="resultModal" class="modal">
+    <div id="modal" class="modal-content">
+        <span class="close">&times;</span>
+        <div id="resultWindow" class="result-content">
+            <span class="flashcard"></span>
+        </div>
+    </div>
+</div>
+
+<div id="holdingBay" style="display: block;">
+</div>
+
+
+<script src="{% static 'notemaker/js/jquery-3.1.0.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'notemaker/js/tts.js' %}"></script>
+<script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}"></script>
+<script type="text/javascript" src="{% static 'notemaker/js/createNote.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'notemaker/js/modal.js' %}"></script>
+
+<script type="text/javascript">
+function queueCards(cards){
+    for (card of cards){
+        let flashcard = new FlashCard(card);
+        let h = flashcard.getHTML();
+        $("#holdingBay").append(h);        
+    }
+    $("#resultWindow").html( "<span class='flashcard'></span>" );
+    $( "#resultModal" ).trigger( "finish-card", [-1] );
+    openModal();
+}
+
+function startReview(){
+    console.log("Starting review ;)");
+    $( ".unique-display" ).hide();
+    $.ajax({
+        url: "{% url 'notemaker:ajax-review-cards' %}",
+        data: {'max_number': 10},
+        dataType: 'json',
+        success: function (data) {
+            if (data['success'] === true){
+                //console.log( data['cards'] );
+                queueCards(data['cards']);
+            }
+            else{
+                $( "#resultWindow" ).html(data['message']);
+                openModal();
+            }
+        }
+    });   
+}
+
+function addWord(){
+    $( "#boxu" ).toggle();
+}
+
+$("#startReview").click(function(){
+    startReview();
+});
+
+$("#addWordButton").click(function(){
+    addWord();
+});
+
+$("#hardResetButton").click(function(){
+    $.ajax({
+        url: "{% url 'notemaker:api' %}",
+        data: {'request': 'reset',
+                'flags': ['hard',]},
+        dataType: 'json',
+        success: function (data) {
+            console.log( data );
+        }
+    });   
+});
+
+$( document ).on('finish-card', '#resultModal', function(event, message){
+    console.log(event);
+    console.log(message);
+    if (message == '9'){
+        console.log("Skipping card");
+        h = $("#resultWindow").html();
+        $("#holdingBay").append(h); 
+        $("#resultWindow").html( "<span class='flashcard'></span>" );
+    }
+    if ( $("#holdingBay span").first().length ){
+        $("#resultWindow").find(".flashcard").replaceWith( $("#holdingBay span").first() );
+    } else {
+        $( "#resultModal" ).trigger('click')
+    }
+});
+
+$( document ).on('change', '#boxu', function () {
+    console.log("Boxu changed");
+    $.ajax({
+        url: "{% url 'notemaker:ajax_anki_generate_note' %}",
+        data: {
+            'word': $(this).val()
+        },
+        dataType: 'html',
+        success: function (data) {
+            drawCard(data)
+        }
+    });
+});
+
+
+
+
+</script>
+
+</body>
+</html>
+
+

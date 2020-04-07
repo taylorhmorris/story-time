@@ -1,0 +1,8 @@
+{% load static %}
+
+<b>{{ note.word }}</b> /{{ note.ipa }}/ <a class='mp3' msg='{{ note.word }}' href='#'>&#128265;</a><br>
+Definition: {{ note.definition }}<br>
+Example: {{ note.example }}<br>
+Expression: {{ note.expression }} -- ({{ note.expression_meaning }})<br>
+Image: <img src="data:image/jpg;base64, {{ note.image }}"><br>
+

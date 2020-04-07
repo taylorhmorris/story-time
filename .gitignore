@@ -1,0 +1,7 @@
+__*
+env/
+*.sqlite3
+cache/
+apikeys
+*.pyc
+migrations/
