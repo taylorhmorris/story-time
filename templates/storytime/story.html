@@ -1,0 +1,47 @@
+{% load static %}
+<html>
+<!--
+  1. There should be a header with the site title
+  2. The header should have links
+    2.5 The links should compress into a menu on small screens
+  3. There should be an intro image above the header
+    3.5 As the page scrolls the header should stick to the top
+  4. There should be links to the story pages
+  5. There should be a footer
+-->
+<head>
+<title>Story Time</title>
+<link rel="stylesheet" type="text/css" href="{% static 'storytime/index.css' %}" />
+</head>
+<body>
+<main>
+  <nav id="navbar">
+    <span id="logo">Story Time</span>
+    <ul>
+      <li><a href="{% url 'index' lang=lang %}#welcome-section">Welcome</a></li>
+      <li><a href="{% url 'index' lang=lang %}#stories">Stories</a></li>
+      <li><a href="#contact-section">Contact</a></li>
+  </nav>
+
+  <section id="welcome-section">
+    <h1>Story Time in {{ translation.language }}</h1>
+  </section>
+
+  <section id="stories">
+    <h2>{{ translation.title }}</h2>
+{{ translation.main_text }}
+  </section>
+    
+    <section id="contact-section">
+      <h2>Contact</h2>
+      <div id="contact-holder">
+      <a class="contact-tile" id="profile-link" href="https://github.com/" target="_blank">GitHub</a>
+      <a class="contact-tile" href="http://twitter.com" target="_blank">Twitter</a>
+      <a class="contact-tile" href="mailto:example@example.com" target="_blank">E-mail</a>
+      <a class="contact-tile" href="tel:555-555-5555" target="_blank">Phone</a>  
+      </div>
+    </section>
+
+</main>
+</body>
+</html>
