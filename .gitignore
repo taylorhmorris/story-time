@@ -5,3 +5,5 @@ cache/
 apikeys
 *.pyc
 migrations/
+*.xmind
+apikeys
