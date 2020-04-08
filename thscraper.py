@@ -259,10 +259,7 @@ def query_google_images(search_string):
     return images
 
 def query_all(word):
-    """Queries all sites using word parameter
-
-    Depreciated
-    """
+    """Queries all sites using word parameter"""
     #ipa, mp3_url = "DUMMY_IPA", "MP3_URL"
     #ipa, mp3_url = query_collins(word)
     ## collins is blocking scraping
