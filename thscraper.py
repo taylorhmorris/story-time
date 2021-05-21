@@ -6,6 +6,7 @@ from pprint import pprint as pp
 from bs4 import BeautifulSoup
 import requests
 from epitran import Epitran
+import logging
 
 class Query():
     """Query Class to be extended for use with specific sites"""
@@ -44,7 +45,8 @@ class Query():
         """Query the site with search_string"""
         if self.check_cache:
             cached = self.retrieve_cache(search_string)
-            if not cached:
+            if cached:
+                logger.info(f"Search string ({search_string}) found in cache")
                 return self.parse_soup(cached)
         url = self.url.format(search_string=search_string, api_key=self.api_key)
         webpage = requests.get(url)
@@ -263,7 +265,13 @@ def query_all(word):
     #ipa, mp3_url = "DUMMY_IPA", "MP3_URL"
     #ipa, mp3_url = query_collins(word)
     ## collins is blocking scraping
+    global logger
+    logger = logging.getLogger("th_scraper")
+    logger.setLevel(logging.DEBUG)    
+    logger.info("Running Scraper")
+    
     ipa = Epitran('fra-Latn').transliterate(word)
+    logger.info(f"ipa found by Epitran == {ipa}")
     #grammar, definitions, examples = "dummy_grammar",
     #["Def 1", "Def 2"], ["Example 1", "Example 2"]
     larousse = QueryLarousse().query(word)
@@ -291,7 +299,7 @@ def query_all(word):
 
 def run():
     """Run demo query to test query_all function"""
-    data = query_all("cliquez")
+    data = query_all("manger")
     pp(data)
     return data
 
