@@ -122,34 +122,39 @@ option {
     display: grid;
     height: 100%;
     grid-template-rows: 20px auto auto 20px;
-    grid-template-columns: 20px auto auto auto auto auto auto auto auto auto auto 20px;
+    grid-template-columns: 20px 50px auto auto auto auto auto auto auto auto 50px 20px;
 }
 
 /* Modal Content/Box */
 .modal-content {
-    grid-column: 2 / 12;
+    grid-column: 4 / 10;
     grid-row: 2;
-    background-color: #fefefe;
+	margin-left: 15%;
+	margin-right: 15%;
+	margin-top: 10%;
+	margin-bottom: 10%;
+    background-color: transparent;
     padding: 0px;
-    border: 1px solid #888;
+   /* border: 2px solid #888;*/
+
 }
 
 .result-content {
-    grid-column: 2 / 12;
-    grid-row: 2 / 4;
     height: 100%;
     width: 100%;
-    background-color: #fefefe;
-    padding: 20px;
+    background-color: #FFFFFF;
+    padding: 25px;
     border: 1px solid #888;
+	border-radius: 15px;
 }
 
 /* The Close Button */
 .close {
     grid-column: 12;
     grid-row: 1;
-  color: #aaa;
+  color: #f00;
   margin: 0px;
+  margin-right: 2px;
   float: right;
   padding: 0px;
   font-size: 28px;
