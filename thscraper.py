@@ -18,6 +18,8 @@ class Query():
 
     def retrieve_cache(self, search_string):
         """Retrieve query data from cache"""
+        if len(''.join(e for e in search_string if e.isalnum())) < 1:
+            return False
         try:
             folder = self.__class__.__name__.lstrip('Query').lower()
             with open(f"cache\\{folder}\\{search_string}.json", "r") as json_file:
@@ -29,9 +31,13 @@ class Query():
 
     def store_in_cache(self, search_string, data):
         """Store query data in cache"""
+        if len(''.join(e for e in search_string if e.isalnum())) < 1:
+            return False
         folder = self.__class__.__name__.lstrip('Query').lower()
         try:
             word = data['word']
+            if not word or len(''.join(e for e in word if e.isalnum())) < 1:
+                return False
         except KeyError as e:
             word = search_string
         try:
@@ -40,6 +46,7 @@ class Query():
         except TypeError as e:
             print("Could not serialize data")
             raise e
+        return True
 
     def query(self, search_string):
         """Query the site with search_string"""
