@@ -3,6 +3,7 @@ French language words, bring the information together into one usable json file
 """
 import json
 from pprint import pprint as pp
+import bs4
 from bs4 import BeautifulSoup
 import requests
 from epitran import Epitran
@@ -162,8 +163,16 @@ class QueryLarousse(Query):
         if isinstance(soup, dict):
             return soup
         try:
-            word = soup(class_="AdresseDefinition")[0].find(text=True, recursive=False)
-            if "," in word:
+            word = None
+            for text_part in soup(class_="AdresseDefinition"):
+                for content in text_part.contents:
+                    if not isinstance(content, bs4.element.NavigableString):
+                        continue
+                    if len(''.join(e for e in content if e.isalnum())) < 1:
+                        continue
+                    word = str(content)
+                    break
+            if word and "," in word:
                 word = word.split(',')[0]
             print(f'Using base form: {word}')
         except IndexError as e:
