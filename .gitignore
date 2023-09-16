@@ -7,3 +7,6 @@ apikeys
 migrations/
 *.xmind
 apikeys
+
+# Local environment scripts
+startworkspace.py
