@@ -207,8 +207,8 @@
 				hardReset() {
 					fetch("{% url 'notemaker:api' %}?request=reset&flags=hard")
 						.then((response) => console.log(response.json()))
-						.catch((error) => console.log(error))
-						.then(console.log("finished"));
+						.then(console.log("finished"))
+            .catch((error) => console.log(error));
 				},
 				playWord(msg, lang) {
 					console.log('Playing ' + msg + ' using browser TTS through Alpine');

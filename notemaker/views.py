@@ -195,7 +195,7 @@ def api_view(request):
     if request_type == 'reset':# and 'hard' in data['flags']:
         for card in Card.objects.all():
             card.reset()
-            results = {'success': True, 'message': 'All cards reset'}
+        results = {'success': True, 'message': 'All cards reset'}
     else:
         results = {'success': False, 'message': 'Invalid Command'}
     return JsonResponse(results)
