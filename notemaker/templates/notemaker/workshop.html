@@ -3,6 +3,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/ankicard-workshop.css' %}">
 </head>
 <body>
@@ -112,54 +114,156 @@ Ouais<br>
     </div>
 </div>
 
-<script src="{% static 'notemaker/js/jquery-3.1.0.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'notemaker/js/tts.js' %}"></script>
-<script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}"></script>
-<script type="text/javascript" src="{% static 'notemaker/js/createNote.js' %}"></script>
+<div x-data="workshopData()">
+  <div x-show="$store.noteStore.generating == true">
+    <form id='cardForm'>
+      <a @click="playWord($store.noteStore.noteData.word, 'fr-FR')" href='#'>&#128265;</a>
+      <span class='word field' x-text="$store.noteStore.noteData.word"></span>&emsp;
+      /<span class='ipa' x-text="$store.noteStore.noteData.ipa"></span>/&emsp;&emsp;
+      <span class='grammar' x-text="$store.noteStore.noteData.grammar"></span><br><br>
+      <label class='field'>Definitions: <select class='definitions' name='def' x-model="$store.noteStore.selectedDefinition">
+      <template x-for="(def, index) in $store.noteStore.noteData.definitions">
+        <option class='definition' name='def' :value='index' x-text="def.definition"></option>
+      </template>
+      </select></label><br><br>
+      <label class='field'>Examples: <select class='examples' name='example' x-model="$store.noteStore.selectedExample">
+      <template x-for="(example, index) in $store.noteStore.noteData.examples">
+          <option class='example' name='example' :value='index' x-text="example.source"></option>
+      </template>
+      </select></label><br><br>
+      
+      <label class='field'>Expressions: <select class='expressions' name='expression' x-model="$store.noteStore.selectedExpression">
+      <template x-for="(expression, index) in $store.noteStore.noteData.expressions">
+        <option class='expression' name='expression' :value='index' x-text="`${expression.expression} (${expression.definition})`"></option>
+      </template>
+      </select></label><br><br>
 
-<script type="text/javascript" src="{% static 'notemaker/js/modal.js' %}"></script>
+      <span class='imgs'>
+      <span x-show="false">Selected Image:
+        <input name='selectedImg' size='1' :value='selectedImage' readonly=true><br>
+      </span>
+      <template x-for="(image, index) in $store.noteStore.noteData.images">
+          <img :value='index' :id="index == $store.noteStore.selectedImage ? 'selectedImage' : `image${index}`" class='image' :src='`data:image/jpg;base64, ${image}`' @click="$store.noteStore.selectedImage = index">
+      </template>
+      </span>
+    </form>
+    <button x-if="generatingCard" @click="submitGeneratedCard()">Real Submit</button>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}"></script>
 
 <script type="text/javascript">
 
 function spanifyWords(div){
-    let text = div.html();
-    div.html( "<span class='singleWord'>" + text.replace(/[ \n\r\s\t]/g, "</span> <span class='singleWord'>") + "</span>" );
+    let text = div.innerHTML;
+    div.innerHTML = "<span class='singleWord'>" +
+      text.replace(/[ \n\r\s\t]/g, "</span> <span class='singleWord'>") + "</span>";
 }
 
-function spanifyStory(){    
-    $( ".story" ).each( function( index ) {
-        let text = "<span class='singleSentence'>" + $( this ).text().replace(/[.!?][ \n\r\s\t]/g, function(m){return m[0]+"</span>"+m[1]+"<span class='singleSentence'>"}) + "</span>";
-        $( this ).html(text);
-        $( this ).children(".singleSentence").each( function( i ) {spanifyWords( $( this ) )} );
-        console.log($( this ).html());
+function spanifyStory(){
+  (document.querySelectorAll(".story") || []).forEach((element, index) => {
+    element.innerHTML = 
+      "<span class='singleSentence'>" + 
+      element
+      .textContent
+      .replace(
+        /[.!?][ \n\r\s\t]/g,
+        function(m){
+          return m[0]+"</span>"+m[1]+"<span class='singleSentence'>"
+        }) + "</span>";
+    (element.querySelectorAll(".singleSentence") || []).forEach((element, index) => {
+      spanifyWords( element )
     });
+  });
 };
 
-$( document ).ready(function() {
-    spanifyStory();
+document.addEventListener("DOMContentLoaded", () => {
+  spanifyStory();
+  (document.querySelectorAll(".singleWord") || []).forEach((element, index) => {
+    element.addEventListener('click', (event) => {
+      let word = event.target.textContent.toLowerCase().replace(/[^a-zÀ-ú ']/gi, "");
+      console.log("word clicked: " + word);
+      console.log("parent of clicked: " + event.target.parentNode.textContent)
+      Alpine.store('noteStore').checkSubmission(word);
+    });   
+  });
 });
-
-$( document ).on('click', '.singleWord', function () {
-    let word = $( this ).text().toLowerCase().replace(/[^a-zÀ-ú ']/gi, "");
-    console.log("Word selected: \""+ word +"\"");
-    console.log("Sentence selected: \""+ $( this ).parent().text() +"\"");
-    $.ajax({
-        url: "{% url 'notemaker:ajax_anki_generate_note' %}",
-        data: {
-            'word': word
-        },
-        dataType: 'html',
-        success: function (data) {
-            drawCard(data)
-        }
-    });
-});
-
-
-
-
 </script>
 
+<script type="text/javascript">
+  document.addEventListener('alpine:init', () => {
+    Alpine.store('noteStore', {
+      generating: false,
+      noteData: {},
+      selectedDefinition: 0,
+      selectedExample: 0,
+      selectedExpression: 0,
+      selectedImage: 0,
+      checkSubmission(word) {
+        console.log('Generate note!');
+        fetch(`{% url 'notemaker:ajax_anki_generate_note' %}?word=${word}`)
+          .then((response) => response.json())
+          .catch((error) => console.log(error))
+          .then((data) => {
+            console.log(data);
+            this.generating = true;
+            this.noteData = data;
+            this.selectedImage = 0;
+            this.selectedDefinition = 0;
+            this.selectedExample = 0;
+            this.selectedExpression = 0;
+            console.log(this.noteData)
+          });
+      },
+    })
+  })
+  function workshopData() {
+    return {
+      addWordToggle: false,
+      reviewModalToggle: false,
+      reviewModalFlipped: false,
+      cards: [],
+      top: undefined,
+      wordToEnterQuery: '',
+      playWord(msg, lang) {
+        console.log('Playing ' + msg + ' using browser TTS through Alpine');
+        let utterance = new SpeechSynthesisUtterance(msg);
+        utterance.lang = lang;
+        window.speechSynthesis.speak(utterance);
+      },
+      submitGeneratedCard() {
+        const noteStore = Alpine.store('noteStore')
+        const formData = {
+          def: noteStore.selectedDefinition,
+          example: noteStore.selectedExample,
+          expression: noteStore.selectedExpression,
+          selectedImg: noteStore.selectedImage,
+        };
+        // const formURI = `def=${formData.def}&example=${formData.example}&expression=${formData.expression}&selectedImg=${formData.selectedImg}`;
+        const formURI = new URLSearchParams(formData).toString();
+
+        const noteData = {
+          word: noteStore.noteData.word,
+          form: formURI,
+        };
+        console.log(new URLSearchParams(noteData).toString());
+        fetch("../ajax/anki_create_note/?" + new URLSearchParams(noteData))
+        .then(response => {
+          if (response.status === 200) {
+            console.log('note created successfully');
+            noteStore.generating = false;
+            noteStore.noteData = undefined;
+            return response
+          }
+        })
+        .then(response => response.json())
+        .catch(error => console.log("error: " + error))
+      },
+    }
+  }
+</script>
 </body>
 </html>
 

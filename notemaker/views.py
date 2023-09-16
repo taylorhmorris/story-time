@@ -119,8 +119,8 @@ def ajax_anki_generate_note(request):
         new_search.data = json.dumps(data)
         new_search.save()
     context = {'data': data}
-    #return JsonResponse(data)
-    return render(request, "notemaker/note_create.html", context)
+    return JsonResponse(data)
+    # return render(request, "notemaker/note_create.html", context)
 
 def ajax_note_detail_view(request):
     note_id = request.GET.get('note_id', None)

@@ -2,129 +2,293 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
-<link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/ankicard.css' %}">
+	<title>Notemaker</title>
+	<script src="//unpkg.com/alpinejs" defer></script>
+	<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+	<link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/ankicard.css' %}">
 </head>
+
 <body>
+	<div x-data="cardQueueData()">
+		<nav class='col-12 col-s-12'>
+			<span>
+				<button @click="addWordToggle = false; beginReview();">Start Review</button>
+			</span>
+			<button @click="addWordToggle = !addWordToggle">
+				Add Words
+			</button>
+			<input x-show="addWordToggle" x-model="wordToEnterQuery" type='text' id='boxu' autofocus=''
+				@keypress="checkSubmission">
+				<button @click="hardReset">Hard Reset</button>
+		</nav>
 
-<nav class='col-12 col-s-12'>
-<button id="startReview">Start Review</button>
-<button id="addWordButton">Add Words</button><input type='text' id='boxu' class='unique-display' autofocus=''>
-<button id="hardResetButton">Hard Reset</button>
-</nav>
+		<template x-if="reviewModalToggle && cards.length > 0" id="resultModal" class="">
+			<div id="modal" class="modal-content">
+				<span class="close" @click="reviewModalToggle = false">&times;</span>
+				<div id="resultWindow" class="result-content">
+					<span class="flashcard">
+						<template x-if="reviewModalFlipped == false">
+							<div class="front">
+								<template x-if="top.card_type == 'ImageToWord'">
+									<div>What word goes with this image:
+										<img :src="top.imageSrc()"></img>
+									</div>
+								</template>
+								<template x-if="top.card_type == 'WordToImage'">
+									<div>
+										What does this word mean:
+										<img :src="top.imageSrc()"></img>
+										<b x-text="top.word"></b>
+										<span x-text="top.ipa"></span>
+										<a @click="playWord(top.word, 'fr-FR')" href='#'>&#128265;</a>
+									</div>
+								</template>
+								<template x-if=" top.card_type=='FillInTheBlank'">
+									<div>
+										Fill in the Blank:
+										<div x-text=" top.blankedExample">
+										</div>
+									</div>
+								</template>
+								<div class='rate_bar_show'>
+									<button @click="flipCard">Show Answer</button>
+									<button @click="skipCard">Skip Card</button>
+									<button @click="deleteCard">Delete</button>
+								</div>
+							</div>
+						</template>
+						<template x-if="reviewModalFlipped == true">
+							<div>
+								<b x-text="top.word"></b>
+								<span x-text="top.ipa"></span>
+								<a @click="playWord(top.word, 'fr-FR')" href="#">&#128265;</a>
+								<br>
+								Definition: <span x-text="top.definition"></span>
+								<br>Example: <span x-text="top.example"></span>
+								<br>
+								<span x-html="top.imageTag()"></span>
 
-<div id="resultModal" class="modal">
-    <div id="modal" class="modal-content">
-        <span class="close">&times;</span>
-        <div id="resultWindow" class="result-content">
-            <span class="flashcard"></span>
-        </div>
-    </div>
-</div>
+								<div class=" rate_bar_rate">
+									<button @click="rateCard(0)">Incorrect</button>
+									<button @click="rateCard(1)">Correct</button>
+									<button @click="rateCard(2)">Easy</button>
+									<button @click="skipCard">Skip Card</button>
+									<button @click="deleteCard">Delete</button>
+									<button @click="editCard">Edit</button>
+								</div>
+							</div>
+						</template>
+					</span>
+				</div>
+			</div>
+		</template>
 
-<div id="holdingBay" style="display: block;">
-</div>
+		<div x-show="generatingCard" x-data="generatedCard">
+			<form id='cardForm'>
+        <a @click="playWord(generatedCard.word, 'fr-FR')" href='#'>&#128265;</a>
+        <span class='word field' x-text="generatedCard.word"></span>&emsp;
+        /<span class='ipa' x-text="generatedCard.ipa"></span>/&emsp;&emsp;
+        <span class='grammar' x-text="generatedCard.grammar"></span><br><br>
+        <label class='field'>Definitions: <select class='definitions' name='def' x-model="selectedDefinition">
+        <template x-for="(def, index) in generatedCard.definitions">
+          <option class='definition' name='def' :value='index' x-text="def.definition"></option>
+        </template>
+        </select></label><br><br>
+        <label class='field'>Examples: <select class='examples' name='example' x-model="selectedExample">
+        <template x-for="(example, index) in generatedCard.examples">
+            <option class='example' name='example' :value='index' x-text="example.source"></option>
+        </template>
+        </select></label><br><br>
+        
+        <label class='field'>Expressions: <select class='expressions' name='expression' x-model="selectedExpression">
+        <template x-for="(expression, index) in generatedCard.expressions">
+          <option class='expression' name='expression' :value='index' x-text="`${expression.expression} (${expression.definition})`"></option>
+        </template>
+        </select></label><br><br>
+  
+        <span class='imgs'>
+        <span x-show="false">Selected Image:
+          <input name='selectedImg' size='1' :value='selectedImage' readonly=true><br>
+        </span>
+        <template x-for="(image, index) in generatedCard.images">
+            <img :value='index' :id="index == selectedImage ? 'selectedImage' : `image${index}`" class='image' :src='`data:image/jpg;base64, ${image}`' @click="selectedImage = index">
+        </template>
+        </span>
+      </form>
+			<button x-if="generatingCard" @click="submitGeneratedCard()">Real Submit</button>
+		</div>
+	</div>
 
 
-<script src="{% static 'notemaker/js/jquery-3.1.0.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'notemaker/js/tts.js' %}"></script>
-<script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}"></script>
-<script type="text/javascript" src="{% static 'notemaker/js/createNote.js' %}"></script>
+	<script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}"></script>
 
-<script type="text/javascript" src="{% static 'notemaker/js/modal.js' %}"></script>
+	<script type="text/javascript">
+		function cardQueueData() {
+			return {
+				addWordToggle: false,
+				reviewModalToggle: false,
+				reviewModalFlipped: false,
+				cards: [],
+				top: undefined,
+				wordToEnterQuery: '',
+				generatingCard: false,
+				generatedCard: {},
+        selectedImage: 0,
+        selectedDefinition: 0,
+        selectedExample: 0,
+        selectedExpression: 0,
+				beginReview() {
+					if (this.cards.length === 0) {
+						let url = "{% url 'notemaker:ajax-review-cards' %}?max_number=10"
+						fetch(url)
+							.then(response => response.json())
+							.then(data => {
+                if (!data.cards ||data.cards.length < 1) {
+                  throw new Error('No cards to review at this time');
+                }
+                console.log(data.cards);
+								for (card of data.cards) {
+									let flashcard = new FlashCard(card);
+									this.cards.push(flashcard);
+								}
+								if (this.cards.length > 0) {
+									this.top = this.cards[0];
+									this.reviewModalToggle = true;
+								}
+							})
+              .catch((error) => {
+								console.log(error);
+							});
+					} else {
+						this.top = this.cards[0];
+						this.reviewModalToggle = true;
+					}
+				},
+				flipCard() {
+					console.log("Flipping card");
+					this.reviewModalFlipped = true;
+				},
+				resetCardModal() {
+					this.reviewModalFlipped = false;
+					if (this.cards && this.cards[0])
+						this.top = this.cards[0];
+					else {
+						this.reviewModalToggle = false;
+					}
+				},
+				skipCard() {
+					console.log("Skipping card");
+					this.cards.push(this.cards.shift());
+					this.resetCardModal();
+				},
+				deleteCard() {
+					let r = confirm("Are you sure you want to delete this card? (This action CANNOT be undone)");
+					if (r === true) {
+						fetch("../ajax/delete_card/?card_id=" + this.top.id)
+							.then(response => {
+								if (response.status === 200) {
+									console.log("Success!");
+									this.cards.shift();
+									this.top = this.cards[0];
+                  this.reviewModalFlipped = false;
+								} else {
+									console.log(response);
+								}
+							})
+							.catch((error) => console.log(error))
+							.then(console.log("finished"));
+					}
+				},
+				editCard() {
+					window.location.href = "http://127.0.0.1:8000/notemaker/note/" + this.top.note_id + "/update/";
+				},
+				hardReset() {
+					fetch("{% url 'notemaker:api' %}?request=reset&flags=hard")
+						.then((response) => console.log(response.json()))
+						.catch((error) => console.log(error))
+						.then(console.log("finished"));
+				},
+				playWord(msg, lang) {
+					console.log('Playing ' + msg + ' using browser TTS through Alpine');
+					let utterance = new SpeechSynthesisUtterance(msg);
+					utterance.lang = lang;
+					window.speechSynthesis.speak(utterance);
+				},
+				rateCard(rating) { // int: 0, 1, 2 (incorrect, correct, easy)
+					console.log("rateCard method");
+					switch (rating) {
+						case 0:
+						case 1:
+						case 2: break;
+						default: console.log("Unknown rating: " + rating); return;
+					}
+					console.log("rating = " + rating);
+					fetch(`{% url 'notemaker:ajax-rate-card' %}?card_id=${this.top.id}&rating=${rating}`)
+						.then((response) => {
+							console.log(response.json())
+							this.cards.shift();
+							this.resetCardModal();
+						})
+						.catch((error) => console.log(error))
+						.then(console.log("finished"));
+				},
+				checkSubmission(event) {
+					if (event.key === 'Enter') {
+						console.log('Submit the form from method!');
+						fetch(`{% url 'notemaker:ajax_anki_generate_note' %}?word=${this.wordToEnterQuery}`)
+							.then((response) => response.json())
+							.catch((error) => console.log(error))
+							.then((data) => {
+								console.log(data);
+								this.generatingCard = true;
+								this.generatedCard = data;
+                this.selectedImage = 0;
+                this.selectedDefinition = 0;
+                this.selectedExample = 0;
+                this.selectedExpression = 0;
+                console.log(this.generatedCard)
+							});
+					}
+				},
+				submitGeneratedCard() {
+					console.log('would submit the card');
+          const formData = {
+            def: this.selectedDefinition,
+            example: this.selectedExample,
+            expression: this.selectedExpression,
+            selectedImg: this.selectedImage,
+          };
+          // const formURI = `def=${formData.def}&example=${formData.example}&expression=${formData.expression}&selectedImg=${formData.selectedImg}`;
+          const formURI = new URLSearchParams(formData).toString();
 
-<script type="text/javascript">
-function queueCards(cards){
-    for (card of cards){
-        let flashcard = new FlashCard(card);
-        let h = flashcard.getHTML();
-        $("#holdingBay").append(h);        
-    }
-    $("#resultWindow").html( "<span class='flashcard'></span>" );
-    $( "#resultModal" ).trigger( "finish-card", [-1] );
-    openModal();
-}
-
-function startReview(){
-    console.log("Starting review ;)");
-    $( ".unique-display" ).hide();
-    $.ajax({
-        url: "{% url 'notemaker:ajax-review-cards' %}",
-        data: {'max_number': 10},
-        dataType: 'json',
-        success: function (data) {
-            if (data['success'] === true){
-                //console.log( data['cards'] );
-                queueCards(data['cards']);
+          const noteData = {
+            word: this.generatedCard.word,
+            form: formURI,
+          };
+          console.log(new URLSearchParams(noteData).toString());
+          fetch("../ajax/anki_create_note/?" + new URLSearchParams(noteData))
+          .then(response => {
+            if (response.status === 200) {
+              console.log('note created successfully');
+              this.generatingCard = false;
+					    this.generatedCard = '';
+              return response
             }
-            else{
-                $( "#resultWindow" ).html(data['message']);
-                openModal();
-            }
-        }
-    });   
-}
-
-function addWord(){
-    $( "#boxu" ).toggle();
-}
-
-$("#startReview").click(function(){
-    startReview();
-});
-
-$("#addWordButton").click(function(){
-    addWord();
-});
-
-$("#hardResetButton").click(function(){
-    $.ajax({
-        url: "{% url 'notemaker:api' %}",
-        data: {'request': 'reset',
-                'flags': ['hard',]},
-        dataType: 'json',
-        success: function (data) {
-            console.log( data );
-        }
-    });   
-});
-
-$( document ).on('finish-card', '#resultModal', function(event, message){
-    console.log(event);
-    console.log(message);
-    if (message == '9'){
-        console.log("Skipping card");
-        h = $("#resultWindow").html();
-        $("#holdingBay").append(h); 
-        $("#resultWindow").html( "<span class='flashcard'></span>" );
-    }
-    if ( $("#holdingBay span").first().length ){
-        $("#resultWindow").find(".flashcard").replaceWith( $("#holdingBay span").first() );
-    } else {
-        $( "#resultModal" ).trigger('click')
-    }
-});
-
-$( document ).on('change', '#boxu', function () {
-    console.log("Boxu changed");
-    $.ajax({
-        url: "{% url 'notemaker:ajax_anki_generate_note' %}",
-        data: {
-            'word': $(this).val()
-        },
-        dataType: 'html',
-        success: function (data) {
-            drawCard(data)
-        }
-    });
-});
+          })
+          .then(response => response.json())
+          .catch(error => console.log("error: " + error))
+          
+				},
+			}
+		}
 
 
 
 
-</script>
+	</script>
 
 </body>
+
 </html>
-
-

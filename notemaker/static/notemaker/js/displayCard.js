@@ -13,10 +13,23 @@ function FlashCard(card) {
 	this.expression_meaning = card.note.expression_meaning;
 	this.image = card.note.image;
 	this.note_id = card.note.id;
+	this.blankedExample = card.note.example.replace(this.word, "____");
+
+	this.questionText = function () {
+		return "What does this word mean?";
+	};
 
 	this.getHTML = function () {
 		let functionName = "draw" + this.card_type;
 		return this[functionName]();
+	};
+
+	this.imageTag = function () {
+		return "<img src=\'data:image/jpg;base64, " + this.image + "\'>"
+	};
+
+	this.imageSrc = function () {
+		return "data:image/jpg;base64, " + this.image;
 	};
 
 	this.drawBack = function () {
@@ -47,7 +60,7 @@ function FlashCard(card) {
 	};
 
 	this.drawFillInTheBlank = function () {
-		let blankedExample = this.example.replace(this.word, "____");
+		let blankedExample = this.blankedExample;
 		let result = "<span class='flashcard'><div class='front'>";
 		result += "Fill in the Blank:<br>" + blankedExample + "</div>";
 
@@ -60,78 +73,3 @@ function FlashCard(card) {
 		return result;
 	};
 }
-
-function flipCard() {
-	console.log("flipping card");
-	$("#resultWindow").find(".front").toggle();
-	$("#resultWindow").find(".back").toggle();
-	$("#resultWindow").find(".rate_bar_show").toggle();
-	$("#resultWindow").find(".rate_bar_rate").toggle();
-}
-
-function showFrontOfCard() {
-	$("#resultWindow").find(".front").show();
-	$("#resultWindow").find(".back").hide();
-	$("#resultWindow").find(".rate_bar_show").show();
-	$("#resultWindow").find(".rate_bar_rate").hide();
-}
-
-$(document).on('click', '.flipCard', function () {
-	flipCard();
-	$("#resultWindow").trigger('isFlipped');
-});
-
-$(document).on('click', '.rate_button', function () {
-	let value = $(this).attr('id')[5];
-	//console.log(value);
-	if (value === '9') {
-		console.log("This would be a 9 string");
-		showFrontOfCard();
-		$("#resultModal").trigger("finish-card", [value]);
-	} else {
-		$.ajax({
-			url: "../ajax/rate_card/",
-			data: {
-				'card_id': $(this).attr('card_id'),
-				'rating': value
-			},
-			dataType: 'json',
-			success: function (data) {
-				//console.log(data);
-				$("#resultModal").trigger("finish-card", [value]);
-			}
-		});
-	}
-});
-
-$(document).on('click', '.delete_button', function () {
-	let r = confirm("Are you sure you want to delete this card? (This action CANNOT be undone)");
-	if (r === true) {
-		$.ajax({
-			url: "../ajax/delete_card/",
-			data: {
-				'card_id': $(this).attr('card_id')
-			},
-			dataType: 'json',
-			success: function (data) {
-				$("#resultModal").trigger("finish-card", [0]);
-			}
-		});
-	}
-});
-
-$(document).on('click', '.edit_button', function () {
-	/*  let r = confirm("Are you sure you want to delete this card? (This action CANNOT be undone)");
-	if (r === true) {
-	$.ajax({
-	url: "../ajax/delete_card/",
-	data: {'card_id': $(this).attr('card_id')},
-	dataType: 'json',
-	success: function (data) {
-	$( "#resultModal" ).trigger( "finish-card", [0] );
-	}
-	});
-	} */
-	//$( document ).load( "http://127.0.0.1:8000/notemaker/note/"+ $( this ).attr('note_id') + "/update/");
-	window.location.href = "http://127.0.0.1:8000/notemaker/note/" + $(this).attr('note_id') + "/update/";
-});

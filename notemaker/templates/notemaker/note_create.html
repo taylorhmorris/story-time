@@ -1,31 +1,55 @@
-<form id='cardForm'>
-    <a class='mp3' msg='{{ data.word }}' href='#'>&#128265;</a>
-    <span class='word field'>{{ data.word }}</span>&emsp;
-    <span class='ipa'>/{{ data.ipa }}/</span>&emsp;&emsp;
-    <span class='grammar'>{{ data.grammar }}</span><br><br>
-    <label class='field'>Definitions: <select class='definitions' name='def'>
-    {% for def in data.definitions %}
-        <option class='definition' name='def' value='{{ forloop.counter0 }}'>{{ def.definition }} </option>
-    {% endfor %}
-    </select></label><br><br><label class='field'>Examples: <select class='examples' name='example'>
-    {% for example in data.examples %}
-        <option class='example' name='example' value='{{ forloop.counter0 }}'> {{ example.source }} </option>
-    {% endfor %}
-    </select></label><br><br>
-    
-    <label class='field'>Expressions: <select class='expressions' name='expression'>
-    {% for expres in data.expressions %}
-        <option class='expression' name='expression' value='{{ forloop.counter0 }}'>{{ expres.expression }} ({{ expres.definition }})</option>
-    {% endfor %}
-    </select></label><br><br>
+<div x-data="noteCreateData()">
+  <form id='cardForm'>
+      <a @click="playWord('{{ data.word }}', 'fr-FR')" msg='{{ data.word }}' href='#'>&#128265;</a>
+      <span class='word field'>{{ data.word }}</span>&emsp;
+      <span class='ipa'>/{{ data.ipa }}/</span>&emsp;&emsp;
+      <span class='grammar'>{{ data.grammar }}</span><br><br>
+      <label class='field'>Definitions: <select class='definitions' name='def'>
+      {% for def in data.definitions %}
+          <option class='definition' name='def' value='{{ forloop.counter0 }}'>{{ def.definition }} </option>
+      {% endfor %}
+      </select></label><br><br><label class='field'>Examples: <select class='examples' name='example'>
+      {% for example in data.examples %}
+          <option class='example' name='example' value='{{ forloop.counter0 }}'> {{ example.source }} </option>
+      {% endfor %}
+      </select></label><br><br>
+      
+      <label class='field'>Expressions: <select class='expressions' name='expression'>
+      {% for expres in data.expressions %}
+          <option class='expression' name='expression' value='{{ forloop.counter0 }}'>{{ expres.expression }} ({{ expres.definition }})</option>
+      {% endfor %}
+      </select></label><br><br>
 
-    <span class='imgs'><span style='display: none;'>Selected Image: <input name='selectedImg' size='1' value='0' readonly=true><br></span>
-    {% for img in data.images %}
-        {% if forloop.counter0 == 0 %}
-        <img value='{{ forloop.counter0 }}' id='selectedImage' class='image' src='data:image/jpg;base64, {{ img }}'>
-        {% else %}
-        <img value='{{ forloop.counter0 }}' class='image' src='data:image/jpg;base64, {{ img }}'>
-        {% endif %}
-    {% endfor %}
-    </span>
-</form><button id='cardButton'>Submit</button>
+      <span class='imgs'><span style='display: none;'>Selected Image: <input name='selectedImg' size='1' value='0' readonly=true><br></span>
+      {% for img in data.images %}
+          {% if forloop.counter0 == 0 %}
+          <img value='{{ forloop.counter0 }}' id='selectedImage' class='image' src='data:image/jpg;base64, {{ img }}'>
+          {% else %}
+          <img value='{{ forloop.counter0 }}' class='image' src='data:image/jpg;base64, {{ img }}'>
+          {% endif %}
+      {% endfor %}
+      </span>
+  </form>
+  <button id='cardButton'>Submit</button>
+</div>
+
+<script type="text/javascript">
+  function noteCreateData() {
+    return {
+      playWord(msg, lang) {
+        console.log('Playing ' + msg + ' using browser TTS through Alpine');
+        let utterance = new SpeechSynthesisUtterance(msg);
+        utterance.lang = lang;
+        window.speechSynthesis.speak(utterance);
+      },
+      selectImage() {
+        console.log('Selecting Image with alpine');
+        $("#selectedImage").removeAttr('id');
+        $("input[name=selectedImg]").val($(this).attr("value"));
+        $(this).attr('id', 'selectedImage');
+        let msg_text = $("input[name=selectedImg]").val();
+        console.log(msg_text);
+      },
+    }
+  }
+</script>
