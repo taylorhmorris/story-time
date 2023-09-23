@@ -1,0 +1,5 @@
+<button class="rate_button"
+    hx-target="#resultWindow"
+    hx-swap="innerHTML"
+    hx-get="{% url 'notemaker:note-update' card.note.id %}"
+  >Edit</button>

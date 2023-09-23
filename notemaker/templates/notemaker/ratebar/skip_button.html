@@ -1,0 +1,5 @@
+<button class="rate_button"
+    hx-target="#resultWindow"
+    hx-swap="innerHTML"
+    hx-get="{% url 'notemaker:htmx-skip-card' card.id %}"
+  >Skip</button>

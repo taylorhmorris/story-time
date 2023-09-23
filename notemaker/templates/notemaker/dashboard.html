@@ -61,7 +61,6 @@
 	<script>
 		function cardQueueData() {
 			return {
-				addWordToggle: false,
 				reviewModalToggle: false,
 				cards: [],
 				top: undefined,
@@ -72,18 +71,6 @@
         selectedDefinition: 0,
         selectedExample: 0,
         selectedExpression: 0,
-				resetCardModal() {
-					if (this.cards && this.cards[0])
-						this.top = this.cards[0];
-					else {
-						this.reviewModalToggle = false;
-					}
-				},
-				skipCard() {
-					console.log("Skipping card");
-					this.cards.push(this.cards.shift());
-					this.resetCardModal();
-				},
 				deleteCard(cardId) {
 					let r = confirm("Are you sure you want to delete this card? (This action CANNOT be undone)");
 					if (r === true) {
@@ -98,9 +85,6 @@
 							.catch((error) => console.log(error))
 							.then(console.log("finished"));
 					}
-				},
-				editCard() {
-					window.location.href = "http://127.0.0.1:8000/notemaker/note/" + this.top.note_id + "/update/";
 				},
 				checkSubmission(event) {
 					if (event.key === 'Enter') {

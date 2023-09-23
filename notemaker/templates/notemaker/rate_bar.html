@@ -1,6 +1,8 @@
 {% load static %}
 <div x-show="flipped == false">
   <button class="flipCard" @click="flipped = !flipped">Show Answer</button>
+  {% include 'notemaker/ratebar/skip_button.html' %}
+  {% include 'notemaker/ratebar/edit_button.html' %}
 </div>
 
 <div x-show="flipped">
@@ -21,16 +23,8 @@
     hx-swap="outerHTML"
     hx-get="{% url 'notemaker:htmx-rate-card' card.id 2 %}"
   >Easy</button>
-  <button class="rate_button"
-    hx-target="#resultWindow"
-    hx-swap="innerHTML"
-    hx-get="{% url 'notemaker:htmx-skip-card' card.id %}"
-  >Skip</button>
-  <button class="rate_button"
-    hx-target="#resultWindow"
-    hx-swap="innerHTML"
-    hx-get="{% url 'notemaker:note-update' card.note.id %}"
-  >Edit</button>
+  {% include 'notemaker/ratebar/skip_button.html' %}
+  {% include 'notemaker/ratebar/edit_button.html' %}
   <button class="rate_button"
     hx-target="#resultWindow"
     hx-swap="innerHTML"
