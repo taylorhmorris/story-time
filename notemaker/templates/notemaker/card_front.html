@@ -3,3 +3,5 @@
 {% with template_name=template|stringformat:"s"|add:".html" %}
     {% include 'notemaker/cards/'|add:template_name %}
 {% endwith %}
+
+{% include 'notemaker/rate_bar.html' %}

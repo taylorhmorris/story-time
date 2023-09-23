@@ -26,5 +26,8 @@ urlpatterns = [
     path('ajax/review/', views.ajax_review_cards, name='ajax-review-cards'),
     
     path('api/',  views.api_view, name='api'),
+
+    path('htmx/rate_card/<int:pk>/<int:rating>', views.htmx_rate_card_view, name='htmx-rate-card'),
+    path('htmx/review/', views.htmx_review_card, name='htmx-review-card'),
     
 ]

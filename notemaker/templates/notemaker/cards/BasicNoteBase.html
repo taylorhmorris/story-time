@@ -1,0 +1,16 @@
+{% load static %}
+
+<div class="flashcard" x-data="{ flipped: false}">
+  <div class="front"  x-show="flipped == false">
+  {% block front %}
+  {% include "notemaker/cards/BasicNoteFront.html" %}
+  {% endblock %}
+  </div>
+
+  <div class="back" x-show="flipped == true">
+  {% block back %}
+  {% include "notemaker/cards/BasicNoteBack.html" %}
+  {% endblock %}
+  </div>
+  {% include 'notemaker/rate_bar.html' %}
+</div>

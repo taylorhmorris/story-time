@@ -1,0 +1,9 @@
+{% extends "notemaker/cards/BasicNoteBase.html" %}
+{% load static %}
+{% load notemaker.blank_string %}
+
+{% block front %}
+Fill In The Blank:<br>
+{{ card.note.example|blank_string:card.note.word }}
+
+{% endblock %}

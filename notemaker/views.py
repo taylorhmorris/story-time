@@ -6,7 +6,7 @@ import requests
 import thscraper
 
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import generic
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -148,6 +148,29 @@ def ajax_rate_card_view(request):
     new_date = card.schedule()
     data = {'success': 'true', 'new_date': new_date}
     return JsonResponse(data)
+
+def htmx_rate_card_view(request, pk, rating):
+    card = Card.objects.get(pk=pk)
+    if rating == '0':
+        card.failure += 1
+        card.fails_in_a_row += 1
+        card.success_in_a_row = 0
+    else:
+        card.success += 1
+        card.success_in_a_row += int(rating)
+        card.fails_in_a_row = 0
+    card.save()
+    card.schedule()
+    return htmx_review_card(request)
+
+def htmx_review_card(request):
+    max_number = 1
+    cards = Card.custom_objects.are_due()[:max_number]
+    if len(cards) > 0:
+        card_type_obj = CardType.objects.get(pk=cards[0].card_type.pk)
+        context = { 'card': cards[0], 'template': card_type_obj.card_type_name }
+        return render(request, "notemaker/card_detail.html", context)
+    return HttpResponse("No cards to review")
 
 def ajax_delete_card_view(request):
     card_id = request.GET.get('card_id', None)

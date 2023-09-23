@@ -1,0 +1,8 @@
+{% load static %}
+
+What does this word mean:<br>
+<b>
+  {{ card.note.word }}
+</b>
+{% include "notemaker/utils/ipa.html" with ipa=card.note.ipa %}
+ {% include "notemaker/utils/megaphone.html" with message=card.note.word %}<br>

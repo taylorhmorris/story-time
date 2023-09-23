@@ -1,0 +1,32 @@
+{% load static %}
+
+<nav class='col-12 col-s-12' x-data="dashboardMenuData()">
+  <button
+    hx-get="{% url 'notemaker:htmx-review-card' %}"
+    hx-trigger="click"
+    hx-target="next #resultWindow"
+    hx-swap="innerHTML"
+    @click="reviewModalToggle = true; addWordToggle = false"
+  >
+    Start Review
+  </button>
+  <button @click="addWordToggle = !addWordToggle">
+    Add Words
+  </button>
+  <input x-show="addWordToggle" x-model="wordToEnterQuery" type='text' id='boxu' autofocus=''
+    @keypress="checkSubmission">
+    <button @click="requestHardReset">Hard Reset</button>
+</nav>
+
+<script>
+function dashboardMenuData() {
+  return {
+    requestHardReset() {
+      fetch("{% url 'notemaker:api' %}?request=reset&flags=hard")
+        .then((response) => console.log(response.json()))
+        .then(console.log("Cards reset"))
+        .catch((error) => console.log(error));
+    }
+  }
+}
+</script>

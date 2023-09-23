@@ -1,55 +1,162 @@
-<div x-data="noteCreateData()">
-  <form id='cardForm'>
-      <a @click="playWord('{{ data.word }}', 'fr-FR')" msg='{{ data.word }}' href='#'>&#128265;</a>
-      <span class='word field'>{{ data.word }}</span>&emsp;
-      <span class='ipa'>/{{ data.ipa }}/</span>&emsp;&emsp;
-      <span class='grammar'>{{ data.grammar }}</span><br><br>
-      <label class='field'>Definitions: <select class='definitions' name='def'>
-      {% for def in data.definitions %}
-          <option class='definition' name='def' value='{{ forloop.counter0 }}'>{{ def.definition }} </option>
-      {% endfor %}
-      </select></label><br><br><label class='field'>Examples: <select class='examples' name='example'>
-      {% for example in data.examples %}
-          <option class='example' name='example' value='{{ forloop.counter0 }}'> {{ example.source }} </option>
-      {% endfor %}
+<div x-data="workshopData()">
+  <div x-show="$store.noteStore.generating == true">
+    <form id='cardForm'>
+      <a @click="playWord($store.noteStore.noteData.word, 'fr-FR')" href='#'>&#128265;</a>
+      <span class='word field' x-text="$store.noteStore.noteData.word"></span>&emsp;
+      /<span class='ipa' x-text="$store.noteStore.noteData.ipa"></span>/&emsp;&emsp;
+      <span class='grammar' x-text="$store.noteStore.noteData.grammar"></span><br><br>
+      <label class='field'>Definitions: <select class='definitions' name='def' x-model="$store.noteStore.selectedDefinition">
+      <template x-for="(def, index) in $store.noteStore.noteData.definitions">
+        <option class='definition' name='def' :value='index' x-text="def.definition"></option>
+      </template>
+      </select></label><br><br>
+      <label class='field'>Examples: <select class='examples' name='example' x-model="$store.noteStore.selectedExample">
+      <template x-for="(example, index) in $store.noteStore.noteData.examples">
+          <option class='example' name='example' :value='index' x-text="example.source"></option>
+      </template>
       </select></label><br><br>
       
-      <label class='field'>Expressions: <select class='expressions' name='expression'>
-      {% for expres in data.expressions %}
-          <option class='expression' name='expression' value='{{ forloop.counter0 }}'>{{ expres.expression }} ({{ expres.definition }})</option>
-      {% endfor %}
+      <label class='field'>Expressions: <select class='expressions' name='expression' x-model="$store.noteStore.selectedExpression">
+      <template x-for="(expression, index) in $store.noteStore.noteData.expressions">
+        <option class='expression' name='expression' :value='index' x-text="`${expression.expression} (${expression.definition})`"></option>
+      </template>
       </select></label><br><br>
 
-      <span class='imgs'><span style='display: none;'>Selected Image: <input name='selectedImg' size='1' value='0' readonly=true><br></span>
-      {% for img in data.images %}
-          {% if forloop.counter0 == 0 %}
-          <img value='{{ forloop.counter0 }}' id='selectedImage' class='image' src='data:image/jpg;base64, {{ img }}'>
-          {% else %}
-          <img value='{{ forloop.counter0 }}' class='image' src='data:image/jpg;base64, {{ img }}'>
-          {% endif %}
-      {% endfor %}
+      <span class='imgs'>
+      <span x-show="false">Selected Image:
+        <input name='selectedImg' size='1' :value='selectedImage' readonly=true><br>
       </span>
-  </form>
-  <button id='cardButton'>Submit</button>
+      <template x-for="(image, index) in $store.noteStore.noteData.images">
+          <img :value='index' :id="index == $store.noteStore.selectedImage ? 'selectedImage' : `image${index}`" class='image' :src='`data:image/jpg;base64, ${image}`' @click="$store.noteStore.selectedImage = index">
+      </template>
+      </span>
+    </form>
+    <button x-if="generatingCard" @click="submitGeneratedCard()">Real Submit</button>
+  </div>
 </div>
 
 <script type="text/javascript">
-  function noteCreateData() {
+  document.addEventListener('alpine:init', () => {
+    Alpine.store('noteStore', {
+      generating: false,
+      noteData: {},
+      selectedDefinition: 0,
+      selectedExample: 0,
+      selectedExpression: 0,
+      selectedImage: 0,
+      checkSubmission(word) {
+        console.log('Generate note!');
+        fetch(`{% url 'notemaker:ajax_anki_generate_note' %}?word=${word}`)
+          .then((response) => response.json())
+          .catch((error) => console.log(error))
+          .then((data) => {
+            console.log(data);
+            this.generating = true;
+            this.noteData = data;
+            this.selectedImage = 0;
+            this.selectedDefinition = 0;
+            this.selectedExample = 0;
+            this.selectedExpression = 0;
+            console.log(this.noteData)
+          });
+      },
+    })
+  })
+  function workshopData() {
     return {
+      addWordToggle: false,
+      reviewModalToggle: false,
+      reviewModalFlipped: false,
+      cards: [],
+      top: undefined,
+      wordToEnterQuery: '',
       playWord(msg, lang) {
         console.log('Playing ' + msg + ' using browser TTS through Alpine');
         let utterance = new SpeechSynthesisUtterance(msg);
         utterance.lang = lang;
         window.speechSynthesis.speak(utterance);
       },
-      selectImage() {
-        console.log('Selecting Image with alpine');
-        $("#selectedImage").removeAttr('id');
-        $("input[name=selectedImg]").val($(this).attr("value"));
-        $(this).attr('id', 'selectedImage');
-        let msg_text = $("input[name=selectedImg]").val();
-        console.log(msg_text);
+      submitGeneratedCard() {
+        const noteStore = Alpine.store('noteStore')
+        const formData = {
+          def: noteStore.selectedDefinition,
+          example: noteStore.selectedExample,
+          expression: noteStore.selectedExpression,
+          selectedImg: noteStore.selectedImage,
+        };
+        // const formURI = `def=${formData.def}&example=${formData.example}&expression=${formData.expression}&selectedImg=${formData.selectedImg}`;
+        const formURI = new URLSearchParams(formData).toString();
+
+        const noteData = {
+          word: noteStore.noteData.word,
+          form: formURI,
+        };
+        console.log(new URLSearchParams(noteData).toString());
+        fetch("../ajax/anki_create_note/?" + new URLSearchParams(noteData))
+        .then(response => {
+          if (response.status === 200) {
+            console.log('note created successfully');
+            noteStore.generating = false;
+            noteStore.noteData = undefined;
+            return response
+          }
+        })
+        .then(response => response.json())
+        .catch(error => console.log("error: " + error))
       },
     }
   }
 </script>
+
+
+
+
+
+
+<!-- 
+<form id='cardForm' hx-post="../ajax/anki_create_note/">
+  <a class='mp3' msg='{{ data.word }}' href='#'>&#128265;</a>
+  <span class='word field'>{{ data.word }}</span>&emsp;
+  <span class='ipa'>/{{ data.ipa }}/</span>&emsp;&emsp;
+  <span class='grammar'>{{ data.grammar }}</span><br><br>
+  <label class='field'>Definitions: <select class='definitions' name='def'>
+  {% for def in data.definitions %}
+      <option class='definition' name='def' value='{{ forloop.counter0 }}'>{{ def.definition }} </option>
+  {% endfor %}
+  </select></label><br><br><label class='field'>Examples: <select class='examples' name='example'>
+  {% for example in data.examples %}
+      <option class='example' name='example' value='{{ forloop.counter0 }}'> {{ example.source }} </option>
+  {% endfor %}
+  </select></label><br><br>
+  
+  <label class='field'>Expressions: <select class='expressions' name='expression'>
+  {% for expres in data.expressions %}
+      <option class='expression' name='expression' value='{{ forloop.counter0 }}'>{{ expres.expression }} ({{ expres.definition }})</option>
+  {% endfor %}
+  </select></label><br><br>
+
+  <span class='imgs'><span style='display: none;'>Selected Image: <input name='selectedImg' size='1' value='0' readonly=true><br></span>
+  {% for img in data.images %}
+      {% if forloop.counter0 == 0 %}
+      <img value='{{ forloop.counter0 }}' id='selectedImage' class='image' src='data:image/jpg;base64, {{ img }}'>
+      {% else %}
+      <img value='{{ forloop.counter0 }}' class='image' src='data:image/jpg;base64, {{ img }}'>
+      {% endif %}
+  {% endfor %}
+  </span>
+</form><button id='cardButton' type="submit">Submit</button>
+
+<!-- $(document).on('click', '#cardButton', function () {
+	console.log('Clicked');
+	$.ajax({
+		url: "../ajax/anki_create_note/",
+		data: {
+			'word': $("#cardForm .word").text(),
+			'form': $("form").serialize()
+		},
+		dataType: 'json',
+		success: function (data) {
+			viewNote(data.note_id);
+		}
+	});
+}); --> -->

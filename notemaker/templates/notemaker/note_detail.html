@@ -1,8 +1,22 @@
 {% load static %}
 
-<b>{{ note.word }}</b> /{{ note.ipa }}/ <a class='mp3' msg='{{ note.word }}' href='#'>&#128265;</a><br>
-Definition: {{ note.definition }}<br>
-Example: {{ note.example }}<br>
-Expression: {{ note.expression }} -- ({{ note.expression_meaning }})<br>
-Image: <img src="data:image/jpg;base64, {{ note.image }}"><br>
-
+<div class="flashcard" x-data="{ flipped: false}">
+  <template x-if="flipped == false">
+    <div class="front">
+      front
+    </div>
+  </template>
+  <template x-if="flipped == true">
+    <div class="back">
+      <b>{{ note.word }}</b>
+      <span>/{{ note.ipa }}/</span>
+      <a @click="speakMessage('{{ note.word }}', 'fr-FR')" href="#">&#128265;</a>
+      <br>
+      Definition: <span>{{ note.definition }}</span>
+      <br>Example: <span @click="console.log('clickedd example')">{{ note.example }}</span>
+      <br>
+      <span><img src="data:image/jpg;base64, {{ note.image }}"></span>
+    </div>
+  </template>
+  <span @click="flipped = !flipped">Flip!</span>
+</div>
