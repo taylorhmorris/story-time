@@ -16,13 +16,13 @@
 <body>
 	<div x-data="cardQueueData()">
     {% include 'notemaker/dashboard_menu.html' %}
-    <div id="modal" class="modal-content" x-show="reviewModalToggle">
+    <div id="modal" class="modal-content" x-show="reviewModalToggle" x-cloak>
       <span class="close" @click="reviewModalToggle = false">&times;</span>
       <div id="resultWindow" class="result-content">
       </div>
     </div>
 
-		<div x-show="generatingCard" x-data="generatedCard">
+		<div x-show="generatingCard" x-data="generatedCard" x-cloak>
 			<form id='cardForm'>
         <a @click="speakMessage(generatedCard.word, 'fr-FR')" href='#'>&#128265;</a>
         <span class='word field' x-text="generatedCard.word"></span>&emsp;
@@ -84,16 +84,13 @@
 					this.cards.push(this.cards.shift());
 					this.resetCardModal();
 				},
-				deleteCard() {
+				deleteCard(cardId) {
 					let r = confirm("Are you sure you want to delete this card? (This action CANNOT be undone)");
 					if (r === true) {
-						fetch("../ajax/delete_card/?card_id=" + this.top.id)
+						fetch("../ajax/delete_card/?card_id=" + cardId)
 							.then(response => {
 								if (response.status === 200) {
 									console.log("Success!");
-									this.cards.shift();
-									this.top = this.cards[0];
-                  this.reviewModalFlipped = false;
 								} else {
 									console.log(response);
 								}

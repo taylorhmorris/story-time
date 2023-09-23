@@ -13,7 +13,13 @@
   <button @click="addWordToggle = !addWordToggle">
     Add Words
   </button>
-  <input x-show="addWordToggle" x-model="wordToEnterQuery" type='text' id='boxu' autofocus=''
+  <input
+    x-show="addWordToggle"
+    x-cloak
+    x-model="wordToEnterQuery"
+    type='text'
+    id='boxu'
+    autofocus=''
     @keypress="checkSubmission">
     <button @click="requestHardReset">Hard Reset</button>
 </nav>
