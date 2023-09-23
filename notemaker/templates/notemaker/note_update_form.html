@@ -1,4 +1,6 @@
-<form method="post">{% csrf_token %}
+<div hx-target="this" hx-swap="outerHTML">
+<form method="post" hx->{% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Update">
+    <input type="submit" value="Update" hx-post="{% url 'notemaker:note-update' pk=note.id %}">
 </form>
+</div>

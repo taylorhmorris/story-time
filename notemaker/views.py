@@ -12,6 +12,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 
 from .models import Note, SearchResult, Card, CardType
 
@@ -25,7 +26,7 @@ class NoteUpdateView(generic.edit.UpdateView):
     model = Note
     fields = '__all__'
     template_name_suffix = '_update_form'
-    success_url = reverse_lazy('notemaker:dashboard')
+    success_url = reverse_lazy('notemaker:htmx-review-card')
     
 class NoteListView(ListView):
     model = Note
@@ -155,12 +156,21 @@ def htmx_rate_card_view(request, pk, rating):
         card.failure += 1
         card.fails_in_a_row += 1
         card.success_in_a_row = 0
+    elif rating == '-1':
+        card.due_date = timezone.now()
+        card.save()
     else:
         card.success += 1
         card.success_in_a_row += int(rating)
         card.fails_in_a_row = 0
     card.save()
     card.schedule()
+    return htmx_review_card(request)
+
+def htmx_skip_card_view(request, pk):
+    card = Card.objects.get(pk=pk)
+    card.due_date = timezone.now()
+    card.save()
     return htmx_review_card(request)
 
 def htmx_review_card(request):

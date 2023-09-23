@@ -28,6 +28,7 @@ urlpatterns = [
     path('api/',  views.api_view, name='api'),
 
     path('htmx/rate_card/<int:pk>/<int:rating>', views.htmx_rate_card_view, name='htmx-rate-card'),
+    path('htmx/skip_card/<int:pk>', views.htmx_skip_card_view, name='htmx-skip-card'),
     path('htmx/review/', views.htmx_review_card, name='htmx-review-card'),
     
 ]

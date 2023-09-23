@@ -21,4 +21,20 @@
     hx-swap="outerHTML"
     hx-get="{% url 'notemaker:htmx-rate-card' card.id 2 %}"
   >Easy</button>
+  <button class="rate_button"
+    hx-target="#resultWindow"
+    hx-swap="innerHTML"
+    hx-get="{% url 'notemaker:htmx-skip-card' card.id %}"
+  >Skip</button>
+  <button class="rate_button"
+    hx-target="#resultWindow"
+    hx-swap="innerHTML"
+    hx-get="{% url 'notemaker:note-update' card.note.id %}"
+  >Edit</button>
+  <button class="rate_button"
+    hx-target="#resultWindow"
+    hx-swap="innerHTML"
+    hx-get="{% url 'notemaker:htmx-review-card' %}"
+    @click="deleteCard({{ card.id }})"
+  >Delete</button>
 </div>
