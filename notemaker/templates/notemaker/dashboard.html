@@ -13,10 +13,12 @@
 
 <body>
 	<div x-data="cardQueueData()">
-    {% include 'notemaker/dashboard_menu.html' %}
-    <div id="modal" class="modal-content" x-show="reviewModalToggle" x-cloak>
-      <span class="close" @click="reviewModalToggle = false">&times;</span>
-      <div id="resultWindow" class="result-content">
+    <div>{% include 'notemaker/dashboard_menu.html' %}</div>
+    <div class="modal" x-show="reviewModalToggle" x-cloak @click.self="reviewModalToggle = false">
+      <div class="modal-content">
+        <span class="close" @click="reviewModalToggle = false">&times;</span>
+        <div id="resultWindow" class="result-content">
+        </div>
       </div>
     </div>
 	</div>
