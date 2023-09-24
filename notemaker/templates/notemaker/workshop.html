@@ -3,156 +3,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/ankicard-workshop.css' %}">
+  <script src="https://unpkg.com/alpinejs" defer></script>
+  <script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous" defer></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/ankicard-workshop.css' %}">
 </head>
 <body>
 
-<div class="story">A l'orée d'une grande forêt vivaient un pauvre bûcheron, sa femme et ses deux enfants. Le garçon s'appelait Hansel et la fille Grethel. La famille ne mangeait guère.
+  <div class="workshop" x-data="workshopData()">
+    <div class="story">A l'orée d'une grande forêt vivaient un pauvre bûcheron, sa femme et ses deux enfants. Le garçon s'appelait Hansel et la fille Grethel. La famille ne mangeait guère.
 
-Une année que la famine régnait dans le pays et que le pain lui-même vint à manquer, le bûcheron ruminait des idées noires, une nuit, dans son lit et remâchait ses soucis. Il dit à sa femme - Qu'allons-nous devenir ? Comment nourrir nos pauvres enfants, quand nous n'avons plus rien pour nous-mêmes ? - Eh bien, mon homme, dit la femme, sais-tu ce que nous allons faire ?
+    Une année que la famine régnait dans le pays et que le pain lui-même vint à manquer, le bûcheron ruminait des idées noires, une nuit, dans son lit et remâchait ses soucis. Il dit à sa femme - Qu'allons-nous devenir ? Comment nourrir nos pauvres enfants, quand nous n'avons plus rien pour nous-mêmes ? - Eh bien, mon homme, dit la femme, sais-tu ce que nous allons faire ?
 
-Dès l'aube, nous conduirons les enfants au plus profond de la forêt nous leur allumerons un feu et leur donnerons à chacun un petit morceau de pain. Puis nous irons à notre travail et les laisserons seuls. Ils ne retrouveront plus leur chemin et nous en serons débarrassés. - Non, femme, dit le bûcheron. je ne ferai pas cela ! Comment pourrais-je me résoudre à laisser nos enfants tout seuls dans la forêt ! Les bêtes sauvages ne tarderaient pas à les dévorer. - Oh ! fou, rétorqua-t-elle, tu préfères donc que nous mourions de faim tous les quatre ? Alors, il ne te reste qu'à raboter les planches de nos cercueils.
+    Dès l'aube, nous conduirons les enfants au plus profond de la forêt nous leur allumerons un feu et leur donnerons à chacun un petit morceau de pain. Puis nous irons à notre travail et les laisserons seuls. Ils ne retrouveront plus leur chemin et nous en serons débarrassés. - Non, femme, dit le bûcheron. je ne ferai pas cela ! Comment pourrais-je me résoudre à laisser nos enfants tout seuls dans la forêt ! Les bêtes sauvages ne tarderaient pas à les dévorer. - Oh ! fou, rétorqua-t-elle, tu préfères donc que nous mourions de faim tous les quatre ? Alors, il ne te reste qu'à raboter les planches de nos cercueils.
 
-Elle n'eut de cesse qu'il n'acceptât ce qu'elle proposait. - Mais j'ai quand même pitié de ces pauvres enfants, dit le bûcheron. Les deux petits n'avaient pas pu s'endormir tant ils avaient faim. Ils avaient entendu ce que la marâtre disait à leur père. Grethel pleura des larmes amères et dit à son frère : - C'en est fait de nous - Du calme, Grethel, dit Hansel. Ne t'en fais pas ; Je trouverai un moyen de nous en tirer.
+    Elle n'eut de cesse qu'il n'acceptât ce qu'elle proposait. - Mais j'ai quand même pitié de ces pauvres enfants, dit le bûcheron. Les deux petits n'avaient pas pu s'endormir tant ils avaient faim. Ils avaient entendu ce que la marâtre disait à leur père. Grethel pleura des larmes amères et dit à son frère : - C'en est fait de nous - Du calme, Grethel, dit Hansel. Ne t'en fais pas ; Je trouverai un moyen de nous en tirer.
 
-Quand les parents furent endormis, il se leva, enfila ses habits, ouvrit la chatière et se glissa dehors. La lune brillait dans le ciel et les graviers blancs, devant la maison, étincelaient comme des diamants. Hansel se pencha et en mit dans ses poches autant qu'il put. Puis il rentra dans la maison et dit à Grethel : - Aie confiance, chère petite sœur, et dors tranquille. Dieu ne nous abandonnera pas. Et lui-même se recoucha.</div>
+    Quand les parents furent endormis, il se leva, enfila ses habits, ouvrit la chatière et se glissa dehors. La lune brillait dans le ciel et les graviers blancs, devant la maison, étincelaient comme des diamants. Hansel se pencha et en mit dans ses poches autant qu'il put. Puis il rentra dans la maison et dit à Grethel : - Aie confiance, chère petite sœur, et dors tranquille. Dieu ne nous abandonnera pas. Et lui-même se recoucha.</div>
 
-<div class="story" style="display: none;">
-Et dis donc Internet...<br>
-Je voulais juste te remercier pour cette année 2014,<br>
-parce que j'ai vraiment passé une sup-<br>
-[Bruit de tir]<br>
-[Rires]<br>
-C'est marrant parce que moi, quand je suis tombé sur ce truc-là,<br>
-l'année 2014 sur Facebook,<br>
-"Merci d'y avoir contribué !"<br>
-[Rires]<br>
-Ouais, alors j'ai essayé, ne cliquez pas là-dessus.<br>
-[Rires]<br>
-Ne cliquez pas, c'est un piège.<br>
-Parce qu'au début, tu te dis : "Ah ! Ça va être sympa !",<br>
-et après, tu vois à quoi ressemble ton année,<br>
-tu fais : "Ah merde !"<br>
-[Rires]<br>
-"C'est ça mon année 2014 ?"<br>
-J'avais pas vécu ça depuis la 3e.<br>
-J'avais l'impression de voir ma prof principale qui débarquait quand elle fait la remise des bulletins<br>
-et qu'elle fait : "Bon, euh..."<br>
-[Soupir]<br>
-[Rires]<br>
-"C'est pas pour moi."<br>
-"Moi, je l'ai déjà eu mon brevet des collèges."<br>
-[Rires]<br>
-"C'est pour vous !"<br>
-"Après, si vous n'avez pas d'ambition..."<br>
-[Rires]<br>
-De l'ambition, un gamin de 15 ans, de quoi tu me parles ?<br>
-Bien sûr, j'ai de l'ambition !<br>
-Je veux rentrer chez moi et me toucher le zizi !<br>
-[Rires]<br>
-J'ai regardé mon bilan, le bouton "J'aime" il y était pas.<br>
-[Rires]<br>
-Non, il a refusé de venir, il a fait comme ça, il a fait:<br>
-"Non moi je viens pas ! Je t'emmerde ! j'en ai rien à..."<br>
-Ouais je fais parler le bouton j'aime<br>
-Ouais parce que je suis un geudin<br>
-"Trembles Jeff Panacloc, mwahaha"<br>
-Donc j'avais que 3 photos<br>
-La première c'était une photo du nouvel an, y a un an pile.<br>
-Tu vois, où bah évidement j'ai ta tête d'un mec du nouvel an quoi<br>
-C'est-à-dire je m'étais dis je vais boire 2 bières, donc j'en ai une dans chaque main<br>
-Et y en a 8 à côté<br>
-Juste après j'ai une photo en juin où je suis sur la plage, et je me dis que
-"ah génial j'vais pas mettre de crème!" Tu sais, l’ego des mecs bruns.<br>
-L'ego des mecs qui font "ah ça va j'ai pas besoin"<br>
-Le lendemain j'ai pris un bain de biafine<br>
-Et la troisième photo, c'est ma cousine qui l'a postée,<br>
-Elle est magique!<br>
-J'ai une forme, j'ai un an et demi<br>
-Et je crois que je pèse le même poids que maintenant<br>
-J'vous jure j'ai des seins<br>
-C'est la première fois de ma vie que j'ai vu un enfant avec des seins<br>
-Et cet enfant c'était moi!<br>
-J'vous jure j'ai des seins, mais à un point, même mes coudes ils ont des seins!<br>
-Je crois que mes parents ils ont hésité à me reconnaître!<br>
-j'pense ils ont eu un débat à la maison: "On le prend ou pas, euh...<br>
-Il est horrible, on va attendre que ça se calme"<br>
-Alors évidement, y a pire.<br>
-Y a pire et y a évidement pire<br>
-J'ai regardé, et vous avez vu vous aussi, les mecs qui partagent<br>
-Oh y a des types leur vie tu...<br>
-Leur pouce c'est plus un pouce, c'est un doigt comme ça<br>
-Alors le type il a perdu son chien, sa femme elle s'est barrée et il a le sida.<br>
-Bah c'est bien.<br>
-Non mais déjà c'est triste, mais moi ce que j'imagine, c'est 2 jours avant Noël,
-Facebook il débarque en faisant: "héé! Tu veux voir les meilleurs moments de ton année 2014?"<br>
-Avec le mec, j'aurais tellement aimé voir sa tête<br>
-"J'ai eu des bons moments?"<br>
-Et t'sais quoi Internet? Merci d'avoir regardé cette vidéo jusqu'au bout.<br>
-C'est vraiment très très cool<br>
-Tu peux t'abonner sur YouTube pour voir mes autres vidéos<br>
-Et tu peux me suivre sur Twitter et sur Facebook<br>
-Et puis, comme dirait ma prof de 3ème: "C'est pas pour moi,<br>
-Moi je suis déjà abonnée"<br>
-Et merci à vous tous derrière d'avoir été présents!<br>
-Oh yeah<br>
-Wouhou<br>
-Tu peux t'abonner à mon... à YouTube, comme ça tu vas...<br>
-ahah ouais faut que je le reprenne du coup j'ai bafouillé comme un ouf<br>
-Les gens derrière ont fait: "Il a bafouillé là"<br>
-Ouais<br>
-</div>
-
-<div id="resultModal" class="modal">
-    <div id="modal" class="modal-content">
-        <span class="close">&times;</span>
-        <div id="resultWindow" class="modal-content">
-            <span class="flashcard"></span>
-        </div>
+    <div id="modal" class="modal-content" x-show="$store.noteStore.reviewModalToggle" x-cloak>
+      <span class="close" @click="$store.noteStore.reviewModalToggle = false">&times;</span>
+      <div id="resultWindow" class="result-content">
+      </div>
     </div>
-</div>
-
-<div x-data="workshopData()">
-  <div x-show="$store.noteStore.generating == true">
-    <form id='cardForm'>
-      <a @click="playWord($store.noteStore.noteData.word, 'fr-FR')" href='#'>&#128265;</a>
-      <span class='word field' x-text="$store.noteStore.noteData.word"></span>&emsp;
-      /<span class='ipa' x-text="$store.noteStore.noteData.ipa"></span>/&emsp;&emsp;
-      <span class='grammar' x-text="$store.noteStore.noteData.grammar"></span><br><br>
-      <label class='field'>Definitions: <select class='definitions' name='def' x-model="$store.noteStore.selectedDefinition">
-      <template x-for="(def, index) in $store.noteStore.noteData.definitions">
-        <option class='definition' name='def' :value='index' x-text="def.definition"></option>
-      </template>
-      </select></label><br><br>
-      <label class='field'>Examples: <select class='examples' name='example' x-model="$store.noteStore.selectedExample">
-      <template x-for="(example, index) in $store.noteStore.noteData.examples">
-          <option class='example' name='example' :value='index' x-text="example.source"></option>
-      </template>
-      </select></label><br><br>
-      
-      <label class='field'>Expressions: <select class='expressions' name='expression' x-model="$store.noteStore.selectedExpression">
-      <template x-for="(expression, index) in $store.noteStore.noteData.expressions">
-        <option class='expression' name='expression' :value='index' x-text="`${expression.expression} (${expression.definition})`"></option>
-      </template>
-      </select></label><br><br>
-
-      <span class='imgs'>
-      <span x-show="false">Selected Image:
-        <input name='selectedImg' size='1' :value='selectedImage' readonly=true><br>
-      </span>
-      <template x-for="(image, index) in $store.noteStore.noteData.images">
-          <img :value='index' :id="index == $store.noteStore.selectedImage ? 'selectedImage' : `image${index}`" class='image' :src='`data:image/jpg;base64, ${image}`' @click="$store.noteStore.selectedImage = index">
-      </template>
-      </span>
-    </form>
-    <button x-if="generatingCard" @click="submitGeneratedCard()">Real Submit</button>
   </div>
-</div>
-
-
-<script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}"></script>
 
 <script type="text/javascript">
 
@@ -195,74 +68,20 @@ document.addEventListener("DOMContentLoaded", () => {
 <script type="text/javascript">
   document.addEventListener('alpine:init', () => {
     Alpine.store('noteStore', {
-      generating: false,
-      noteData: {},
-      selectedDefinition: 0,
-      selectedExample: 0,
-      selectedExpression: 0,
-      selectedImage: 0,
+      reviewModalToggle: false,
       checkSubmission(word) {
-        console.log('Generate note!');
-        fetch(`{% url 'notemaker:ajax_anki_generate_note' %}?word=${word}`)
-          .then((response) => response.json())
-          .catch((error) => console.log(error))
-          .then((data) => {
-            console.log(data);
-            this.generating = true;
-            this.noteData = data;
-            this.selectedImage = 0;
-            this.selectedDefinition = 0;
-            this.selectedExample = 0;
-            this.selectedExpression = 0;
-            console.log(this.noteData)
-          });
+        console.log('word clicked')
+          this.reviewModalToggle = true;
+          htmx.ajax(
+            'GET',
+            "{% url 'notemaker:htmx-generate-note' %}" + `?word=${word}`,
+            {
+              target: "#resultWindow",
+            }
+          )
       },
     })
   })
-  function workshopData() {
-    return {
-      addWordToggle: false,
-      reviewModalToggle: false,
-      reviewModalFlipped: false,
-      cards: [],
-      top: undefined,
-      wordToEnterQuery: '',
-      playWord(msg, lang) {
-        console.log('Playing ' + msg + ' using browser TTS through Alpine');
-        let utterance = new SpeechSynthesisUtterance(msg);
-        utterance.lang = lang;
-        window.speechSynthesis.speak(utterance);
-      },
-      submitGeneratedCard() {
-        const noteStore = Alpine.store('noteStore')
-        const formData = {
-          def: noteStore.selectedDefinition,
-          example: noteStore.selectedExample,
-          expression: noteStore.selectedExpression,
-          selectedImg: noteStore.selectedImage,
-        };
-        // const formURI = `def=${formData.def}&example=${formData.example}&expression=${formData.expression}&selectedImg=${formData.selectedImg}`;
-        const formURI = new URLSearchParams(formData).toString();
-
-        const noteData = {
-          word: noteStore.noteData.word,
-          form: formURI,
-        };
-        console.log(new URLSearchParams(noteData).toString());
-        fetch("../ajax/anki_create_note/?" + new URLSearchParams(noteData))
-        .then(response => {
-          if (response.status === 200) {
-            console.log('note created successfully');
-            noteStore.generating = false;
-            noteStore.noteData = undefined;
-            return response
-          }
-        })
-        .then(response => response.json())
-        .catch(error => console.log("error: " + error))
-      },
-    }
-  }
 </script>
 </body>
 </html>
