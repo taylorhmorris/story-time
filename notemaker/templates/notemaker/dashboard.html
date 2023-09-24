@@ -7,7 +7,7 @@
 	<title>Notemaker</title>
 	<script src="//unpkg.com/alpinejs" defer></script>
   <script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous" defer></script>
-  <script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}" defer></script>
+  <!-- <script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}" defer></script> -->
 	<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
   <script src="{% static 'notemaker/js/speakMessage.js' %}"></script>
 	<link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/ankicard.css' %}">
@@ -74,7 +74,7 @@
 				deleteCard(cardId) {
 					let r = confirm("Are you sure you want to delete this card? (This action CANNOT be undone)");
 					if (r === true) {
-						fetch("../ajax/delete_card/?card_id=" + cardId)
+						fetch("{% url 'notemaker:ajax-delete-card' %}?card_id=" + cardId)
 							.then(response => {
 								if (response.status === 200) {
 									console.log("Success!");

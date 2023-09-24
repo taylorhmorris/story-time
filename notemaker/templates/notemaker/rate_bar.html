@@ -3,6 +3,7 @@
   <button class="flipCard" @click="flipped = !flipped">Show Answer</button>
   {% include 'notemaker/ratebar/skip_button.html' %}
   {% include 'notemaker/ratebar/edit_button.html' %}
+  {% include 'notemaker/ratebar/delete_button.html' %}
 </div>
 
 <div x-show="flipped">
@@ -25,10 +26,5 @@
   >Easy</button>
   {% include 'notemaker/ratebar/skip_button.html' %}
   {% include 'notemaker/ratebar/edit_button.html' %}
-  <button class="rate_button"
-    hx-target="#resultWindow"
-    hx-swap="innerHTML"
-    hx-get="{% url 'notemaker:htmx-review-card' %}"
-    @click="deleteCard({{ card.id }})"
-  >Delete</button>
+  {% include 'notemaker/ratebar/delete_button.html' %}
 </div>
