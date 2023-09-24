@@ -2,6 +2,7 @@ import json
 import base64
 from random import shuffle
 import requests
+from .forms import NoteForm
 
 import thscraper
 
@@ -27,6 +28,10 @@ class NoteUpdateView(generic.edit.UpdateView):
     fields = '__all__'
     template_name_suffix = '_update_form'
     success_url = reverse_lazy('notemaker:htmx-review-card')
+
+class NoteCreateView(generic.edit.CreateView):
+    model = Note
+    fields = '__all__'
     
 class NoteListView(ListView):
     model = Note
@@ -39,6 +44,15 @@ class DashboardView(TemplateView):
     
 class WorkshopView(TemplateView):
     template_name = "notemaker/workshop.html"
+
+def create_note_form(request):
+    if request.method == "POST":
+        form = NoteForm(request.POST)
+        if form.is_valid():
+            return HttpResponse("Form submitted!")
+    else:
+        form = NoteForm({'word': 'testing'})
+    return render(request, "notemaker/note_form.html", {"form": form})
 
 def test_ajax(request):
     rec = request.GET.get('rec', None)
@@ -122,6 +136,47 @@ def ajax_anki_generate_note(request):
     context = {'data': data}
     return JsonResponse(data)
     # return render(request, "notemaker/note_create.html", context)
+
+def htmx_generate_note(request):
+    if request.method == "POST":
+        form = NoteForm(request.POST)
+        print(form.errors)
+        if form.is_valid():
+            new_note = form.save(commit=True)
+            i2w = CardType.objects.get(card_type_name="ImageToWord")
+            Card(note=new_note, card_type=i2w).save()
+            w2i = CardType.objects.get(card_type_name="WordToImage")
+            Card(note=new_note, card_type=w2i).save()
+            fitb = CardType.objects.get(card_type_name="FillInTheBlank")
+            Card(note=new_note, card_type=fitb).save()
+            return HttpResponse(f"Note '{new_note.word}' created!")
+        return render(request, "notemaker/note_form.html", {"form": form, "data": {}})
+    else:
+        word = request.GET.get('word', None)
+        try:
+            sr = SearchResult.objects.values_list('data', flat=True).get(word=word)
+            data = json.decoder.JSONDecoder().decode(sr)
+        except:
+            print(f"No Saved Result. Asking thscraper for {word}")
+            data = thscraper.query_all(word)
+            b64images = [base64.b64encode(requests.get(img).content).decode()
+                        for img in data['images']]
+            data['images'] = b64images
+            new_search = SearchResult(word=data['word'])
+            new_search.data = json.dumps(data)
+            new_search.save()
+        if data['definitions']:
+            data['definition'] = data['definitions'][0]['definition']
+        if data['examples']:
+            data['example'] = data['examples'][0]['source']
+        if data['expressions']:
+            data['expression'] = data['expressions'][0]['expression']
+            data['expression_meaning'] = data['expressions'][0]['definition']
+        if data['images']:
+            data['image'] = data['images'][0]
+        form = NoteForm(data)
+        form.word = data['word']
+    return render(request, "notemaker/note_form.html", {"form": form, "data": data})
 
 def ajax_note_detail_view(request):
     note_id = request.GET.get('note_id', None)

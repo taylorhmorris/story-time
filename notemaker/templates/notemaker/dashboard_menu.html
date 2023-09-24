@@ -4,7 +4,7 @@
   <button
     hx-get="{% url 'notemaker:htmx-review-card' %}"
     hx-trigger="click"
-    hx-target="next #resultWindow"
+    hx-target="#resultWindow"
     hx-swap="innerHTML"
     @click="reviewModalToggle = true; addWordToggle = false"
   >
@@ -19,7 +19,7 @@
     x-model="wordToEnterQuery"
     type='text'
     id='boxu'
-    autofocus=''
+    autofocus='true'
     @keypress="checkSubmission">
     <button @click="requestHardReset">Hard Reset</button>
 </nav>

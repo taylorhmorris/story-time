@@ -1,0 +1,40 @@
+<form id='cardForm'>
+  {% include "notemaker/utils/megaphone.html" with message=data.word %}<br>
+  <span class='word field'>{{ data.word }}</span>&emsp;
+  <span class='ipa'>/{{ data.ipa }}/</span>&emsp;&emsp;
+  <span class='grammar'>{{ data.grammar }}</span><br><br>
+  <label class='field'>Definitions: <select class='definitions' name='def'>
+  {% for def in data.definitions %}
+      <option class='definition' name='def' value='{{ forloop.counter0 }}'>{{ def.definition }} </option>
+  {% endfor %}
+  </select></label><br><br><label class='field'>Examples: <select class='examples' name='example'>
+  {% for example in data.examples %}
+      <option class='example' name='example' value='{{ forloop.counter0 }}'> {{ example.source }} </option>
+  {% endfor %}
+  </select></label><br><br>
+  
+  <label class='field'>Expressions: <select class='expressions' name='expression'>
+  {% for expres in data.expressions %}
+      <option class='expression' name='expression' value='{{ forloop.counter0 }}'>{{ expres.expression }} ({{ expres.definition }})</option>
+  {% endfor %}
+  </select></label><br><br>
+
+  <span class='imgs'><span>Selected Image: <input name='selectedImg' size='1' value='0' readonly=true><br></span>
+  {% for img in data.images %}
+      {% if forloop.counter0 == 0 %}
+      <img value='{{ forloop.counter0 }}' id='selectedImage' class='image' src='data:image/jpg;base64, {{ img }}'>
+      {% else %}
+      <img value='{{ forloop.counter0 }}' class='image' src='data:image/jpg;base64, {{ img }}'>
+      {% endif %}
+  {% endfor %}
+  </span>
+  <input type="submit" value="Update" hx-post="{% url 'notemaker:note-update' pk=note.id %}">
+</form><button id='cardButton'>Submit</button>
+
+<div hx-target="this" hx-swap="outerHTML">
+  <form method="post" hx->{% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Update" hx-post="{% url 'notemaker:note-update' pk=note.id %}">
+  </form>
+  </div>
+  

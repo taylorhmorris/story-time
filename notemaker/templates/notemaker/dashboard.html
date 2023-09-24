@@ -7,8 +7,6 @@
 	<title>Notemaker</title>
 	<script src="//unpkg.com/alpinejs" defer></script>
   <script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous" defer></script>
-  <!-- <script type="text/javascript" src="{% static 'notemaker/js/displayCard.js' %}" defer></script> -->
-	<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
   <script src="{% static 'notemaker/js/speakMessage.js' %}"></script>
 	<link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/ankicard.css' %}">
 </head>
@@ -21,56 +19,13 @@
       <div id="resultWindow" class="result-content">
       </div>
     </div>
-
-		<div x-show="generatingCard" x-data="generatedCard" x-cloak>
-			<form id='cardForm'>
-        <a @click="speakMessage(generatedCard.word, 'fr-FR')" href='#'>&#128265;</a>
-        <span class='word field' x-text="generatedCard.word"></span>&emsp;
-        /<span class='ipa' x-text="generatedCard.ipa"></span>/&emsp;&emsp;
-        <span class='grammar' x-text="generatedCard.grammar"></span><br><br>
-        <label class='field'>Definitions: <select class='definitions' name='def' x-model="selectedDefinition">
-        <template x-for="(def, index) in generatedCard.definitions">
-          <option class='definition' name='def' :value='index' x-text="def.definition"></option>
-        </template>
-        </select></label><br><br>
-        <label class='field'>Examples: <select class='examples' name='example' x-model="selectedExample">
-        <template x-for="(example, index) in generatedCard.examples">
-            <option class='example' name='example' :value='index' x-text="example.source"></option>
-        </template>
-        </select></label><br><br>
-        
-        <label class='field'>Expressions: <select class='expressions' name='expression' x-model="selectedExpression">
-        <template x-for="(expression, index) in generatedCard.expressions">
-          <option class='expression' name='expression' :value='index' x-text="`${expression.expression} (${expression.definition})`"></option>
-        </template>
-        </select></label><br><br>
-  
-        <span class='imgs'>
-        <span x-show="false">Selected Image:
-          <input name='selectedImg' size='1' :value='selectedImage' readonly=true><br>
-        </span>
-        <template x-for="(image, index) in generatedCard.images">
-            <img :value='index' :id="index == selectedImage ? 'selectedImage' : `image${index}`" class='image' :src='`data:image/jpg;base64, ${image}`' @click="selectedImage = index">
-        </template>
-        </span>
-      </form>
-			<button x-if="generatingCard" @click="submitGeneratedCard()">Submit</button>
-		</div>
 	</div>
 
 	<script>
 		function cardQueueData() {
 			return {
 				reviewModalToggle: false,
-				cards: [],
-				top: undefined,
 				wordToEnterQuery: '',
-				generatingCard: false,
-				generatedCard: {},
-        selectedImage: 0,
-        selectedDefinition: 0,
-        selectedExample: 0,
-        selectedExpression: 0,
 				deleteCard(cardId) {
 					let r = confirm("Are you sure you want to delete this card? (This action CANNOT be undone)");
 					if (r === true) {
@@ -88,50 +43,15 @@
 				},
 				checkSubmission(event) {
 					if (event.key === 'Enter') {
-						console.log('Submit the form from method!');
-						fetch(`{% url 'notemaker:ajax_anki_generate_note' %}?word=${this.wordToEnterQuery}`)
-							.then((response) => response.json())
-							.catch((error) => console.log(error))
-							.then((data) => {
-								console.log(data);
-								this.generatingCard = true;
-								this.generatedCard = data;
-                this.selectedImage = 0;
-                this.selectedDefinition = 0;
-                this.selectedExample = 0;
-                this.selectedExpression = 0;
-                console.log(this.generatedCard)
-							});
+						this.reviewModalToggle = true;
+            htmx.ajax(
+              'GET',
+              "{% url 'notemaker:htmx-generate-note' %}" + `?word=${this.wordToEnterQuery}`,
+              {
+                target: "#resultWindow",
+              }
+            )
 					}
-				},
-				submitGeneratedCard() {
-					console.log('would submit the card');
-          const formData = {
-            def: this.selectedDefinition,
-            example: this.selectedExample,
-            expression: this.selectedExpression,
-            selectedImg: this.selectedImage,
-          };
-          // const formURI = `def=${formData.def}&example=${formData.example}&expression=${formData.expression}&selectedImg=${formData.selectedImg}`;
-          const formURI = new URLSearchParams(formData).toString();
-
-          const noteData = {
-            word: this.generatedCard.word,
-            form: formURI,
-          };
-          console.log(new URLSearchParams(noteData).toString());
-          fetch("../ajax/anki_create_note/?" + new URLSearchParams(noteData))
-          .then(response => {
-            if (response.status === 200) {
-              console.log('note created successfully');
-              this.generatingCard = false;
-					    this.generatedCard = '';
-              return response
-            }
-          })
-          .then(response => response.json())
-          .catch(error => console.log("error: " + error))
-          
 				},
 			}
 		}
