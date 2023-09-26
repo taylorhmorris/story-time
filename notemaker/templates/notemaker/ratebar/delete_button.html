@@ -1,6 +1,6 @@
-<button class="rate_button"
+<button class="button is-danger"
     hx-target="#resultWindow"
     hx-swap="innerHTML"
     hx-get="{% url 'notemaker:htmx-review-card' %}"
     @click="deleteCard({{ card.id }})"
-  >Delete</button>
+  ><span class="icon iconify" data-icon="mdi-delete"></span></button>

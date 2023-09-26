@@ -4,22 +4,36 @@
 <html>
 
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Notemaker</title>
 	<script src="https://unpkg.com/alpinejs" defer></script>
   <script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous" defer></script>
   <script src="{% static 'notemaker/js/speakMessage.js' %}"></script>
-	<link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/ankicard.css' %}">
+	<!-- <link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/ankicard.css' %}"> -->
+  <link rel="stylesheet" type="text/css" href="{% static 'notemaker/css/style.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
 </head>
 
 <body>
 	<div x-data="cardQueueData()">
     <div>{% include 'notemaker/dashboard_menu.html' %}</div>
-    <div class="modal" x-show="reviewModalToggle" x-cloak @click.self="reviewModalToggle = false">
-      <div class="modal-content">
-        <span class="close" @click="reviewModalToggle = false">&times;</span>
-        <div id="resultWindow" class="result-content">
-        </div>
+    <div :class="`modal ${reviewModalToggle ? 'is-active' : ''}`" x-show="reviewModalToggle" x-cloak @click.self="reviewModalToggle = false">
+      <div class="modal-background" @click.self="reviewModalToggle = false"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title"></p>
+          <button class="delete" aria-label="close" @click.self="reviewModalToggle = false"></button>
+        </header>
+        <section class="modal-card-body">
+          <div id="resultWindow" class="result-content">
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+        </footer>
       </div>
+      <button class="modal-close is-large" @click="reviewModalToggle = false"></button>
     </div>
 	</div>
 

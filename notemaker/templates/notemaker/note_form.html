@@ -15,34 +15,57 @@
   x-init="$watch('selectedExpression', value => { expression = value.split(':::')[0]; expression_meaning = value.split(':::')[1];})"
 >
   {% include "notemaker/utils/megaphone.html" with message=data.word %}
-  <span class='word field' x-text="word"></span>&emsp;
-  /<span class='ipa' x-text="ipa"></span>/&emsp;&emsp;
+  <span class='word field title' x-text="word"></span>&emsp;
+  /<span class='ipa subtitle' x-text="ipa"></span>/&emsp;&emsp;
   <span class='grammar' x-text="grammar"></span><br><br>
-  <label class='field'>Definitions: <select class='definitions' name='def' x-model="definition">
-  {% for def in data.definitions %}
-    <option class='definition' name='def'>{{ def.definition }}</option>
-  {% endfor %}
-  </select></label><br><br>
-  <label class='field'>Examples: <select class='examples' name='example' x-model="example">
-  {% for example in data.examples %}
-    <option class='example' name='example'>{{ example.source }}</option>
-  {% endfor %}
-  </select></label><br><br>
-  
-  <label class='field'>Expressions: <select class='expressions' name='expression' x-model="selectedExpression">
-  {% for expression in data.expressions %}
-    <option class='expression' name='expression' value="{{ expression.expression }}:::{{ expression.definition }}">{{ expression.expression }} ({{ expression.definition }})</option>
-  {% endfor %}
-  </select></label><br><br>
 
-  {% for img in data.images %}
-    <img
-      value='{{ forloop.counter0 }}'
-      :id="{{ forloop.counter0 }} == selectedImage ? 'selectedImage' : 'image{{ forloop.counter0 }}'"
-      class='image'
-      :src='`data:image/jpg;base64, {{ img }}`'
-      @click="selectedImage = {{ forloop.counter0 }}; image = '{{ img }}'" />
+  <label class='field'>
+    <h2 class="subtitle">Definitions</h2>
+    <div class="select">
+      <select class='definitions' name='def' x-model="definition">
+        {% for def in data.definitions %}
+          <option class='definition' name='def'>{{ def.definition }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </label><br><br>
+
+  <label class='field'>
+    <h2 class="subtitle">Examples</h2>
+    <div class="select">
+      <select class='examples' name='example' x-model="example">
+        {% for example in data.examples %}
+          <option class='example' name='example'>{{ example.source }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </label><br><br>
+  
+  <label class='field'>
+    <h2 class="subtitle">Expressions</h2>
+    <div class="select">
+      <select class='expressions' name='expression' x-model="selectedExpression">
+        {% for expression in data.expressions %}
+          <option class='expression' name='expression' value="{{ expression.expression }}:::{{ expression.definition }}">{{ expression.expression }} ({{ expression.definition }})</option>
+        {% endfor %}
+      </select>
+    </div>
+  </label><br><br>
+
+  <div class="is-flex is-flex-direction-row is-flex-wrap-wrap">
+    {% for img in data.images %}
+    <div :style="'flex: 25%'" :class="{ 'has-background-success': {{ forloop.counter0 }} == selectedImage }">
+      <figure class="image is-square">
+        <img
+          value='{{ forloop.counter0 }}'
+          :id="{{ forloop.counter0 }} == selectedImage ? 'selectedImage' : 'image{{ forloop.counter0 }}'"
+          :class="{ 'image': true, 'is-rounded': {{ forloop.counter0 }} == selectedImage }"
+          :src='`data:image/jpg;base64, {{ img }}`'
+          @click="selectedImage = {{ forloop.counter0 }}; image = '{{ img }}'" />
+      </figure>
+    </div>
   {% endfor %}
+  </div>
 
   <form method="post">{% csrf_token %}
     <div class="fieldWrapper" x-show='false' x-cloak>
@@ -84,6 +107,7 @@
       hx-post="{% url 'notemaker:htmx-generate-note' %}"
       hx-target="#cardForm"
       hx-swap="outerHTML"
+      class="button is-success"
       >
   </form>
 </div>

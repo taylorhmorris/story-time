@@ -1,27 +1,57 @@
 {% load static %}
 
-<nav class='col-12 col-s-12' x-data="dashboardMenuData()">
-  <button
-    hx-get="{% url 'notemaker:htmx-review-card' %}"
-    hx-trigger="click"
-    hx-target="#resultWindow"
-    hx-swap="innerHTML"
-    @click="reviewModalToggle = true; addWordToggle = false"
-  >
-    Start Review
-  </button>
-  <button @click="addWordToggle = !addWordToggle">
-    Add Words
-  </button>
-  <input
-    x-show="addWordToggle"
-    x-cloak
-    x-model="wordToEnterQuery"
-    type='text'
-    id='boxu'
-    autofocus='true'
-    @keypress="checkSubmission">
-    <button @click="requestHardReset">Hard Reset</button>
+<nav class='navbar' x-data="dashboardMenuData()">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="#">
+      Notemaker
+    </a>
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMenu" class="navbar-menu">
+    <div class="navbar-start">
+      <button
+        hx-get="{% url 'notemaker:htmx-review-card' %}"
+        hx-trigger="click"
+        hx-target="#resultWindow"
+        hx-swap="innerHTML"
+        @click="reviewModalToggle = true; addWordToggle = false"
+        class="button is-primary navbar-item has-tooltip-bottom"
+        data-tooltip="Review Saved Cards"
+      >
+        Start Review
+      </button>
+      <button
+        @click="addWordToggle = !addWordToggle; $nextTick(() => { $refs.boxu.focus() })"
+        class="button is-info has-tooltip-bottom"
+        data-tooltip="Search a word to create a new note"
+      >
+        Search
+      </button>
+      <input
+        x-show="addWordToggle"
+        x-cloak
+        x-model="wordToEnterQuery"
+        x-ref="boxu"
+        type='text'
+        id='boxu'
+        autofocus='true'
+        @keypress="checkSubmission"
+        placeholder="Enter a word here"
+        class="input"
+      >
+    </div>
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <button @click="requestHardReset" class="button is-danger navbar-item has-tooltip-left" data-tooltip="Reset review times on all cards">Hard Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </nav>
 
 <script>
