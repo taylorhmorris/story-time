@@ -5,13 +5,21 @@
     <a class="navbar-item" href="#">
       <img class="mt-0" src="{% static 'notemaker/logo/rectangle.png' %}" width="112" height="28">
     </a>
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+    <a
+      role="button"
+      class="navbar-burger"
+      aria-label="menu"
+      aria-expanded="false"
+      data-target="navbarMenu"
+      @click="menuToggle = !menuToggle"
+      :class="menuToggle ? 'is-active' : ''"
+    >
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
     </a>
   </div>
-  <div id="navbarMenu" class="navbar-menu">
+  <div id="navbarMenu" class="navbar-menu" :class="menuToggle ? 'is-active' : ''">
     <div class="navbar-start">
       <button
         hx-get="{% url 'notemaker:htmx-review-card' %}"
@@ -20,7 +28,8 @@
         hx-swap="innerHTML"
         x-on:htmx:after-settle.window="reviewModalToggle = true;"
         @click="addWordToggle = false"
-        class="button is-primary navbar-item has-tooltip-bottom"
+        class="button is-primary navbar-item"
+        :class="menuToggle ? 'has-tooltip-right' : 'has-tooltip-bottom'"
         data-tooltip="Review Saved Cards"
       >
         Start Review
@@ -28,6 +37,7 @@
       <button
         @click="addWordToggle = !addWordToggle; $nextTick(() => { $refs.boxu.focus() })"
         class="button is-info has-tooltip-bottom"
+        :class="menuToggle ? 'has-tooltip-right' : 'has-tooltip-bottom'"
         data-tooltip="Search a word to create a new note"
       >
         Search
@@ -53,7 +63,7 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          <button @click="requestHardReset" class="button is-danger navbar-item has-tooltip-left" data-tooltip="Reset review times on all cards">Hard Reset</button>
+          <button @click="requestHardReset" class="button is-danger navbar-item" :class="menuToggle ? 'has-tooltip-right' : 'has-tooltip-left'" data-tooltip="Reset review times on all cards">Hard Reset</button>
         </div>
       </div>
     </div>
@@ -64,6 +74,7 @@
 function dashboardMenuData() {
   return {
     addWordToggle: false,
+    menuToggle: false,
     requestHardReset() {
       fetch("{% url 'notemaker:api' %}?request=reset&flags=hard")
         .then((response) => console.log(response.json()))
