@@ -1,8 +1,23 @@
 {% load static %}
-<b>{{ card.note.word }}</b> 
-{% include "notemaker/utils/ipa.html" with ipa=card.note.ipa %}
-{% include "notemaker/utils/megaphone.html" with message=card.note.word %}<br>
 
-Definition: {{ card.note.definition }}<br>
-Example: {{ card.note.example }}<br>
-Image: <img src="data:image/jpg;base64, {{ card.note.image }}"><br>
+<div class="tile is-ancestor">
+  <div class="tile is-vertical">
+    <div class="tile">
+      <b>{{ card.note.word }}</b> 
+      {% include "notemaker/utils/ipa.html" with ipa=card.note.ipa %}
+      {% include "notemaker/utils/megaphone.html" with message=card.note.word %}<br>
+    </div>
+    <div class="tile">
+      <div class="tile">
+        <figure class="image is_square">
+          <img src="data:image/jpg;base64, {{ card.note.image }}">
+        </figure>
+      </div>
+      <div class="tile">
+        {{ card.note.definition }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<i> {{ card.note.example }}</i>

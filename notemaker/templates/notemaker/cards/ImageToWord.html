@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block front %}
-What word goes with this image:<br>
-<img src="data:image/jpg;base64, {{ card.note.image }}">
+<div class="has-text-centered">
+  <h1 class="is-size-3">What word goes with this image?</h1>
+  <img src="data:image/jpg;base64, {{ card.note.image }}">
+</div>
 {% endblock %}

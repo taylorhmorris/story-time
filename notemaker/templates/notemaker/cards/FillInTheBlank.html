@@ -3,7 +3,8 @@
 {% load notemaker.blank_string %}
 
 {% block front %}
-Fill In The Blank:<br>
-{{ card.note.example|blank_string:card.note.word }}
-
+<div class="has-text-centered">
+  <h1 class="is-size-3">Fill In The Blank</h1>
+  {{ card.note.example|blank_string:card.note.word }}
+</div>
 {% endblock %}
