@@ -18,7 +18,8 @@
         hx-trigger="click"
         hx-target="#resultWindow"
         hx-swap="innerHTML"
-        @click="reviewModalToggle = true; addWordToggle = false"
+        x-on:htmx:after-settle.window="reviewModalToggle = true;"
+        @click="addWordToggle = false"
         class="button is-primary navbar-item has-tooltip-bottom"
         data-tooltip="Review Saved Cards"
       >
