@@ -158,24 +158,30 @@ def htmx_generate_note(request):
             data = json.decoder.JSONDecoder().decode(sr)
         except:
             print(f"No Saved Result. Asking thscraper for {word}")
-            data = thscraper.query_all(word)
-            b64images = [base64.b64encode(requests.get(img).content).decode()
-                        for img in data['images']]
-            data['images'] = b64images
-            new_search = SearchResult(word=data['word'])
-            new_search.data = json.dumps(data)
-            new_search.save()
-        if data['definitions']:
-            data['definition'] = data['definitions'][0]['definition']
-        if data['examples']:
-            data['example'] = data['examples'][0]['source']
-        if data['expressions']:
-            data['expression'] = data['expressions'][0]['expression']
-            data['expression_meaning'] = data['expressions'][0]['definition']
-        if data['images']:
-            data['image'] = data['images'][0]
-        form = NoteForm(data)
-        form.word = data['word']
+            try:
+                data = thscraper.query_all(word)
+                b64images = [base64.b64encode(requests.get(img).content).decode()
+                            for img in data['images']]
+                data['images'] = b64images
+                new_search = SearchResult(word=data['word'])
+                new_search.data = json.dumps(data)
+                new_search.save()
+            except:
+                return render(request, "notemaker/message.html", { "message": 'Error: could not collect note data' })
+        try:
+            if data['definitions']:
+                data['definition'] = data['definitions'][0]['definition']
+            if data['examples']:
+                data['example'] = data['examples'][0]['source']
+            if data['expressions']:
+                data['expression'] = data['expressions'][0]['expression']
+                data['expression_meaning'] = data['expressions'][0]['definition']
+            if data['images']:
+                data['image'] = data['images'][0]
+            form = NoteForm(data)
+            form.word = data['word']
+        except:
+            return render(request, "notemaker/message.html", { "message": 'Error: could not generate note card' })
     return render(request, "notemaker/note_form.html", {"form": form, "data": data})
 
 def ajax_note_detail_view(request):
