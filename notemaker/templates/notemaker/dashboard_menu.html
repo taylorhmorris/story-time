@@ -31,18 +31,23 @@
       >
         Search
       </button>
-      <input
+      <div
+        class="control"
+        :class="searchLoading == true ? 'is-loading' : ''"
         x-show="addWordToggle"
         x-cloak
-        x-model="wordToEnterQuery"
-        x-ref="boxu"
-        type='text'
-        id='boxu'
-        autofocus='true'
-        @keypress="checkSubmission"
-        placeholder="Enter a word here"
-        class="input"
       >
+        <input          
+          x-model="wordToEnterQuery"
+          x-ref="boxu"
+          type='text'
+          id='boxu'
+          autofocus='true'
+          @keypress="checkSubmission"
+          placeholder="Enter a word here"
+          class="input"
+        >
+      </div>
     </div>
     <div class="navbar-end">
       <div class="navbar-item">

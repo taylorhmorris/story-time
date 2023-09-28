@@ -47,6 +47,7 @@
 			return {
 				reviewModalToggle: false,
 				wordToEnterQuery: '',
+        searchLoading: false,
 				deleteCard(cardId) {
 					let r = confirm("Are you sure you want to delete this card? (This action CANNOT be undone)");
 					if (r === true) {
@@ -64,14 +65,17 @@
 				},
 				checkSubmission(event) {
 					if (event.key === 'Enter') {
-						this.reviewModalToggle = true;
+            this.searchLoading = true;
             htmx.ajax(
               'GET',
               "{% url 'notemaker:htmx-generate-note' %}" + `?word=${this.wordToEnterQuery}`,
               {
                 target: "#resultWindow",
               }
-            )
+            ).then((response) => console.log(response)).then(() => {
+              this.searchLoading = false;
+              this.reviewModalToggle = true;
+            }).catch((error) => {console.log(error)});
 					}
 				},
 			}
