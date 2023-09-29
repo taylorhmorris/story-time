@@ -1,4 +1,9 @@
-<div id="resultWindow" class="modal-card" x-data="{% block x-data-object %}{% endblock %}">
+<div
+  id="resultWindow"
+  class="modal-card"
+  x-data="{% block x-data-object %}{% endblock %}"
+  @keydown="console.log('escape!')"
+>
   <header class="modal-card-head">
     <p class="modal-card-title">
       {% block title %}{% endblock %}

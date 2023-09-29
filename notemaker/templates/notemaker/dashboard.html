@@ -22,7 +22,9 @@
 </head>
 
 <body>
-	<div x-data="cardQueueData()">
+	<div
+    x-data="cardQueueData()"
+    x-init="document.addEventListener('keydown', (event) => { if(event.key == 'Escape') { reviewModalToggle = false } })">
     <div>{% include 'notemaker/dashboard_menu.html' %}</div>
     <div :class="`modal ${reviewModalToggle ? 'is-active' : ''}`" x-show="reviewModalToggle" x-cloak @click.self="reviewModalToggle = false">
       <div class="modal-background" @click.self="reviewModalToggle = false"></div>
