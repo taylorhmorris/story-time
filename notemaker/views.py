@@ -167,7 +167,7 @@ def htmx_generate_note(request):
                 new_search.data = json.dumps(data)
                 new_search.save()
             except:
-                return render(request, "notemaker/message.html", { "message": 'Error: could not collect note data' })
+                return render(request, "notemaker/utils/message.html", { "message": 'Error: could not collect note data' })
         try:
             if data['definitions']:
                 data['definition'] = data['definitions'][0]['definition']
@@ -181,7 +181,7 @@ def htmx_generate_note(request):
             form = NoteForm(data)
             form.word = data['word']
         except:
-            return render(request, "notemaker/message.html", { "message": 'Error: could not generate note card' })
+            return render(request, "notemaker/utils/message.html", { "message": 'Error: could not generate note card' })
     return render(request, "notemaker/note_form.html", {"form": form, "data": data})
 
 def ajax_note_detail_view(request):
@@ -241,7 +241,7 @@ def htmx_review_card(request):
         card_type_obj = CardType.objects.get(pk=cards[0].card_type.pk)
         context = { 'card': cards[0], 'template': card_type_obj.card_type_name }
         return render(request, "notemaker/card_detail.html", context)
-    return HttpResponse("No cards to review")
+    return render(request, "notemaker/utils/message.html", { "message": "No cards to review" })
 
 def ajax_delete_card_view(request):
     card_id = request.GET.get('card_id', None)
