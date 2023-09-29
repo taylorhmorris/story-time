@@ -3,9 +3,9 @@
 <div class="tile is-ancestor">
   <div class="tile is-vertical">
     <div class="tile">
+      {% include "notemaker/utils/megaphone.html" with message=card.note.word %}
       <b>{{ card.note.word }}</b> 
       {% include "notemaker/utils/ipa.html" with ipa=card.note.ipa %}
-      {% include "notemaker/utils/megaphone.html" with message=card.note.word %}<br>
     </div>
     <div class="tile">
       <div class="tile">

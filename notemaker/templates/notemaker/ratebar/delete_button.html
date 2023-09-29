@@ -1,6 +1,10 @@
-<button class="button is-danger"
+<button class="button is-danger is-fullwidth"
     hx-target="#resultWindow"
     hx-swap="innerHTML"
     hx-get="{% url 'notemaker:htmx-review-card' %}"
     @click="deleteCard({{ card.id }})"
-  ><span class="icon iconify" data-icon="mdi-delete"></span></button>
+  >
+    <span></span>
+    <span class="icon iconify" data-icon="mdi-delete">test</span>
+    <span class="is-hidden-desktop">Delete</span>
+  </button>

@@ -1,5 +1,9 @@
-<button class="button is-warning"
+<button class="button is-warning is-fullwidth"
     hx-target="#resultWindow"
     hx-swap="innerHTML"
     hx-get="{% url 'notemaker:note-update' card.note.id %}"
-  ><span class="icon iconify" data-icon="mdi-pencil"></span></button>
+  >
+    <span></span>
+    <span class="icon iconify" data-icon="mdi-pencil"></span>
+    <span class="is-hidden-desktop">Edit</span>
+  </button>

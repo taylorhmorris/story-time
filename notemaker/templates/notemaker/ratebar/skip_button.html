@@ -1,5 +1,9 @@
-<button class="button is-info"
+<button class="button is-info is-fullwidth"
     hx-target="#resultWindow"
     hx-swap="innerHTML"
     hx-get="{% url 'notemaker:htmx-skip-card' card.id %}"
-  ><span class="icon iconify" data-icon="mdi-skip-next"></span></button>
+  >
+    <span></span>
+    <span class="icon iconify" data-icon="mdi-skip-next"></span>
+    <span class="is-hidden-desktop">Skip</span>
+  </button>

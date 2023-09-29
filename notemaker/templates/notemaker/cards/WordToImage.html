@@ -4,10 +4,10 @@
 {% block front %}
 <div class="has-text-centered">
   <h1 class="is-size-3">What does this word mean?</h1>
+  {% include "notemaker/utils/megaphone.html" with message=card.note.word %}
   <b>
     {{ card.note.word }}
   </b>
   {% include "notemaker/utils/ipa.html" with ipa=card.note.ipa %}
-  {% include "notemaker/utils/megaphone.html" with message=card.note.word %}
 </div>
 {% endblock %}
