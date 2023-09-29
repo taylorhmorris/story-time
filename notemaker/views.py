@@ -149,7 +149,7 @@ def htmx_generate_note(request):
             Card(note=new_note, card_type=w2i).save()
             fitb = CardType.objects.get(card_type_name="FillInTheBlank")
             Card(note=new_note, card_type=fitb).save()
-            return HttpResponse(f"Note created!")
+            return render(request, "notemaker/utils/message.html", { "message": 'Note created' })
         return render(request, "notemaker/note_form.html", {"form": form, "data": {}})
     else:
         word = request.GET.get('word', None)
