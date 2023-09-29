@@ -24,13 +24,32 @@
 <body>
 	<div
     x-data="cardQueueData()"
-    x-init="document.addEventListener('keydown', (event) => { if(event.key == 'Escape') { reviewModalToggle = false } })">
+    x-init="document.addEventListener('keydown', (event) => { if(event.key == 'Escape') { reviewModalToggle = false } })"
+  >
     <div>{% include 'notemaker/dashboard_menu.html' %}</div>
     <div :class="`modal ${reviewModalToggle ? 'is-active' : ''}`" x-show="reviewModalToggle" x-cloak @click.self="reviewModalToggle = false">
       <div class="modal-background" @click.self="reviewModalToggle = false"></div>
       <div id="resultWindow" class="modal-card"></div>
       <button class="modal-close is-large" @click="reviewModalToggle = false"></button>
     </div>
+
+    <div x-show="storyModeToggle" x-cloak>
+      <textarea
+        class="textarea"
+        x-model="rawStory"
+        placeholder="Paste French text here"
+        x-ref="storyBox"
+        @keyup="spanifyStory()"
+      ></textarea>
+      <div class="message">
+        <div class="message-header">
+          Story
+        </div>
+        <div class="message-body is-flex is-flex-wrap-wrap" x-html="spannedStory">
+        </div>
+      </div>
+    </div>
+
 	</div>
 
 	<script>
@@ -39,6 +58,9 @@
 				reviewModalToggle: false,
 				wordToEnterQuery: '',
         searchLoading: false,
+        rawStory: "",
+        spannedStory: '',
+        storyModeToggle: false,
 				deleteCard(cardId) {
 					let r = confirm("Are you sure you want to delete this card? (This action CANNOT be undone)");
 					if (r === true) {
@@ -64,20 +86,35 @@
 				},
 				checkSubmission(event) {
 					if (event.key === 'Enter') {
-            this.searchLoading = true;
-            htmx.ajax(
-              'GET',
-              "{% url 'notemaker:htmx-generate-note' %}" + `?word=${this.wordToEnterQuery}`,
-              {
-                target: "#resultWindow",
-                swap: "outerHTML",
-              }
-            ).then(() => {
-              this.searchLoading = false;
-              this.reviewModalToggle = true;
-            }).catch((error) => {console.log(error)});
+            this.queryWord(this.wordToEnterQuery);
 					}
 				},
+        queryWord(word) {
+          word = word.replace(/[.!?,]$/, '');
+          console.log('trimmed word: [' + word + ']');
+          if (word.length < 1) return; // Report error
+          this.searchLoading = true;
+          htmx.ajax(
+            'GET',
+            "{% url 'notemaker:htmx-generate-note' %}" + `?word=${word}`,
+            {
+              target: "#resultWindow",
+              swap: "outerHTML",
+            }
+          ).then(() => {
+            this.searchLoading = false;
+            this.reviewModalToggle = true;
+          }).catch((error) => {console.log(error)});
+        },
+        wordClickHandler(event) {
+          this.queryWord(event.target.textContent);
+        },
+        spanifyStory() {
+          const text = this.rawStory;
+
+          this.spannedStory = text.split(/\s/).filter((word) => word.length > 0).join("</span>&nbsp;<span class='content is-clickable' @click='wordClickHandler'>");
+          this.spannedStory = "<span class='content is-clickable' @click='wordClickHandler'>" + this.spannedStory;
+        },
 			}
 		}
 

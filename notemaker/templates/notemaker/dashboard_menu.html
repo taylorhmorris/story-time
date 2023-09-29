@@ -1,6 +1,6 @@
 {% load static %}
 
-<nav class='navbar' x-data="dashboardMenuData()">
+<nav class='navbar is-warning' x-data="dashboardMenuData()">
   <div class="navbar-brand">
     <a class="navbar-item" href="#">
       <img class="mt-0" src="{% static 'notemaker/logo/rectangle.png' %}" width="112" height="28">
@@ -59,6 +59,13 @@
           class="input"
         >
       </div>
+      <button
+        class="button is-info has-tooltip-bottom"
+        data-tooltip="Copy a story"
+        @click="storyModeToggle = !storyModeToggle; $nextTick(() => { $refs.storyBox.focus() })"
+      >
+        Story
+      </button>
     </div>
     <div class="navbar-end">
       <div class="navbar-item p-0">
