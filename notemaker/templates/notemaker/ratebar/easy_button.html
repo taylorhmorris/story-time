@@ -3,7 +3,7 @@
 {% block extra-attributes %}
 data-tooltip="Mark Easy"
 :class="'is-info'"
-hx-target="closest .flashcard"
+hx-target="#resultWindow"
 hx-swap="outerHTML"
 hx-get="{% url 'notemaker:htmx-rate-card' card.id 2 %}"
 {% endblock %}
