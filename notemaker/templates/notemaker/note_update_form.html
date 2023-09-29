@@ -1,6 +1,19 @@
-<div hx-target="this" hx-swap="outerHTML">
-<form method="post" hx->{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Update" hx-post="{% url 'notemaker:note-update' pk=note.id %}">
-</form>
+{% extends "notemaker/components/modal_card.html" %}
+
+{% block x-data-object %}
+{% endblock %}
+
+{% block title %}
+{{ form.word.value }}
+{% endblock %}
+
+{% block body %}
+<div hx-target="#resultWindow" hx-swap="outerHTML">
+  <form method="post" hx->{% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Update" hx-post="{% url 'notemaker:note-update' pk=note.id %}">
+  </form>
 </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
