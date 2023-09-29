@@ -4,8 +4,8 @@
   <div class="tile is-vertical">
     <div class="tile">
       {% include "notemaker/utils/megaphone.html" with message=card.note.word %}
-      <b>{{ card.note.word }}</b> 
-      {% include "notemaker/utils/ipa.html" with ipa=card.note.ipa %}
+      <p class="title is-5 mx-3">{{ card.note.word }}</p> 
+      <p>{% include "notemaker/utils/ipa.html" with ipa=card.note.ipa %}</p>
     </div>
     <div class="tile">
       <div class="tile">
