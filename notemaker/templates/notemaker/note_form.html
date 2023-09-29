@@ -1,6 +1,7 @@
-<div
-  id='cardForm'
-  x-data="{
+{% extends "notemaker/components/modal_card.html" %}
+
+{% block x-data-object %}
+  {
     word: '{{ form.word.value|escapejs }}',
     ipa: '{{ form.ipa.value|escapejs }}',
     grammar: '{{ form.grammar.value|escapejs }}',
@@ -11,14 +12,25 @@
     image: '{{ form.image.value|escapejs }}',
     selectedExpression: '',
     selectedImage: 0
-  }"
+  }
+{% endblock %}
+
+{% block title %}
+  <span
+    class=""
+  >
+    {% include "notemaker/utils/megaphone.html" with message=data.word %}
+    <span class='word field title' x-text="word"></span>&emsp;
+    /<span class='ipa subtitle' x-text="ipa"></span>/&emsp;&emsp;
+    <span class='grammar' x-text="grammar"></span>
+  </span>
+{% endblock %}
+
+{% block body %}
+<div
+  id='cardForm'
   x-init="$watch('selectedExpression', value => { expression = value.split(':::')[0]; expression_meaning = value.split(':::')[1];})"
 >
-  {% include "notemaker/utils/megaphone.html" with message=data.word %}
-  <span class='word field title' x-text="word"></span>&emsp;
-  /<span class='ipa subtitle' x-text="ipa"></span>/&emsp;&emsp;
-  <span class='grammar' x-text="grammar"></span><br><br>
-
   <label class='field'>
     <h2 class="subtitle">Definitions</h2>
     <div class="select">
@@ -111,3 +123,6 @@
       >
   </form>
 </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

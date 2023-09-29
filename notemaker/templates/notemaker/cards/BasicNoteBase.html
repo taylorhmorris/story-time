@@ -1,5 +1,9 @@
-{% load static %}
+{% extends "notemaker/components/modal_card.html" %}
 
+{% block title %}
+{% endblock %}
+
+{% block body %}
 <div class="flashcard" x-data="{ flipped: false}">
   <div class="front"  x-show="flipped == false">
   {% block front %}
@@ -14,3 +18,8 @@
   </div>
   {% include 'notemaker/rate_bar.html' %}
 </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+

@@ -26,18 +26,7 @@
     <div>{% include 'notemaker/dashboard_menu.html' %}</div>
     <div :class="`modal ${reviewModalToggle ? 'is-active' : ''}`" x-show="reviewModalToggle" x-cloak @click.self="reviewModalToggle = false">
       <div class="modal-background" @click.self="reviewModalToggle = false"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title"></p>
-          <button class="delete" aria-label="close" @click.self="reviewModalToggle = false"></button>
-        </header>
-        <section class="modal-card-body">
-          <div id="resultWindow" class="result-content">
-          </div>
-        </section>
-        <footer class="modal-card-foot">
-        </footer>
-      </div>
+      <div id="resultWindow" class="modal-card"></div>
       <button class="modal-close is-large" @click="reviewModalToggle = false"></button>
     </div>
 	</div>
@@ -71,8 +60,9 @@
               "{% url 'notemaker:htmx-generate-note' %}" + `?word=${this.wordToEnterQuery}`,
               {
                 target: "#resultWindow",
+                swap: "outerHTML",
               }
-            ).then((response) => console.log(response)).then(() => {
+            ).then(() => {
               this.searchLoading = false;
               this.reviewModalToggle = true;
             }).catch((error) => {console.log(error)});

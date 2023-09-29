@@ -1,6 +1,6 @@
 <button class="button is-info is-fullwidth"
     hx-target="#resultWindow"
-    hx-swap="innerHTML"
+    hx-swap="outerHTML"
     hx-get="{% url 'notemaker:htmx-skip-card' card.id %}"
   >
     <span></span>

@@ -25,7 +25,7 @@
         hx-get="{% url 'notemaker:htmx-review-card' %}"
         hx-trigger="click"
         hx-target="#resultWindow"
-        hx-swap="innerHTML"
+        hx-swap="outerHTML"
         x-on:htmx:after-settle.window="reviewModalToggle = true;"
         @click="addWordToggle = false"
         class="button is-primary navbar-item"

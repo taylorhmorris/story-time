@@ -1,6 +1,6 @@
 <button class="button is-warning is-fullwidth"
     hx-target="#resultWindow"
-    hx-swap="innerHTML"
+    hx-swap="outerHTML"
     hx-get="{% url 'notemaker:note-update' card.note.id %}"
   >
     <span></span>
