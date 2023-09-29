@@ -44,6 +44,14 @@
 							.then(response => {
 								if (response.status === 200) {
 									console.log("Success!");
+                  htmx.ajax(
+                    'GET',
+                    "{% url 'notemaker:htmx-review-card' %}",
+                    {
+                      target: "#resultWindow",
+                      swap: "outerHTML",
+                    }
+                  )
 								} else {
 									console.log(response);
 								}

@@ -1,15 +1,18 @@
 {% extends "notemaker/ratebar/button.html" %}
 
 {% block extra-attributes %}
-data-tooltip="Flip Card"
+data-tooltip="Mark Easy"
 :class="'is-info'"
-@click="flipped = !flipped"
+hx-target="closest .flashcard"
+hx-swap="outerHTML"
+hx-get="{% url 'notemaker:htmx-rate-card' card.id 2 %}"
 {% endblock %}
 
 {% block icon-name %}
-"mdi-orbit-variant"
+"mdi-check-all"
 {% endblock %}
 
 {% block extra-text %}
-Flip
+Easy
 {% endblock %}
+

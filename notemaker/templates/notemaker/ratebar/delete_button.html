@@ -1,10 +1,16 @@
-<button class="button is-danger is-fullwidth"
-    hx-target="#resultWindow"
-    hx-swap="outerHTML"
-    hx-get="{% url 'notemaker:htmx-review-card' %}"
-    @click="deleteCard({{ card.id }})"
-  >
-    <span></span>
-    <span class="icon iconify" data-icon="mdi-delete">test</span>
-    <span class="is-hidden-desktop">Delete</span>
-  </button>
+  {% extends "notemaker/ratebar/button.html" %}
+
+  {% block extra-attributes %}
+  data-tooltip="Delete Card"
+  :class="'is-danger'"
+  @click="deleteCard({{ card.id }})"
+  {% endblock %}
+  
+  {% block icon-name %}
+  "mdi-delete"
+  {% endblock %}
+  
+  {% block extra-text %}
+  Delete
+  {% endblock %}
+  

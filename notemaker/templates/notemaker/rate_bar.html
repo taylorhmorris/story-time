@@ -1,61 +1,30 @@
 {% load static %}
-<div class="level" x-show="flipped == false">
-  <div class="level-left">
+<div x-show="flipped == false">
+  <div class="level">
     {% include 'notemaker/ratebar/flip_button.html' %}
-  </div>
-  <div class="level-right">
-    <div class="level">
-      <div class="level-item has-text-centered">
-        {% include 'notemaker/ratebar/skip_button.html' %}
-      </div>
-      <div class="level-item has-text-centered">
-        {% include 'notemaker/ratebar/edit_button.html' %}
-      </div>
-      <div class="level-item has-text-centered">
-        {% include 'notemaker/ratebar/delete_button.html' %}
-      </div>
-    </div>
+    {% include 'notemaker/ratebar/skip_button.html' %}
+    {% include 'notemaker/ratebar/edit_button.html' %}
+    {% include 'notemaker/ratebar/delete_button.html' %}
   </div>
 </div>
 
 <div x-show="flipped" class="level">
-  <div class="level-left">
-    <div class="level">
-      <div class="level-item has-text-centered">
-        {% include 'notemaker/ratebar/flip_button.html' %}
-      </div><div class="level-item hs-text-centered">
-      <button class="button is-success is-fullwidth"
-        hx-target="closest .flashcard"
-        hx-swap="outerHTML"
-        hx-get="{% url 'notemaker:htmx-rate-card' card.id 1 %}"
-      >Correct</button>
-    </div><div class="level-item hs-text-centered">
-      <button class="button is-info is-fullwidth"
-        hx-target="closest .flashcard"
-        hx-swap="outerHTML"
-        hx-get="{% url 'notemaker:htmx-rate-card' card.id 2 %}"
-      >Easy</button>
-    </div><div class="level-item hs-text-centered">
-      <button class="button is-danger is-fullwidth"
-        hx-target="closest .flashcard"
-        hx-swap="outerHTML"
-        hx-get="{% url 'notemaker:htmx-rate-card' card.id 0 %}"
-        hx-trigger="click"
-      >Incorrect</button>
-      </div>
-    </div>
+  <div class="level-item has-text-centered">
+    {% include 'notemaker/ratebar/flip_button.html' %}
+  </div><div class="level-item hs-text-centered">
+    {% include 'notemaker/ratebar/correct_button.html' %}
+</div><div class="level-item hs-text-centered">
+  {% include 'notemaker/ratebar/easy_button.html' %}
+</div><div class="level-item hs-text-centered">
+  {% include 'notemaker/ratebar/incorrect_button.html' %}
   </div>
-  <div class="level-right">
-    <div class="level">
-      <div class="level-item has-text-centered">
-        {% include 'notemaker/ratebar/skip_button.html' %}
-      </div>
-      <div class="level-item has-text-centered">
-        {% include 'notemaker/ratebar/edit_button.html' %}
-      </div>
-      <div class="level-item has-text-centered">
-        {% include 'notemaker/ratebar/delete_button.html' %}
-      </div>
-    </div>
+  <div class="level-item has-text-centered">
+    {% include 'notemaker/ratebar/skip_button.html' %}
+  </div>
+  <div class="level-item has-text-centered">
+    {% include 'notemaker/ratebar/edit_button.html' %}
+  </div>
+  <div class="level-item has-text-centered">
+    {% include 'notemaker/ratebar/delete_button.html' %}
   </div>
 </div>

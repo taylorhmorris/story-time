@@ -1,9 +1,17 @@
-<button class="button is-info is-fullwidth"
-    hx-target="#resultWindow"
-    hx-swap="outerHTML"
-    hx-get="{% url 'notemaker:htmx-skip-card' card.id %}"
-  >
-    <span></span>
-    <span class="icon iconify" data-icon="mdi-skip-next"></span>
-    <span class="is-hidden-desktop">Skip</span>
-  </button>
+  {% extends "notemaker/ratebar/button.html" %}
+
+  {% block extra-attributes %}
+  data-tooltip="Skip Card"
+  :class="'is-info'"
+  hx-target="#resultWindow"
+  hx-swap="outerHTML"
+  hx-get="{% url 'notemaker:htmx-skip-card' card.id %}"
+  {% endblock %}
+  
+  {% block icon-name %}
+  "mdi-skip-next"
+  {% endblock %}
+  
+  {% block extra-text %}
+  Skip
+  {% endblock %}
