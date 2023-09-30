@@ -1,0 +1,18 @@
+<div
+  id="resultWindow"
+  class="modal-card"
+  x-data="{% block x-data-object %}{}{% endblock %}"
+>
+  <header class="modal-card-head">
+    <p class="modal-card-title">
+      {% block title %}{% endblock %}
+    </p>
+    <button class="delete" aria-label="close" @click.self="reviewModalToggle = false"></button>
+  </header>
+  <section class="modal-card-body">
+    {% block body %}{% endblock %}
+  </section>
+  <footer class="modal-card-foot">
+    {% block footer %}{% endblock %}
+  </footer>
+</div>

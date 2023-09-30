@@ -1,5 +1,18 @@
-<button class="rate_button"
-    hx-target="#resultWindow"
-    hx-swap="innerHTML"
-    hx-get="{% url 'notemaker:note-update' card.note.id %}"
-  >Edit</button>
+  {% extends "notemaker/ratebar/button.html" %}
+
+  {% block extra-attributes %}
+  data-tooltip="Edit Note"
+  :class="'is-warning'"
+  hx-target="#resultWindow"
+  hx-swap="outerHTML"
+  hx-get="{% url 'notemaker:note-update' card.note.id %}"
+  {% endblock %}
+  
+  {% block icon-name %}
+  "mdi-pencil"
+  {% endblock %}
+  
+  {% block extra-text %}
+  Edit
+  {% endblock %}
+  

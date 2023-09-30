@@ -1,0 +1,18 @@
+{% extends "notemaker/ratebar/button.html" %}
+
+{% block extra-attributes %}
+data-tooltip="Mark Incorrect"
+:class="'is-danger'"
+hx-target="#resultWindow"
+hx-swap="outerHTML"
+hx-get="{% url 'notemaker:htmx-rate-card' card.id 0 %}"
+{% endblock %}
+
+{% block icon-name %}
+"mdi-alpha-x-circle-outline"
+{% endblock %}
+
+{% block extra-text %}
+Incorrect
+{% endblock %}
+

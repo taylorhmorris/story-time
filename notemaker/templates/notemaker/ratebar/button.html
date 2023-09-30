@@ -1,0 +1,14 @@
+<button
+  class="button is-fullwidth m-1"
+  {% block extra-attributes %}{% endblock %}
+>
+  <span></span>
+  <span
+    class="icon iconify"
+    data-icon={% block icon-name %} "" {% endblock %}
+  >
+  </span>
+  <span class="is-hidden-desktop">
+    {% block extra-text %}{% endblock %}
+  </span>
+</button>

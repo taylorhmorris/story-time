@@ -1,0 +1,15 @@
+{% extends "notemaker/ratebar/button.html" %}
+
+{% block extra-attributes %}
+data-tooltip="Flip Card"
+:class="'is-info'"
+@click="flipped = !flipped"
+{% endblock %}
+
+{% block icon-name %}
+"mdi-orbit-variant"
+{% endblock %}
+
+{% block extra-text %}
+Flip
+{% endblock %}

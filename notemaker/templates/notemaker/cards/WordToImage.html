@@ -1,11 +1,16 @@
 {% extends "notemaker/cards/BasicNoteBase.html" %}
 {% load static %}
 
+{% block title %}
+What does this word mean?
+{% endblock %}
+
 {% block front %}
-What does this word mean:<br>
-<b>
-  {{ card.note.word }}
-</b>
-{% include "notemaker/utils/ipa.html" with ipa=card.note.ipa %}
- {% include "notemaker/utils/megaphone.html" with message=card.note.word %}<br>
+<div class="has-text-centered">
+  {% include "notemaker/utils/megaphone.html" with message=card.note.word %}
+  <b>
+    {{ card.note.word }}
+  </b>
+  {% include "notemaker/utils/ipa.html" with ipa=card.note.ipa %}
+</div>
 {% endblock %}

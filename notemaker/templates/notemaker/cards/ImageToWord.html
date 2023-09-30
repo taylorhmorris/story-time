@@ -1,7 +1,12 @@
 {% extends "notemaker/cards/BasicNoteBase.html" %}
 {% load static %}
 
+{% block title %}
+What word goes with this image?
+{% endblock %}
+
 {% block front %}
-What word goes with this image:<br>
-<img src="data:image/jpg;base64, {{ card.note.image }}">
+<div class="has-text-centered">
+  <img src="data:image/jpg;base64, {{ card.note.image }}">
+</div>
 {% endblock %}

@@ -1,33 +1,87 @@
 {% load static %}
 
-<nav class='col-12 col-s-12' x-data="dashboardMenuData()">
-  <button
-    hx-get="{% url 'notemaker:htmx-review-card' %}"
-    hx-trigger="click"
-    hx-target="#resultWindow"
-    hx-swap="innerHTML"
-    @click="reviewModalToggle = true; addWordToggle = false"
-  >
-    Start Review
-  </button>
-  <button @click="addWordToggle = !addWordToggle">
-    Add Words
-  </button>
-  <input
-    x-show="addWordToggle"
-    x-cloak
-    x-model="wordToEnterQuery"
-    type='text'
-    id='boxu'
-    autofocus='true'
-    @keypress="checkSubmission">
-    <button @click="requestHardReset">Hard Reset</button>
+<nav class='navbar is-warning' x-data="dashboardMenuData()">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="#">
+      <img class="mt-0" src="{% static 'notemaker/logo/rectangle.png' %}" width="112" height="28">
+    </a>
+    <a
+      role="button"
+      class="navbar-burger"
+      aria-label="menu"
+      aria-expanded="false"
+      data-target="navbarMenu"
+      @click="menuToggle = !menuToggle"
+      :class="menuToggle ? 'is-active' : ''"
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMenu" class="navbar-menu" :class="menuToggle ? 'is-active' : ''">
+    <div class="navbar-start p-1">
+      <button
+        hx-get="{% url 'notemaker:htmx-review-card' %}"
+        hx-trigger="click"
+        hx-target="#resultWindow"
+        hx-swap="outerHTML"
+        x-on:htmx:after-settle.window="reviewModalToggle = true;"
+        @click="addWordToggle = false"
+        class="button is-primary navbar-item"
+        :class="menuToggle ? 'has-tooltip-right' : 'has-tooltip-bottom'"
+        data-tooltip="Review Saved Cards"
+      >
+        Start Review
+      </button>
+      <button
+        @click="addWordToggle = !addWordToggle; $nextTick(() => { $refs.boxu.focus() })"
+        class="button is-info has-tooltip-bottom ml-1"
+        :class="menuToggle ? 'has-tooltip-right' : 'has-tooltip-bottom'"
+        data-tooltip="Search a word to create a new note"
+      >
+        Search
+      </button>
+      <div
+        class="control"
+        :class="searchLoading == true ? 'is-loading' : ''"
+        x-show="addWordToggle"
+        x-cloak
+      >
+        <input          
+          x-model="wordToEnterQuery"
+          x-ref="boxu"
+          type='text'
+          id='boxu'
+          autofocus='true'
+          @keypress="checkSubmission"
+          placeholder="Enter a word here"
+          class="input"
+        >
+      </div>
+      <button
+        class="button is-info has-tooltip-bottom ml-1"
+        data-tooltip="Copy a story"
+        @click="storyModeToggle = !storyModeToggle; $nextTick(() => { $refs.storyBox.focus() })"
+      >
+        Story
+      </button>
+    </div>
+    <div class="navbar-end">
+      <div class="navbar-item p-0">
+        <div class="buttons">
+          <button @click="requestHardReset" class="button is-danger navbar-item" :class="menuToggle ? 'has-tooltip-right' : 'has-tooltip-left'" data-tooltip="Reset review times on all cards">Hard Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </nav>
 
 <script>
 function dashboardMenuData() {
   return {
     addWordToggle: false,
+    menuToggle: false,
     requestHardReset() {
       fetch("{% url 'notemaker:api' %}?request=reset&flags=hard")
         .then((response) => console.log(response.json()))

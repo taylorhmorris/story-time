@@ -1,0 +1,18 @@
+{% extends "notemaker/ratebar/button.html" %}
+
+{% block extra-attributes %}
+data-tooltip="Mark Easy"
+:class="'is-info'"
+hx-target="#resultWindow"
+hx-swap="outerHTML"
+hx-get="{% url 'notemaker:htmx-rate-card' card.id 2 %}"
+{% endblock %}
+
+{% block icon-name %}
+"mdi-check-all"
+{% endblock %}
+
+{% block extra-text %}
+Easy
+{% endblock %}
+

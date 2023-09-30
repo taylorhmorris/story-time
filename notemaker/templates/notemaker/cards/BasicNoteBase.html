@@ -1,7 +1,15 @@
-{% load static %}
+{% extends "notemaker/components/modal_card.html" %}
 
-<div class="flashcard" x-data="{ flipped: false}">
-  <div class="front"  x-show="flipped == false">
+{% block x-data-object %}
+{ flipped: false}
+{% endblock %}
+
+{% block title %}
+{% endblock %}
+
+{% block body %}
+<div class="flashcard">
+  <div class="front" x-show="flipped == false">
   {% block front %}
   {% include "notemaker/cards/BasicNoteFront.html" %}
   {% endblock %}
@@ -12,5 +20,11 @@
   {% include "notemaker/cards/BasicNoteBack.html" %}
   {% endblock %}
   </div>
-  {% include 'notemaker/rate_bar.html' %}
 </div>
+{% endblock %}
+
+{% block footer %}
+  {% include 'notemaker/rate_bar.html' %}
+{% endblock %}
+
+
