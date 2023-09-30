@@ -4,7 +4,7 @@ from random import shuffle
 import requests
 from .forms import NoteForm
 
-import thscraper
+from thscraper.thscraper import query_all
 
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
@@ -126,7 +126,7 @@ def ajax_anki_generate_note(request):
         data = json.decoder.JSONDecoder().decode(sr)
     except:
         print(f"No Saved Result. Asking thscraper for {word}")
-        data = thscraper.query_all(word)
+        data = query_all(word)
         b64images = [base64.b64encode(requests.get(img).content).decode()
                      for img in data['images']]
         data['images'] = b64images
@@ -159,7 +159,7 @@ def htmx_generate_note(request):
         except:
             print(f"No Saved Result. Asking thscraper for {word}")
             try:
-                data = thscraper.query_all(word)
+                data = query_all(word)
                 b64images = [base64.b64encode(requests.get(img).content).decode()
                             for img in data['images']]
                 data['images'] = b64images

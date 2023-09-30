@@ -1,6 +1,6 @@
 import unittest
 
-import thscraper
+from . import thscraper
 
 class Test(unittest.TestCase):
     def test_store_cache_with_newline_word(self):

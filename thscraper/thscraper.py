@@ -2,7 +2,6 @@
 French language words, bring the information together into one usable json file
 """
 import json
-from pprint import pprint as pp
 import bs4
 from bs4 import BeautifulSoup
 import requests
@@ -32,6 +31,7 @@ class Query():
 
     def store_in_cache(self, search_string, data):
         """Store query data in cache"""
+        logger.debug(f"Storing '{search_string}' in cache")
         if len(''.join(e for e in search_string if e.isalnum())) < 1:
             return False
         folder = self.__class__.__name__.lstrip('Query').lower()
@@ -45,7 +45,7 @@ class Query():
             with open(f"cache\\{folder}\\{word}.json", "w") as json_file:
                 json.dump(data, json_file)
         except TypeError as e:
-            print("Could not serialize data")
+            logging.error("Could not serialize data")
             raise e
         return True
 
@@ -56,16 +56,20 @@ class Query():
             if cached:
                 logger.info(f"Search string ({search_string}) found in cache")
                 return self.parse_soup(cached)
+        logger.info(f"Search string ({search_string}) not found in cache")
         url = self.url.format(search_string=search_string, api_key=self.api_key)
         webpage = requests.get(url)
         soup = BeautifulSoup(webpage.content, features="html.parser")
         results = self.parse_soup(soup)
+        logger.debug("Results received from soup parser")
         if "word" in results:
             if results["word"] is None:
                 results['word'] = search_string
-            else:
-                self.store_in_cache(results['word'], results)
-        self.store_in_cache(search_string, results)
+        try:
+            self.store_in_cache(results['word'], results)
+        except Exception as e:
+            logger.error(f"Error storing in cache: {e}")
+        logger.debug("Returning query results")    
         return results
 
     def parse_soup(self, soup):
@@ -174,7 +178,7 @@ class QueryLarousse(Query):
                     break
             if word and "," in word:
                 word = word.split(',')[0]
-            print(f'Using base form: {word}')
+            logging.info(f'Using base form: {word}')
         except IndexError as e:
             word = None
         try:
@@ -242,14 +246,15 @@ class QueryLarousse(Query):
                        "citations": citations}
             return results
         except NameError as error:
+            logging.error('Name error encountered')
             raise error
 
 def query_duckduckgo_images(search_string):
     """Queries DuckDuckGo images using word parameter
 
-    Depreciated
+    Deprecated
     """
-    print("Qing Images")
+    logging.info("Querying DuckDuckGo Images")
     url = "https://duckduckgo.com/?q="+search_string+"&t=h_&iar=images&iax=images&ia=images"
     webpage = requests.get(url)
     soup = BeautifulSoup(webpage.content, features="html.parser")
@@ -263,9 +268,9 @@ def query_duckduckgo_images(search_string):
 def query_google_images(search_string):
     """Queries google images using word parameter
 
-    Depreciated
+    Deprecated
     """
-    print("Qing Images")
+    logging.error("Querying Google Images")
     url = "https://www.google.fr/search?tbm=isch&source=hp&biw=681&bih=598&ei=m_R2XN6bH6fi0gLN74KACg&q="+search_string+"&gs_l=img.3..0l8j0i10j0.2271.2899..3038...0.0..0.116.592.4j2......2....1..gws-wiz-img.....0..35i39.3w7tEkx3O6Y"
     webpage = requests.get(url)
     soup = BeautifulSoup(webpage.content, features="html.parser")
@@ -290,12 +295,21 @@ def query_all(word):
     logger.info(f"ipa found by Epitran == {ipa}")
     #grammar, definitions, examples = "dummy_grammar",
     #["Def 1", "Def 2"], ["Example 1", "Example 2"]
+    logger.debug("Querying Larousse")
     larousse = QueryLarousse().query(word)
-    word = larousse['word']
+    logger.debug("Done Querying Larousse")
+    try:
+        word = larousse['word']
+    except Exception as e:
+        logger.error(f"Exception Encountered: {e}")
+    logger.debug("Querying Linguee")
     linguee = QueryLinguee().query(word)
+    logger.debug("Done Querying Linguee")
 
     #images = query_duckduckgo_images(word)
+    logger.debug("Querying Pixabay")
     pixabay = QueryPixabay().query(word)
+    logger.debug("Done Querying Pixabay")
     images = []
     for hit in pixabay['hits']:
         images.append(hit['previewURL'])
@@ -311,6 +325,7 @@ def query_all(word):
         'expressions': larousse['expressions'] + linguee['expressions'],
         'images': images
     }
+    logger.info("Return data")
     return data
 
 def run():
