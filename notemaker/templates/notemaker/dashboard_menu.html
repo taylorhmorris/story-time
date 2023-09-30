@@ -20,7 +20,7 @@
     </a>
   </div>
   <div id="navbarMenu" class="navbar-menu" :class="menuToggle ? 'is-active' : ''">
-    <div class="navbar-start">
+    <div class="navbar-start p-1">
       <button
         hx-get="{% url 'notemaker:htmx-review-card' %}"
         hx-trigger="click"
@@ -36,7 +36,7 @@
       </button>
       <button
         @click="addWordToggle = !addWordToggle; $nextTick(() => { $refs.boxu.focus() })"
-        class="button is-info has-tooltip-bottom"
+        class="button is-info has-tooltip-bottom ml-1"
         :class="menuToggle ? 'has-tooltip-right' : 'has-tooltip-bottom'"
         data-tooltip="Search a word to create a new note"
       >
@@ -60,7 +60,7 @@
         >
       </div>
       <button
-        class="button is-info has-tooltip-bottom"
+        class="button is-info has-tooltip-bottom ml-1"
         data-tooltip="Copy a story"
         @click="storyModeToggle = !storyModeToggle; $nextTick(() => { $refs.storyBox.focus() })"
       >
