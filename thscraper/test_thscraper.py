@@ -4,7 +4,7 @@ from . import thscraper
 
 class Test(unittest.TestCase):
     def test_store_cache_with_newline_word(self):
-        q = thscraper.Query('')
+        q = thscraper.Query.Query('')
         response_data = { 'word': "\n" }
         try:
             res = q.store_in_cache('test', response_data)
@@ -13,7 +13,7 @@ class Test(unittest.TestCase):
         self.assertEqual(res, False)
 
     def test_store_cache_with_newline_search_string(self):
-        q = thscraper.Query('')
+        q = thscraper.Query.Query('')
         response_data = { 'word': "blob" }
         try:
             res = q.store_in_cache('\n', response_data)
@@ -22,8 +22,7 @@ class Test(unittest.TestCase):
         self.assertEqual(res, False)
     
     def test_retrieve_cache_newline_search_string(self):
-        q = thscraper.Query('')
-        response_data = { 'word': "\n" }
+        q = thscraper.Query.Query('')
         try:
             res = q.retrieve_cache('\n')
         except:
