@@ -15,6 +15,7 @@ class Query():
         self.auth = auth
         self.check_cache = check_cache
         self.api_key = api_key
+        self.logger = logging.getLogger("th_scraper")
 
     def retrieve_cache(self, search_string):
         """Retrieve query data from cache"""
@@ -31,7 +32,7 @@ class Query():
 
     def store_in_cache(self, search_string, data):
         """Store query data in cache"""
-        logger.debug(f"Storing '{search_string}' in cache")
+        self.logger.debug(f"Storing '{search_string}' in cache")
         if len(''.join(e for e in search_string if e.isalnum())) < 1:
             return False
         folder = self.__class__.__name__.lstrip('Query').lower()
@@ -54,22 +55,22 @@ class Query():
         if self.check_cache:
             cached = self.retrieve_cache(search_string)
             if cached:
-                logger.info(f"Search string ({search_string}) found in cache")
+                self.logger.info(f"Search string ({search_string}) found in cache")
                 return self.parse_soup(cached)
-        logger.info(f"Search string ({search_string}) not found in cache")
+        self.logger.info(f"Search string ({search_string}) not found in cache")
         url = self.url.format(search_string=search_string, api_key=self.api_key)
         webpage = requests.get(url)
         soup = BeautifulSoup(webpage.content, features="html.parser")
         results = self.parse_soup(soup)
-        logger.debug("Results received from soup parser")
+        self.logger.debug("Results received from soup parser")
         if "word" in results:
             if results["word"] is None:
                 results['word'] = search_string
         try:
             self.store_in_cache(results['word'], results)
         except Exception as e:
-            logger.error(f"Error storing in cache: {e}")
-        logger.debug("Returning query results")    
+            self.logger.error(f"Error storing in cache: {e}")
+        self.logger.debug("Returning query results")    
         return results
 
     def parse_soup(self, soup):
@@ -286,7 +287,6 @@ def query_all(word):
     #ipa, mp3_url = "DUMMY_IPA", "MP3_URL"
     #ipa, mp3_url = query_collins(word)
     ## collins is blocking scraping
-    global logger
     logger = logging.getLogger("th_scraper")
     logger.setLevel(logging.DEBUG)    
     logger.info("Running Scraper")
@@ -331,7 +331,7 @@ def query_all(word):
 def run():
     """Run demo query to test query_all function"""
     data = query_all("manger")
-    pp(data)
+    print(data)
     return data
 
 if __name__ == '__main__':
