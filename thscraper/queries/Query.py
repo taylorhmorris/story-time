@@ -66,11 +66,10 @@ class Query():
         soup = BeautifulSoup(webpage.content, features="html.parser")
         results = self.parse_soup(soup)
         self.logger.debug("Results received from soup parser")
-        if "word" in results:
-            if results["word"] is None:
-                results['word'] = search_string
+        if "word" not in results or results["word"] is None:
+            results['word'] = search_string
         try:
-            self.store_in_cache(results['word'], results)
+            self.store_in_cache(search_string, results)
         except KeyError as e:
             self.logger.error(f"Error storing in cache: results does not have {e} key")
         except Exception as e:

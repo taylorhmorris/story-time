@@ -3,6 +3,7 @@ French language words, bring the information together into one usable json file
 """
 from epitran import Epitran
 import logging
+from dotenv import load_dotenv
 
 from thscraper.queries.QueryLarousse import QueryLarousse
 from thscraper.queries.QueryLinguee import QueryLinguee
@@ -13,6 +14,7 @@ def query_all(word):
     #ipa, mp3_url = "DUMMY_IPA", "MP3_URL"
     #ipa, mp3_url = query_collins(word)
     ## collins is blocking scraping
+    load_dotenv()
     try:
         logger = logging.getLogger("th_scraper")
         logger.setLevel(logging.DEBUG)    
@@ -30,9 +32,9 @@ def query_all(word):
             logger.error(f"Exception Encountered: {e}")
 
         # Possibly no longer working. Investigate
-        # logger.debug("Querying Linguee")
-        # linguee = QueryLinguee().query(word)
-        # logger.debug("Done Querying Linguee")
+        logger.debug("Querying Linguee")
+        linguee = QueryLinguee().query(word)
+        logger.debug("Done Querying Linguee")
 
         logger.debug("Querying Pixabay")
         pixabay = QueryPixabay().query(word)

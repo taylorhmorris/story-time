@@ -1,5 +1,6 @@
 
 import json
+import os
 import requests
 
 from thscraper.queries.Query import Query
@@ -8,11 +9,7 @@ from thscraper.queries.Query import Query
 class QueryPixabay(Query):
     """Query Configured to send queries to Pixabay"""
     def __init__(self, lang='fr'):
-        with open('apikeys', 'r') as file:
-            for line in file:
-                parts = line.split(':')
-                if parts[0] == 'pixabay':
-                    api_key = parts[1].strip()
+        api_key = os.getenv("PIXABAY_API_KEY", None)
         url = "https://pixabay.com/api/?key={api_key}&q={search_string}&lang={lang}&image_type=photo&safesearch=true"
         self.lang = lang
         super().__init__(url, api_key=api_key)
