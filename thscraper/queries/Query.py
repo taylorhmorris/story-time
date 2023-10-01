@@ -6,15 +6,14 @@ from bs4 import BeautifulSoup
 
 import requests
 
-
 class Query():
     """Query Class to be extended for use with specific sites"""
-    def __init__(self, url, auth=None, check_cache=True, api_key=None):
+    def __init__(self, url, auth=None, check_cache=True, api_key=None, cache_path="cache"):
         self.url = url
         self.auth = auth
         self.check_cache = check_cache
         self.api_key = api_key
-        self.cache_path = "cache"
+        self.cache_path = cache_path
         self.service_name = self.__class__.__name__.lstrip('Query').lower()
         if len(self.service_name) == 0:
             self.service_name = "query"
@@ -53,8 +52,9 @@ class Query():
             raise e
         return True
 
-    def query(self, search_string):
+    def query(self, search_string: str):
         """Query the site with search_string"""
+        search_string = search_string.lower()
         if self.check_cache:
             cached = self.retrieve_cache(search_string)
             if cached:

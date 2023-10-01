@@ -1,5 +1,5 @@
-
 import logging
+import unicodedata
 
 import bs4
 from thscraper.queries.Query import Query
@@ -7,9 +7,9 @@ from thscraper.queries.Query import Query
 
 class QueryLarousse(Query):
     """Query Configured to send queries to Larousse"""
-    def __init__(self):
+    def __init__(self, check_cache=True, cache_path="cache"):
         url = "https://www.larousse.fr/dictionnaires/francais/{search_string}/"
-        super().__init__(url)
+        super().__init__(url, check_cache=check_cache, cache_path=cache_path)
 
     def parse_soup(self, soup):
         if isinstance(soup, dict):
@@ -34,15 +34,12 @@ class QueryLarousse(Query):
         except IndexError:
             grammar = None
         try:
-            definitions = soup.findAll("li", {"class": "DivisionDefinition"})
+            definitions = soup.select('.Definitions .DivisionDefinition')
             formatted_definitions = []
             for definition in definitions:
-                text = definition.text.split(':')
-                formatted_definitions.append({'definition': text[0].strip()})
-                try:
-                    formatted_definitions[-1]['example'] = text[1].strip()
-                except IndexError:
-                    pass
+                definition_text = "".join([text for text in definition.contents if isinstance(text, bs4.element.NavigableString)])
+                normalized_text = unicodedata.normalize("NFKD", definition_text.strip())
+                formatted_definitions.append({"definition": normalized_text})
 
             locutions = soup.findAll(class_="Locution")
             expressions = []
