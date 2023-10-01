@@ -1,6 +1,7 @@
 
 import json
 import logging
+from pathlib import Path
 from bs4 import BeautifulSoup
 
 import requests
@@ -13,15 +14,19 @@ class Query():
         self.auth = auth
         self.check_cache = check_cache
         self.api_key = api_key
-        self.logger = logging.getLogger("th_scraper")
+        self.cache_path = "cache"
+        self.service_name = self.__class__.__name__.lstrip('Query').lower()
+        if len(self.service_name) == 0:
+            self.service_name = "query"
+        self.logger = logging.getLogger(f"{self.service_name}")
+        self.logger.setLevel(logging.DEBUG)
 
     def retrieve_cache(self, search_string):
         """Retrieve query data from cache"""
         if len(''.join(e for e in search_string if e.isalnum())) < 1:
             return False
         try:
-            folder = self.__class__.__name__.lstrip('Query').lower()
-            with open(f"cache\\{folder}\\{search_string}.json", "r") as json_file:
+            with open(f"{self.cache_path}\\{self.service_name}\\{search_string}.json", "r") as json_file:
                 data = json.load(json_file)
             return data
         except FileNotFoundError:
@@ -30,10 +35,10 @@ class Query():
 
     def store_in_cache(self, search_string, data):
         """Store query data in cache"""
+        Path(f"{self.cache_path}\\{self.service_name}").mkdir(parents=True, exist_ok=True)
         self.logger.debug(f"Storing '{search_string}' in cache")
         if len(''.join(e for e in search_string if e.isalnum())) < 1:
             return False
-        folder = self.__class__.__name__.lstrip('Query').lower()
         try:
             word = data['word']
             if not word or len(''.join(e for e in word if e.isalnum())) < 1:
@@ -41,7 +46,7 @@ class Query():
         except KeyError as e:
             word = search_string
         try:
-            with open(f"cache\\{folder}\\{word}.json", "w") as json_file:
+            with open(f"{self.cache_path}\\{self.service_name}\\{word}.json", "w") as json_file:
                 json.dump(data, json_file)
         except TypeError as e:
             logging.error("Could not serialize data")
@@ -66,6 +71,8 @@ class Query():
                 results['word'] = search_string
         try:
             self.store_in_cache(results['word'], results)
+        except KeyError as e:
+            self.logger.error(f"Error storing in cache: results does not have {e} key")
         except Exception as e:
             self.logger.error(f"Error storing in cache: {e}")
         self.logger.debug("Returning query results")    
