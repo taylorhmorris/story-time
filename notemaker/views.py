@@ -145,7 +145,7 @@ def htmx_generate_note(request):
     logger.setLevel(logging.DEBUG)
     if request.method == "POST":
         form = NoteForm(request.POST)
-        print(form.errors)
+        logger.info(form.errors)
         if form.is_valid():
             new_note = form.save(commit=True)
             i2w = CardType.objects.get(card_type_name="ImageToWord")
@@ -155,7 +155,6 @@ def htmx_generate_note(request):
             fitb = CardType.objects.get(card_type_name="FillInTheBlank")
             Card(note=new_note, card_type=fitb).save()
             return render(request, "notemaker/utils/message.html", { "message": 'Note created' })
-        logger.debug(f"{form.data}")
         word = form.data['word']
         data = get_search_result(word)
         data_defaults = {
@@ -176,10 +175,6 @@ def htmx_generate_note(request):
         try:
             form = NoteForm(data)
             form.word = data['word']
-        except KeyError as e:
-            logger.error(e)
-            raise e
-            # return render(request, "notemaker/utils/message.html", { "message": 'Error: could not generate note card because of key error' })
         except Exception as e:
             logger.error(e)
             return render(request, "notemaker/utils/message.html", { "message": 'Error: could not generate note card' })
