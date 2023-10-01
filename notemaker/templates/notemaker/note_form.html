@@ -40,7 +40,8 @@
         {% endfor %}
       </select>
     </div>
-  </label><br><br>
+  </label>
+  <div class="notification is-danger py-0">{{ form.definition.errors }}</div>
 
   <label class='field'>
     <h2 class="subtitle">Examples</h2>
@@ -51,7 +52,8 @@
         {% endfor %}
       </select>
     </div>
-  </label><br><br>
+  </label>
+  <div class="notification is-danger py-0">{{ form.example.errors }}</div>
   
   <label class='field'>
     <h2 class="subtitle">Expressions</h2>
@@ -62,7 +64,8 @@
         {% endfor %}
       </select>
     </div>
-  </label><br><br>
+  </label>
+  <div class="notification is-danger py-0">{{ form.expression.errors }}</div>
 
   <div class="is-flex is-flex-direction-row is-flex-wrap-wrap">
     {% for img in data.images %}
@@ -82,36 +85,36 @@
 {% endblock %}
 
 {% block footer %}
-<form method="post">{% csrf_token %}
-  <div class="fieldWrapper" x-show='false' x-cloak>
+<form method="post" x-data="{debug: false}">{% csrf_token %}
+  <div class="fieldWrapper" x-show='debug' x-cloak>
     <label for="{{ form.word.id_for_label }}">Word:</label>
     <input type="text" name="word" x-model="word" maxlength="50" required id="id_word">
   </div>
-  <div class="fieldWrapper" x-show='false' x-cloak>
+  <div class="fieldWrapper" x-show='debug' x-cloak>
     <label for="{{ form.ipa.id_for_label }}">ipa:</label>
     <input x-model="ipa" type="text" name="ipa" maxlength="50" id="id_ipa">
   </div>
-  <div class="fieldWrapper" x-show='false' x-cloak>
+  <div class="fieldWrapper" x-show='debug' x-cloak>
     <label for="{{ form.grammar.id_for_label }}">grammar:</label>
     <input x-model="grammar" type="text" name="grammar" maxlength="50" id="id_grammar">
   </div>
-  <div class="fieldWrapper" x-show='false' x-cloak>
+  <div class="fieldWrapper" x-show='debug' x-cloak>
     <label for="{{ form.definition.id_for_label }}">definition:</label>
     <input x-model="definition" type="text" name="definition" maxlength="200" id="id_definition">
   </div>
-  <div class="fieldWrapper" x-show='false' x-cloak>
+  <div class="fieldWrapper" x-show='debug' x-cloak>
     <label for="{{ form.example.id_for_label }}">example:</label>
     <input x-model="example" type="text" name="example" maxlength="200" id="id_example">
   </div>
-  <div class="fieldWrapper" x-show='false' x-cloak>
+  <div class="fieldWrapper" x-show='debug' x-cloak>
     <label for="{{ form.expression.id_for_label }}">expression:</label>
     <input x-model="expression" type="text" name="expression" maxlength="200" id="id_expression">
   </div>
-  <div class="fieldWrapper" x-show='false' x-cloak>
+  <div class="fieldWrapper" x-show='debug' x-cloak>
     <label for="{{ form.expression_meaning.id_for_label }}">expression_meaning:</label>
     <input x-model="expression_meaning" type="text" name="expression_meaning" maxlength="200" id="id_expression_meaning">
   </div>
-  <div class="fieldWrapper" x-show='false' x-cloak>
+  <div class="fieldWrapper" x-show='debug' x-cloak>
     <label for="{{ form.image.id_for_label }}">image:</label>
     <textarea x-model="image" name="image" cols="40" rows="10" id="id_image"></textarea>
   </div>

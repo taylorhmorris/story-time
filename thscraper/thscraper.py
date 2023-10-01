@@ -53,6 +53,7 @@ def query_all(word):
             'images': images
         }
         logger.info("Return data")
+        logger.debug(f"{data}")
         return data
     except Exception as e:
         logging.error(e)

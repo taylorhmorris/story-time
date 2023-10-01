@@ -1,7 +1,10 @@
+import logging
 import json
 import base64
 from random import shuffle
 import requests
+
+from notemaker.utils.get_search_result import get_search_result, set_defaults
 from .forms import NoteForm
 
 from thscraper.thscraper import query_all
@@ -138,6 +141,8 @@ def ajax_anki_generate_note(request):
     # return render(request, "notemaker/note_create.html", context)
 
 def htmx_generate_note(request):
+    logger = logging.getLogger("view:htmx_generate_note")
+    logger.setLevel(logging.DEBUG)
     if request.method == "POST":
         form = NoteForm(request.POST)
         print(form.errors)
@@ -150,37 +155,33 @@ def htmx_generate_note(request):
             fitb = CardType.objects.get(card_type_name="FillInTheBlank")
             Card(note=new_note, card_type=fitb).save()
             return render(request, "notemaker/utils/message.html", { "message": 'Note created' })
-        return render(request, "notemaker/note_form.html", {"form": form, "data": {}})
+        logger.debug(f"{form.data}")
+        word = form.data['word']
+        data = get_search_result(word)
+        data_defaults = {
+            "definition": form.data['definition'],
+            "expression": [form.data['expression']],
+            "expression_meaning": [form.data['expression_meaning']],
+            "example": [form.data['example']],
+            "image": [form.data['image']],
+        }
+        data = data | data_defaults
+        return render(request, "notemaker/note_form.html", {"form": form, "data": data})
     else:
         word = request.GET.get('word', None)
+        data = get_search_result(word)
+        if not data:
+            return render(request, "notemaker/utils/message.html", { "message": 'Error: could not collect note data' })
+        data = set_defaults(data)
         try:
-            sr = SearchResult.objects.values_list('data', flat=True).get(word=word)
-            data = json.decoder.JSONDecoder().decode(sr)
-        except:
-            print(f"No Saved Result. Asking thscraper for {word}")
-            try:
-                data = query_all(word)
-                b64images = [base64.b64encode(requests.get(img).content).decode()
-                            for img in data['images']]
-                data['images'] = b64images
-                new_search = SearchResult(word=data['word'])
-                new_search.data = json.dumps(data)
-                new_search.save()
-            except:
-                return render(request, "notemaker/utils/message.html", { "message": 'Error: could not collect note data' })
-        try:
-            if data['definitions']:
-                data['definition'] = data['definitions'][0]['definition']
-            if data['examples']:
-                data['example'] = data['examples'][0]['source']
-            if data['expressions']:
-                data['expression'] = data['expressions'][0]['expression']
-                data['expression_meaning'] = data['expressions'][0]['definition']
-            if data['images']:
-                data['image'] = data['images'][0]
             form = NoteForm(data)
             form.word = data['word']
-        except:
+        except KeyError as e:
+            logger.error(e)
+            raise e
+            # return render(request, "notemaker/utils/message.html", { "message": 'Error: could not generate note card because of key error' })
+        except Exception as e:
+            logger.error(e)
             return render(request, "notemaker/utils/message.html", { "message": 'Error: could not generate note card' })
     return render(request, "notemaker/note_form.html", {"form": form, "data": data})
 
