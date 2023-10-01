@@ -18,6 +18,5 @@ from django.urls import include, path
 
 urlpatterns = [
     path('notemaker/', include('notemaker.urls')),
-    path('storytime/', include('storytime.urls')),
     path('admin/', admin.site.urls),
 ]
