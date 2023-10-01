@@ -1,6 +1,6 @@
 {% load static %}
 <div x-show="flipped == false">
-  <div class="level">
+  <div class="level is-mobile">
     {% include 'notemaker/ratebar/flip_button.html' %}
     {% include 'notemaker/ratebar/skip_button.html' %}
     {% include 'notemaker/ratebar/edit_button.html' %}
@@ -8,15 +8,18 @@
   </div>
 </div>
 
-<div x-show="flipped" class="level">
+<div x-show="flipped" class="level is-mobile has-text">
   <div class="level-item has-text-centered">
     {% include 'notemaker/ratebar/flip_button.html' %}
-  </div><div class="level-item hs-text-centered">
+  </div>
+  <div class="level-item has-text-centered">
     {% include 'notemaker/ratebar/correct_button.html' %}
-</div><div class="level-item hs-text-centered">
-  {% include 'notemaker/ratebar/easy_button.html' %}
-</div><div class="level-item hs-text-centered">
-  {% include 'notemaker/ratebar/incorrect_button.html' %}
+  </div>
+  <div class="level-item has-text-centered">
+    {% include 'notemaker/ratebar/easy_button.html' %}
+  </div>
+  <div class="level-item has-text-centered">
+    {% include 'notemaker/ratebar/incorrect_button.html' %}
   </div>
   <div class="level-item has-text-centered">
     {% include 'notemaker/ratebar/skip_button.html' %}

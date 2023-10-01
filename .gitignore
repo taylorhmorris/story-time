@@ -2,11 +2,13 @@ __pycache
 env/
 *.sqlite3
 cache/
-apikeys
 *.pyc
 migrations/
 *.xmind
 apikeys
+
+.env
+*.local
 
 # Local environment scripts
 startworkspace.py

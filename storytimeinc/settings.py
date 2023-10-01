@@ -20,19 +20,25 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '(0y%9!#o9_q_nc(#ugju=k!u-5@@k$(+(wn+*u#o&m$ynp%$j5'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', default='(0y%9!#o9_q_nc(#ugju=k!u-5@@k$(+(wn+*u#o&m$ynp%$j5')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'DJANGO_PRODUCTION' not in os.environ
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+SECURE_SSL_REDIRECT = not DEBUG
 
 ALLOWED_HOSTS = []
+
+DJANGO_EXTERNAL_HOSTNAME = os.environ.get('DJANGO_EXTERNAL_HOSTNAME')
+if DJANGO_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(DJANGO_EXTERNAL_HOSTNAME)
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'notemaker.apps.NotemakerConfig',
-    'storytime.apps.StorytimeConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -121,3 +127,7 @@ STATIC_URL = '/static/'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+
+
+
