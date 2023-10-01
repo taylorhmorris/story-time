@@ -159,7 +159,7 @@
   <div class="is-flex is-flex-direction-row is-flex-wrap-wrap">
     {% for img in data.images %}
     <div :style="'flex: 25%'" :class="{ 'has-background-success': {{ forloop.counter0 }} == selectedImage }">
-      <figure class="image is-square">
+      <figure class="image is-square is-clickable">
         <img
           value='{{ forloop.counter0 }}'
           :id="{{ forloop.counter0 }} == selectedImage ? 'selectedImage' : 'image{{ forloop.counter0 }}'"
@@ -169,6 +169,9 @@
       </figure>
     </div>
   {% endfor %}
+  </div>
+  <div class="container">
+    <p class="tag is-black is-pulled-right">Images from <a href="https://pixabay.com/">Pixabay</a></p>
   </div>
 </div>
 {% endblock %}
