@@ -29,21 +29,21 @@ def set_defaults(data: dict) -> dict:
     try:
         data['definition'] = data['definitions'][0]['definition']
     except KeyError:
-        data['definition'] = []
+        data['definition'] = ''
     try:
         data['expression'] = data['expressions'][0]['expression']
     except KeyError:
-        data['expression'] = []
+        data['expression'] = ''
     try:
         data['expression_meaning'] = data['expressions'][0]['definition']
     except KeyError:
-        data['expression_meaning'] = []
+        data['expression_meaning'] = ''
     try:
         data['example'] = data['examples'][0]['source']
     except (KeyError, IndexError):
-        data['example'] = []
+        data['example'] = ''
     try:
         data['image'] = data['images'][0]
     except KeyError:
-        data['image'] = []
+        data['image'] = ''
     return data

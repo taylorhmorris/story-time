@@ -31,41 +31,130 @@
   id='cardForm'
   x-init="$watch('selectedExpression', value => { expression = value.split(':::')[0]; expression_meaning = value.split(':::')[1];})"
 >
+  {{ form.non_field_errors }}
+
   <label class='field'>
-    <h2 class="subtitle">Definitions</h2>
-    <div class="select">
-      <select class='definitions' name='def' x-model="definition">
-        {% for def in data.definitions %}
-          <option class='definition' name='def'>{{ def.definition }}</option>
-        {% endfor %}
-      </select>
+    <h2 class="subtitle">Definition</h2>
+    <div class="level">
+    
+    <input          
+    x-model="definition"
+    type='text'
+    class="input"
+    placeholder="definition"
+  >
+  <div class="dropdown" x-data="{active: false}" :class="{'is-active': active, 'is-right': getBreakpoint()}">
+    <div class="dropdown-trigger">
+      <button class="button" aria-haspopup="true" aria-controls="definitions-menu" @click="active = !active">
+        <span class="icon is-small">
+          <i class="mdi mdi-chevron-down" aria-hidden="true"></i>
+        </span>
+      </button>
     </div>
+    <div class="dropdown-menu" id="definitions-menu" role="menu">
+      <div class="dropdown-content">
+        {% for def in data.definitions %}
+          <a
+            class='dropdown-item'
+            @click="definition = '{{ def.definition|escapejs }}'; active = false"
+          >
+            {{ def.definition|truncatechars:32 }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
   </label>
   <div class="notification is-danger py-0">{{ form.definition.errors }}</div>
 
+
+
+
+
+
   <label class='field'>
-    <h2 class="subtitle">Examples</h2>
-    <div class="select">
-      <select class='examples' name='example' x-model="example">
-        {% for example in data.examples %}
-          <option class='example' name='example'>{{ example.source }}</option>
-        {% endfor %}
-      </select>
+    <h2 class="subtitle">Example</h2>
+    <div class="level">
+    
+    <input          
+    x-model="example"
+    type='text'
+    class="input"
+    placeholder="example"
+  >
+  <div class="dropdown" x-data="{active: false}" :class="{'is-active': active, 'is-right': getBreakpoint()}">
+    <div class="dropdown-trigger">
+      <button class="button" aria-haspopup="true" aria-controls="examples-menu" @click="active = !active">
+        <span class="icon is-small">
+          <i class="mdi mdi-chevron-down" aria-hidden="true"></i>
+        </span>
+      </button>
     </div>
+    <div class="dropdown-menu" id="examples-menu" role="menu">
+      <div class="dropdown-content">
+        {% for example in data.examples %}
+          <a
+            class='dropdown-item'
+            @click="example = '{{ example.source|escapejs }}'; active = false"
+          >
+            {{ example.source|truncatechars:32 }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
   </label>
   <div class="notification is-danger py-0">{{ form.example.errors }}</div>
-  
+
+
   <label class='field'>
-    <h2 class="subtitle">Expressions</h2>
-    <div class="select">
-      <select class='expressions' name='expression' x-model="selectedExpression">
-        {% for expression in data.expressions %}
-          <option class='expression' name='expression' value="{{ expression.expression }}:::{{ expression.definition }}">{{ expression.expression }} ({{ expression.definition }})</option>
-        {% endfor %}
-      </select>
+    <h2 class="subtitle">Expression and Meaning</h2>
+    <div class="level">
+    
+    <input          
+    x-model="expression"
+    type='text'
+    class="input"
+    placeholder="expression"
+  >
+  <input          
+    x-model="expression_meaning"
+    type='text'
+    class="input"
+    placeholder="expression meaning"
+  >
+  <div class="dropdown is-right-tablet" x-data="{active: false}" :class="{'is-active': active, 'is-right': getBreakpoint()}">
+    <div class="dropdown-trigger">
+      <button class="button" aria-haspopup="true" aria-controls="expressions-menu" @click="active = !active">
+        <span class="icon is-small">
+          <i class="mdi mdi-chevron-down" aria-hidden="true"></i>
+        </span>
+      </button>
     </div>
+    <div class="dropdown-menu" id="expressions-menu" role="menu">
+      <div class="dropdown-content">
+        {% for expression in data.expressions %}
+          <a
+            class='dropdown-item'
+            @click="selectedExpression = '{{ expression.expression|escapejs }}:::{{ expression.definition|escapejs }}'; active = false"
+          >
+            {{ expression.expression|truncatechars:16 }} ({{ expression.definition|truncatechars:16 }})
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
   </label>
   <div class="notification is-danger py-0">{{ form.expression.errors }}</div>
+
+
+  
+
+
+
 
   <div class="is-flex is-flex-direction-row is-flex-wrap-wrap">
     {% for img in data.images %}
