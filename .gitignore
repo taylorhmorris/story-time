@@ -12,3 +12,6 @@ apikeys
 
 # Local environment scripts
 startworkspace.py
+
+# Dev Email
+sent_emails/
