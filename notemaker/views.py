@@ -17,6 +17,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Note, SearchResult, Card, CardType
 
@@ -42,7 +43,7 @@ class NoteListView(ListView):
 class CardListView(ListView):
     model = Card
 
-class DashboardView(TemplateView):
+class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "notemaker/dashboard.html"
     
 class WorkshopView(TemplateView):
