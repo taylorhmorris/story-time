@@ -93,9 +93,11 @@ function dashboardMenuData() {
     menuToggle: false,
     requestHardReset() {
       fetch("{% url 'notemaker:api' %}?request=reset&flags=hard")
-        .then((response) => console.log(response.json()))
-        .then(console.log("Cards reset"))
-        .catch((error) => console.log(error));
+        .then((response) => response.json())
+        .then((data) => { if (data.success = false) throw Error(data.message); return data})
+        .then((data) => { console.log(data.message); return data; })
+        .catch((error) => { console.log(error); return error; })
+        .then((data) => alert(data.message))
     }
   }
 }

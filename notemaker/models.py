@@ -52,10 +52,16 @@ class CardType(models.Model):
         return self.card_type_name
     
 class CardManager(models.Manager):
-    def are_due(self):
-        cards = Card.objects.order_by('due_date','note')
-        ids = [card.id for card in cards if card.is_due()]
-        return cards.filter(id__in=ids)
+    def are_due(self, owner):
+        cards = Card.objects.filter(note__owner_id=owner.id, due_date__lte=timezone.now()).order_by('due_date','note')
+        return cards
+    
+    def reset(self, owner):
+        cards = Card.objects.filter(note__owner_id=owner.id)
+        count = len(cards)
+        for card in cards:
+            card.reset()
+        return count
     
 class Card(models.Model):
     note = models.ForeignKey(Note, on_delete=models.CASCADE)

@@ -236,7 +236,7 @@ def htmx_skip_card_view(request, pk):
 
 def htmx_review_card(request):
     max_number = 1
-    cards = Card.custom_objects.are_due()[:max_number]
+    cards = Card.custom_objects.are_due(request.user)[:max_number]
     if len(cards) > 0:
         card_type_obj = CardType.objects.get(pk=cards[0].card_type.pk)
         context = { 'card': cards[0], 'template': card_type_obj.card_type_name }
@@ -283,13 +283,13 @@ def ajax_review_cards(request):
         results = {'success': False, 'message': 'No cards due'}
     return JsonResponse(results)
 
+@login_required
 def api_view(request):
     #data = request.GET.get('data', None)
     request_type = request.GET.get('request', None)
     if request_type == 'reset':# and 'hard' in data['flags']:
-        for card in Card.objects.all():
-            card.reset()
-        results = {'success': True, 'message': 'All cards reset'}
+        count = Card.custom_objects.reset(request.user)
+        results = {'success': True, 'message': f'{count} cards reset'}
     else:
         results = {'success': False, 'message': 'Invalid Command'}
     return JsonResponse(results)
