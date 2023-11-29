@@ -1,22 +1,36 @@
 {% load static %}
 
-<div class="flashcard" x-data="{ flipped: false}">
-  <template x-if="flipped == false">
-    <div class="front">
-      front
-    </div>
-  </template>
-  <template x-if="flipped == true">
-    <div class="back">
-      <b>{{ note.word }}</b>
-      <span>/{{ note.ipa }}/</span>
-      <a @click="speakMessage('{{ note.word }}', 'fr-FR')" href="#">&#128265;</a>
-      <br>
-      Definition: <span>{{ note.definition }}</span>
-      <br>Example: <span @click="console.log('clickedd example')">{{ note.example }}</span>
-      <br>
-      <span><img src="data:image/jpg;base64, {{ note.image }}"></span>
-    </div>
-  </template>
-  <span @click="flipped = !flipped">Flip!</span>
+<div>
+  Hello, {{ user }}!<br><br>
+
+<a href="{% url 'notemaker:note-update' note.id %}">Edit This</a>
+
+{{ note.owner }}<br>
+{{ note.word }}<br>
+{{ note.ipa }}<br>
+{{ note.grammar }}<br>
+{{ note.definition }}<br>
+{{ note.example }}<br>
+{{ note.expression }}<br>
+{{ note.expression_meaning }}<br>
+<img src='data:image/jpg;base64, {{ note.image }}'><br>
+</div>
+
+<div>
+  Cards:<br>
+  <ul>{% for card in note.card_set.all %}
+    <li>
+      <a href="{% url 'notemaker:card-detail' card.id %}">
+        {{ card.card_type }}
+      </a>
+      <a href="{% url 'notemaker:ajax-delete-card' %}?card_id={{ card.id }}">
+        (Delete this)
+      </a>
+    </li>
+    {% endfor %}
+</ul>
+</div>
+
+<div>
+  
 </div>
