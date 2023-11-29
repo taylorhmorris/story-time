@@ -1,10 +1,32 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-  <h2>Sign up</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
-  </form>
+<form method="post" class="form p-5">
+  <div class="label">Sign up</div>
+  {% csrf_token %}
+{% for hidden in form.hidden_fields %}
+  {{ hidden }}
+{% endfor %}
+
+{% for field in form.visible_fields %}
+  <div class="field">
+    <label class="label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    <div class="control">
+      {{ field|add_class:'input' }}
+    </div>
+    <p class="help">
+      {% for error in field.errors %}
+        <span class="help is-danger">{{ error }}</span>
+      {% endfor %}
+    </p>
+  </div>
+{% endfor %}
+<button class="button has-tooltip-right" type="submit" data-tooltip="Sign Up">Sign Up</button>
+<div class="help is-danger">
+  {{ form.non_field_errors }}
+  </div>
+</form>
 {% endblock %}

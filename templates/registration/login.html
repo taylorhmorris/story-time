@@ -1,6 +1,33 @@
-<h2>Log In</h2>
-<form method="post">
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<form method="post" class="form p-5">
+  <div class="label">Log In</div>
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Log In</button>
+{% for hidden in form.hidden_fields %}
+  {{ hidden }}
+{% endfor %}
+
+{% for field in form.visible_fields %}
+  <div class="field">
+    <label class="label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    <div class="control">
+      {{ field|add_class:'input' }}
+    </div>
+    <p class="help">
+      {% for error in field.errors %}
+        <span class="help is-danger">{{ error }}</span>
+      {% endfor %}
+    </p>
+  </div>
+{% endfor %}
+<div class="control">
+  <button class="button has-tooltip-right" type="submit" data-tooltip="Log In">Log In</button>
+</div>
+<a href="{% url 'password_reset' %}">Forgot your password?</a>
+<div class="help is-danger">
+  {{ form.non_field_errors }}
+  </div>
 </form>
+{% endblock %}
