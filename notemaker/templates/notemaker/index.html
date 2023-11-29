@@ -1,7 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-Welcome to Notemaker!
-
-<a href="{% url 'login' %}">Login</a>
+<div class="message">
+  <div class="message-header">
+    Welcome to Storytime / Notemaker!
+  </div>
+  <div class="message-body">
+    <p>You must be logged in to continue.</p>
+    <br/>
+    <a 
+      href="{% url 'login' %}"
+      class="button has-tooltip-right"
+      data-tooltip="Login"
+    >
+      Login
+    </a>
+    <a 
+      href="{% url 'signup' %}"
+      class="button has-tooltip-right"
+      data-tooltip="Signup"
+    >
+      Signup
+    </a>
+  </div>
+</div>
 {% endblock %}
