@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
 Notemaker
@@ -35,6 +36,7 @@ Notemaker
 
 	</div>
 
+  <script src="{% static 'notemaker/js/speakMessage.js' %}"></script>
 	<script>
 		function cardQueueData() {
 			return {
