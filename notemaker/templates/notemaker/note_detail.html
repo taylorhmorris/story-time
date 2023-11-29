@@ -3,6 +3,8 @@
 <div>
   Hello, {{ user }}!<br><br>
 
+<a href="{% url 'notemaker:note-update' note.id %}">Edit This</a>
+
 {{ note.owner }}<br>
 {{ note.word }}<br>
 {{ note.ipa }}<br>

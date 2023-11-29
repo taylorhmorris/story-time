@@ -4,7 +4,7 @@ from notemaker.utils.get_search_result import get_search_result, set_defaults
 from .forms import NoteForm
 
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.views import generic
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -19,24 +19,32 @@ from .models import Note, Card, CardType
 class IndexView(TemplateView):
     template_name = "notemaker/index.html"
 
-## Protect This
 class NoteDetailView(LoginRequiredMixin, DetailView):
     model = Note
 
-## Protect This
+    def get_queryset(self):
+        return super().get_queryset().filter(owner=self.request.user)
+
 class NoteUpdateView(LoginRequiredMixin, generic.edit.UpdateView):
     model = Note
     fields = '__all__'
     template_name_suffix = '_update_form'
     success_url = reverse_lazy('notemaker:htmx-review-card')
+
+    def get_queryset(self):
+        return super().get_queryset().filter(owner=self.request.user)
     
-## Only list User's Notes
 class NoteListView(LoginRequiredMixin, ListView):
     model = Note
+    
+    def get_queryset(self):
+        return self.model.objects.filter(owner=self.request.user)
 
-## Only list User's Cards
 class CardListView(LoginRequiredMixin, ListView):
     model = Card
+
+    def get_queryset(self):
+        return self.model.objects.filter(note__owner_id=self.request.user.id)
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "notemaker/dashboard.html"
@@ -51,6 +59,7 @@ def htmx_generate_note(request):
         logger.info(form.errors)
         if form.is_valid():
             if form.cleaned_data['owner'] != request.user:
+                logger.debug(f'Invalid Card Creation attempted by {request.user} (pretending to be {form.cleaned_data["owner"]})')
                 return render(request, "notemaker/utils/message.html", { "message": 'Invalid Owner' })
             new_note = form.save(commit=True)
             i2w = CardType.objects.get(card_type_name="ImageToWord")
@@ -88,7 +97,11 @@ def htmx_generate_note(request):
 
 @login_required
 def htmx_rate_card_view(request, pk, rating):
+    logger = logging.getLogger("view:htmx_rate_card_view")
     card = Card.objects.get(pk=pk)
+    if card.note.owner != request.user:
+        logger.debug(f'Invalid Card Rating attempted by {request.user} on card #{card.id} (owned by {card.note.owner})')
+        return htmx_review_card(request)
     if rating == '0':
         card.failure += 1
         card.fails_in_a_row += 1
@@ -106,7 +119,11 @@ def htmx_rate_card_view(request, pk, rating):
 
 @login_required
 def htmx_skip_card_view(request, pk):
+    logger = logging.getLogger("view:htmx_skip_card_view")
     card = Card.objects.get(pk=pk)
+    if card.note.owner != request.user:
+        logger.debug(f'Invalid Card Skip attempted by {request.user} on card #{card.id} (owned by {card.note.owner})')
+        return htmx_review_card(request)
     card.due_date = timezone.now()
     card.save()
     return htmx_review_card(request)
@@ -123,11 +140,13 @@ def htmx_review_card(request):
 
 @login_required
 def ajax_delete_card_view(request):
+    logger = logging.getLogger("view:ajax_delete_card_view")
     card_id = request.GET.get('card_id', None)
     card = Card.objects.get(pk=card_id)
     try:
         note = card.note
         if note.owner != request.user:
+            logger.debug(f'Invalid Card Delete attempted by {request.user} on card owned by {card.note.owner}')
             data = {'success': 'false', 'result': f'Permission Denied'}
         else:
             card.delete()
@@ -138,7 +157,12 @@ def ajax_delete_card_view(request):
 
 @login_required
 def card_detail_view(request, pk):
+    logger = logging.getLogger("view:card_detail_view")
+    logger.setLevel(logging.DEBUG)
     card_obj = Card.objects.get(pk=pk)
+    if card_obj.note.owner != request.user:
+        logger.debug(f'Invalid CardDetailView attempted by {request.user} on card owned by {card_obj.note.owner}')
+        return render(request, "notemaker/utils/message.html", { "message": "Forbidden" })
     card_type_obj = CardType.objects.get(pk=card_obj.card_type.pk)
     context = {'card': card_obj,
                'template': card_type_obj.card_type_name}
