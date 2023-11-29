@@ -1,9 +1,15 @@
 from datetime import timedelta
+from django.conf import settings
 
 from django.db import models
 from django.utils import timezone
 
 class Note(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        blank=False,
+    )
     word = models.CharField(max_length=50)
     ipa = models.CharField(max_length=50, blank=True)
     grammar = models.CharField(max_length=50, blank=True)
@@ -25,6 +31,7 @@ class Note(models.Model):
                 'expression': self.expression,
                 'expression_meaning': self.expression_meaning,
                 'image': self.image,
+                'owner': self.owner,
                 'id': self.id}
     
 class SearchResult(models.Model):
@@ -45,10 +52,16 @@ class CardType(models.Model):
         return self.card_type_name
     
 class CardManager(models.Manager):
-    def are_due(self):
-        cards = Card.objects.order_by('due_date','note')
-        ids = [card.id for card in cards if card.is_due()]
-        return cards.filter(id__in=ids)
+    def are_due(self, owner):
+        cards = Card.objects.filter(note__owner_id=owner.id, due_date__lte=timezone.now()).order_by('due_date','note')
+        return cards
+    
+    def reset(self, owner):
+        cards = Card.objects.filter(note__owner_id=owner.id)
+        count = len(cards)
+        for card in cards:
+            card.reset()
+        return count
     
 class Card(models.Model):
     note = models.ForeignKey(Note, on_delete=models.CASCADE)
