@@ -4,4 +4,4 @@ requests==2.31.*
 Pillow==10.*
 epitran==1.*
 python-dotenv==1.0.*
-
+django-widget-tweaks==1.5.*
