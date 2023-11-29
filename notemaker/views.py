@@ -18,6 +18,7 @@ from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 from .models import Note, SearchResult, Card, CardType
 
@@ -82,7 +83,7 @@ def deserialize(serial):
         results[key] = value
     return results
     
-
+@login_required
 def ajax_anki_create_note(request):
     word = request.GET.get('word', None)
     form = deserialize(request.GET.get('form', None))
@@ -105,6 +106,7 @@ def ajax_anki_create_note(request):
     except KeyError:
         pass
     new_note.image = sr_data['images'][int(form['selectedImg'])]
+    new_note.owner = request.user
     new_note.save()
     
     i2w = CardType.objects.get(card_type_name="ImageToWord")
@@ -173,6 +175,7 @@ def htmx_generate_note(request):
         if not data:
             return render(request, "notemaker/utils/message.html", { "message": 'Error: could not collect note data' })
         data = set_defaults(data)
+        data['owner'] = request.user.id
         try:
             form = NoteForm(data)
             form.word = data['word']

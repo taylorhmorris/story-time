@@ -1,9 +1,15 @@
 from datetime import timedelta
+from django.conf import settings
 
 from django.db import models
 from django.utils import timezone
 
 class Note(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        blank=False,
+    )
     word = models.CharField(max_length=50)
     ipa = models.CharField(max_length=50, blank=True)
     grammar = models.CharField(max_length=50, blank=True)
@@ -25,6 +31,7 @@ class Note(models.Model):
                 'expression': self.expression,
                 'expression_meaning': self.expression_meaning,
                 'image': self.image,
+                'owner': self.owner,
                 'id': self.id}
     
 class SearchResult(models.Model):

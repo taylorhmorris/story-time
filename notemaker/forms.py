@@ -13,5 +13,6 @@ class NoteForm(forms.ModelForm):
             "example",
             "expression",
             "expression_meaning",
-            "image"
+            "image",
+            "owner"
         ]

@@ -178,6 +178,10 @@
 
 {% block footer %}
 <form method="post" x-data="{debug: false}">{% csrf_token %}
+  <div class="fieldWrapper" x-show="debug" x-cloak>
+    <label for="{{ form.owner.id_for_label }}">owner:</label>
+    <input type="text" name="{{ form.owner.name}}" id="id_owner" value="{{ data.owner }}">
+  </div>
   <div class="fieldWrapper" x-show='debug' x-cloak>
     <label for="{{ form.word.id_for_label }}">Word:</label>
     <input type="text" name="word" x-model="word" maxlength="50" required id="id_word">
