@@ -90,6 +90,7 @@ def htmx_generate_note(request):
         form = NoteForm(request.POST)
         logger.info(form.errors)
         if form.is_valid():
+            if form.cleaned_data['owner'] != request.user:
             new_note = form.save(commit=True)
             i2w = CardType.objects.get(card_type_name="ImageToWord")
             Card(note=new_note, card_type=i2w).save()
@@ -165,9 +166,11 @@ def ajax_delete_card_view(request):
     card = Card.objects.get(pk=card_id)
     try:
         note = card.note
-        assert note.owner == request.user
-        card.delete()
-        data = {'success': 'true', 'result': f'Card {card_id} was deleted'}
+        if note.owner != request.user:
+            data = {'success': 'false', 'result': f'Permission Denied'}
+        else:
+            card.delete()
+            data = {'success': 'true', 'result': f'Card {card_id} was deleted'}
     except:
         data = {'success': 'false', 'result': f'Card {card_id} could not be deleted due to an unknown error.'}
     return JsonResponse(data)
