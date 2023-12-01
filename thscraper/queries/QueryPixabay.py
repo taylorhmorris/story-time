@@ -15,14 +15,11 @@ class QueryPixabay(Query):
         super().__init__(url, api_key=api_key)
 
     def query(self, search_string):
+        data = None
         if self.check_cache:
             cached = self.retrieve_cache(search_string)
             if cached:
                 data = cached
-            else:
-                data = None
-        else:
-            data = None
         if data is None:
             url = self.url.format(search_string=search_string, api_key=self.api_key, lang=self.lang)
             response = requests.get(url)

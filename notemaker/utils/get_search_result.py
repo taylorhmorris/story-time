@@ -28,7 +28,7 @@ def get_search_result(word: str) -> dict | None:
 def set_defaults(data: dict) -> dict:
     try:
         data['definition'] = data['definitions'][0]['definition']
-    except KeyError:
+    except (KeyError, IndexError):
         data['definition'] = ''
     try:
         data['expression'] = data['expressions'][0]['expression']
@@ -36,7 +36,7 @@ def set_defaults(data: dict) -> dict:
         data['expression'] = ''
     try:
         data['expression_meaning'] = data['expressions'][0]['definition']
-    except KeyError:
+    except (KeyError, IndexError):
         data['expression_meaning'] = ''
     try:
         data['example'] = data['examples'][0]['source']
@@ -44,6 +44,6 @@ def set_defaults(data: dict) -> dict:
         data['example'] = ''
     try:
         data['image'] = data['images'][0]
-    except KeyError:
+    except (KeyError, IndexError):
         data['image'] = ''
     return data

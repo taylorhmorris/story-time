@@ -31,7 +31,6 @@ def query_all(word):
         except Exception as e:
             logger.error(f"Exception Encountered: {e}")
 
-        # Possibly no longer working. Investigate
         logger.debug("Querying Linguee")
         linguee = QueryLinguee().query(word)
         logger.debug("Done Querying Linguee")

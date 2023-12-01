@@ -23,12 +23,14 @@ class Query():
     def retrieve_cache(self, search_string):
         """Retrieve query data from cache"""
         if len(''.join(e for e in search_string if e.isalnum())) < 1:
+            self.logger.debug('Invalid search string')
             return False
         try:
             with open(f"{self.cache_path}\\{self.service_name}\\{search_string}.json", "r") as json_file:
                 data = json.load(json_file)
             return data
         except FileNotFoundError:
+            self.logger.debug('File Not Found')
             return False
         return False
 
@@ -60,7 +62,9 @@ class Query():
             if cached:
                 self.logger.info(f"Search string ({search_string}) found in cache")
                 return self.parse_soup(cached)
-        self.logger.info(f"Search string ({search_string}) not found in cache")
+            self.logger.info(f"Search string ({search_string}) not found in cache")
+        else:
+            self.logger.info('Skipping Cache as requested')
         url = self.url.format(search_string=search_string, api_key=self.api_key)
         webpage = requests.get(url)
         soup = BeautifulSoup(webpage.content, features="html.parser")

@@ -45,18 +45,10 @@ class QueryLarousse(Query):
             expressions = []
             for x in locutions:
                 express = dict()
-                a = None
-                b = x.find(class_="AdresseLocution").find(text=True, recursive=False)
-                try:
-                    a = f"({b[0].text.split('.')[0]})"
-                    b = b[1].split(',')[0]
-                except:
-                    b = b[0]
-                c = x.find(class_="TexteLocution").text
-                if a:
-                    express['warning'] = a
-                express['expression'] = b
-                express['definition'] = c
+                expression_text = x.find(class_="AdresseLocution").find(text=True, recursive=False)
+                expression_defintion = x.find(class_="TexteLocution").text
+                express['expression'] = expression_text
+                express['definition'] = expression_defintion
                 expressions.append(express)
 
             difficultes = []
