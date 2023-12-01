@@ -1,3 +1,4 @@
+import os
 
 import json
 import logging
@@ -26,7 +27,8 @@ class Query():
             self.logger.debug('Invalid search string')
             return False
         try:
-            with open(f"{self.cache_path}\\{self.service_name}\\{search_string}.json", "r") as json_file:
+            cache_file_path = os.path.join(self.cache_path, self.service_name, f"{search_string}.json")
+            with open(cache_file_path, "r") as json_file:
                 data = json.load(json_file)
             return data
         except FileNotFoundError:
@@ -36,7 +38,8 @@ class Query():
 
     def store_in_cache(self, search_string, data):
         """Store query data in cache"""
-        Path(f"{self.cache_path}\\{self.service_name}").mkdir(parents=True, exist_ok=True)
+        cache_file_dir = os.path.join(self.cache_path, self.service_name)
+        Path(cache_file_dir).mkdir(parents=True, exist_ok=True)
         self.logger.debug(f"Storing '{search_string}' in cache")
         if len(''.join(e for e in search_string if e.isalnum())) < 1:
             return False
@@ -47,7 +50,8 @@ class Query():
         except KeyError as e:
             word = search_string
         try:
-            with open(f"{self.cache_path}\\{self.service_name}\\{word}.json", "w") as json_file:
+            cache_file_path = os.path.join(self.cache_path, self.service_name, f"{word}.json")
+            with open(cache_file_path, "w") as json_file:
                 json.dump(data, json_file)
         except TypeError as e:
             logging.error("Could not serialize data")
