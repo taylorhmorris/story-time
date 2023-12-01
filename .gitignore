@@ -6,6 +6,7 @@ cache/
 migrations/
 *.xmind
 apikeys
+static/
 
 .env
 *.local

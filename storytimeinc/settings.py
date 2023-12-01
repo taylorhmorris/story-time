@@ -29,10 +29,12 @@ SESSION_COOKIE_SECURE = not DEBUG
 SECURE_SSL_REDIRECT = not DEBUG
 
 ALLOWED_HOSTS = []
-
+CSRF_TRUSTED_ORIGINS = []
 DJANGO_EXTERNAL_HOSTNAME = os.environ.get('DJANGO_EXTERNAL_HOSTNAME')
 if DJANGO_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(DJANGO_EXTERNAL_HOSTNAME)
+    CSRF_TRUSTED_ORIGINS.append(f'http://{DJANGO_EXTERNAL_HOSTNAME}')
+    CSRF_TRUSTED_ORIGINS.append(f'https://{DJANGO_EXTERNAL_HOSTNAME}')
 
 
 # Application definition
@@ -126,7 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
