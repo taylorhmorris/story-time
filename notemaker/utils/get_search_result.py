@@ -7,6 +7,8 @@ from thscraper.thscraper import query_all
 
 
 def get_search_result(word: str) -> dict | None:
+    if word is None or len(word) == 0:
+        return None
     try:
         sr = SearchResult.objects.values_list('data', flat=True).get(word=word)
         data = json.decoder.JSONDecoder().decode(sr)

@@ -1,6 +1,7 @@
 import logging
 
 from notemaker.utils.get_search_result import get_search_result, set_defaults
+from notemaker.utils.normalize_word import normalize_word
 from .forms import NoteForm
 
 from django.shortcuts import render
@@ -70,6 +71,7 @@ def htmx_generate_note(request):
             Card(note=new_note, card_type=fitb).save()
             return render(request, "notemaker/utils/message.html", { "message": 'Note created' })
         word = form.data['word']
+        word = normalize_word(word)
         data = get_search_result(word)
         data_defaults = {
             "definition": form.data['definition'],
@@ -82,6 +84,7 @@ def htmx_generate_note(request):
         return render(request, "notemaker/note_form.html", {"form": form, "data": data})
     else:
         word = request.GET.get('word', None)
+        word = normalize_word(word)
         data = get_search_result(word)
         if not data:
             return render(request, "notemaker/utils/message.html", { "message": 'Error: could not collect note data' })
