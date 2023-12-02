@@ -1,6 +1,7 @@
 """THScraper scrapes several sites to determine information about
 French language words, bring the information together into one usable json file
 """
+import os
 from epitran import Epitran
 import logging
 from dotenv import load_dotenv
@@ -20,9 +21,6 @@ def query_all(word):
         logger.setLevel(logging.DEBUG)    
         logger.info("Running Scraper")
         
-        ipa = Epitran('fra-Latn').transliterate(word)
-        logger.info(f"ipa found by Epitran == {ipa}")
-
         logger.debug("Querying Larousse")
         larousse = QueryLarousse().query(word)
         logger.debug("Done Querying Larousse")
@@ -36,11 +34,16 @@ def query_all(word):
         logger.debug("Done Querying Linguee")
 
         logger.debug("Querying Pixabay")
-        pixabay = QueryPixabay().query(word)
+        pixabay_api_key = os.getenv("PIXABAY_API_KEY", None)
+        pixabay = QueryPixabay(api_key=pixabay_api_key).query(word)
         logger.debug("Done Querying Pixabay")
         images = []
-        for hit in pixabay['hits']:
-            images.append(hit['previewURL'])
+        if pixabay and pixabay['hits']:
+            for hit in pixabay['hits']:
+                images.append(hit['previewURL'])
+
+        ipa = Epitran('fra-Latn').transliterate(word)
+        logger.info(f"ipa found by Epitran == {ipa}")
 
         data = {
             'word': word,

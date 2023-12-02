@@ -1,6 +1,5 @@
 
 import json
-import os
 import requests
 
 from thscraper.queries.Query import Query
@@ -8,8 +7,7 @@ from thscraper.queries.Query import Query
 
 class QueryPixabay(Query):
     """Query Configured to send queries to Pixabay"""
-    def __init__(self, lang='fr'):
-        api_key = os.getenv("PIXABAY_API_KEY", None)
+    def __init__(self, lang='fr', api_key=''):
         url = "https://pixabay.com/api/?key={api_key}&q={search_string}&lang={lang}&image_type=photo&safesearch=true"
         self.lang = lang
         super().__init__(url, api_key=api_key)
@@ -27,5 +25,6 @@ class QueryPixabay(Query):
                 data = json.loads(response.content.decode('utf-8'))
                 self.store_in_cache(search_string, data)
                 return data
-            return f"Unknown API Error (status code:{response.status_code})"
+            self.logger.debug(f"Unknown API Error (status code:{response.status_code})")
+            return {}
         return data
