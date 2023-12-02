@@ -32,7 +32,7 @@ def set_defaults(data: dict) -> dict:
         data['definition'] = ''
     try:
         data['expression'] = data['expressions'][0]['expression']
-    except KeyError:
+    except (KeyError, IndexError):
         data['expression'] = ''
     try:
         data['expression_meaning'] = data['expressions'][0]['definition']
