@@ -20,9 +20,6 @@ def query_all(word):
         logger.setLevel(logging.DEBUG)    
         logger.info("Running Scraper")
         
-        ipa = Epitran('fra-Latn').transliterate(word)
-        logger.info(f"ipa found by Epitran == {ipa}")
-
         logger.debug("Querying Larousse")
         larousse = QueryLarousse().query(word)
         logger.debug("Done Querying Larousse")
@@ -41,6 +38,9 @@ def query_all(word):
         images = []
         for hit in pixabay['hits']:
             images.append(hit['previewURL'])
+
+        ipa = Epitran('fra-Latn').transliterate(word)
+        logger.info(f"ipa found by Epitran == {ipa}")
 
         data = {
             'word': word,
