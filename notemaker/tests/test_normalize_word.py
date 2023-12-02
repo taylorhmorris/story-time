@@ -26,7 +26,7 @@ class NormalizeWordTest(TestCase):
 
     def test_accented_chars(self) -> None:
         word = 'mangé et èαá'
-        self.assertEqual(normalize_word(word), 'mangéetèαá')
+        self.assertEqual(normalize_word(word), 'mangé et èαá')
 
     def test_empty(self) -> None:
         word = ''
