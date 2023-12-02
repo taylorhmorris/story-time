@@ -22,10 +22,11 @@
     </p>
   </div>
 {% endfor %}
-<div class="control">
+<div class="control level">
   <button class="button has-tooltip-right" type="submit" data-tooltip="Log In">Log In</button>
+  <a href="{% url 'password_reset' %}">Forgot your password?</a>
 </div>
-<a href="{% url 'password_reset' %}">Forgot your password?</a>
+<a href="{% url 'password_reset' %}">Forgot your password?</a> / <a href="{% url 'signup' %}">Create an account?</a>
 <div class="help is-danger">
   {{ form.non_field_errors }}
   </div>
