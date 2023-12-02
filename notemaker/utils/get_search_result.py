@@ -18,7 +18,7 @@ def get_search_result(word: str) -> dict | None:
             b64images = [base64.b64encode(requests.get(img).content).decode()
                         for img in data['images']]
             data['images'] = b64images
-            new_search = SearchResult(word=data['word'])
+            new_search = SearchResult(word=word)
             new_search.data = json.dumps(data)
             new_search.save()
             return data
@@ -32,7 +32,7 @@ def set_defaults(data: dict) -> dict:
         data['definition'] = ''
     try:
         data['expression'] = data['expressions'][0]['expression']
-    except KeyError:
+    except (KeyError, IndexError):
         data['expression'] = ''
     try:
         data['expression_meaning'] = data['expressions'][0]['definition']
