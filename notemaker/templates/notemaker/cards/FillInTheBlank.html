@@ -3,7 +3,8 @@
 {% load notemaker.blank_string %}
 
 {% block title %}
-Fill In The Blank
+<span class="front" x-show="flipped == false">Fill In The Blank</span>
+<span class="front" x-show="flipped == true">The blank was...</span>
 {% endblock %}
 
 {% block front %}

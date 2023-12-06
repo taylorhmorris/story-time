@@ -63,12 +63,9 @@ def htmx_generate_note(request):
                 logger.debug(f'Invalid Card Creation attempted by {request.user} (pretending to be {form.cleaned_data["owner"]})')
                 return render(request, "notemaker/utils/message.html", { "message": 'Invalid Owner' })
             new_note = form.save(commit=True)
-            i2w = CardType.objects.get(card_type_name="ImageToWord")
-            Card(note=new_note, card_type=i2w).save()
-            w2i = CardType.objects.get(card_type_name="WordToImage")
-            Card(note=new_note, card_type=w2i).save()
-            fitb = CardType.objects.get(card_type_name="FillInTheBlank")
-            Card(note=new_note, card_type=fitb).save()
+            for card_type in CardType.objects.all():
+                new_card_type = CardType.objects.get(card_type_name=card_type.card_type_name)
+                Card(note=new_note, card_type=new_card_type).save()
             return render(request, "notemaker/utils/message.html", { "message": 'Note created' })
         word = form.data['word']
         word = normalize_word(word)
