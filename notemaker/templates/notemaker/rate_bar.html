@@ -1,33 +1,58 @@
 {% load static %}
-<div x-show="flipped == false">
-  <div class="level is-mobile">
-    {% include 'notemaker/ratebar/flip_button.html' %}
-    {% include 'notemaker/ratebar/skip_button.html' %}
-    {% include 'notemaker/ratebar/edit_button.html' %}
-    {% include 'notemaker/ratebar/delete_button.html' %}
+<div class="is-fullwidth" x-show="flipped == false">
+  <div class="level is-mobile is-fullwidth">
+    <div class="level-left">
+      <div class="level-item">
+        {% include 'notemaker/ratebar/flip_button.html' %}   
+      </div>
+      <div class="level-item">
+        {% include 'notemaker/ratebar/skip_button.html' %}
+      </div>
+    </div>
+    <div class="level-item is-fullwidth px-6"></div>
+    <div class="level-item is-fullwidth px-6"></div>
+    <div class="level-item is-fullwidth px-6"></div>
+    <div class="level-item is-fullwidth px-5"></div>
+    <div class="level-right">
+      <div class="level-item">
+        {% include 'notemaker/ratebar/edit_button.html' %}
+      </div>
+      <div class="level-item">
+        {% include 'notemaker/ratebar/delete_button.html' %}
+      </div>
+    </div>
   </div>
 </div>
 
-<div x-show="flipped" class="level is-mobile has-text">
-  <div class="level-item has-text-centered">
-    {% include 'notemaker/ratebar/flip_button.html' %}
+<div x-show="flipped" class="level is-mobile is-fullwidth">
+  <div class="level-left">
+    <div class="level-item">
+      {% include 'notemaker/ratebar/flip_button.html' %}
+    </div>
+    <p class="level-item">
+      {% include 'notemaker/ratebar/skip_button.html' %}
+    </p>
+    <div class="level-item is-fullwidth pl-5 pr-5"></div>
+    <div class="level-item is-fullwidth pl-2 pr-2"></div>
+    <p class="level-item">
+      {% include 'notemaker/ratebar/easy_button.html' %}
+    </p>
+    <p class="level-item">
+      {% include 'notemaker/ratebar/correct_button.html' %}
+    </p>
+    <p class="level-item">
+      {% include 'notemaker/ratebar/incorrect_button.html' %}
+    </p>
+    
   </div>
-  <div class="level-item has-text-centered">
-    {% include 'notemaker/ratebar/correct_button.html' %}
-  </div>
-  <div class="level-item has-text-centered">
-    {% include 'notemaker/ratebar/easy_button.html' %}
-  </div>
-  <div class="level-item has-text-centered">
-    {% include 'notemaker/ratebar/incorrect_button.html' %}
-  </div>
-  <div class="level-item has-text-centered">
-    {% include 'notemaker/ratebar/skip_button.html' %}
-  </div>
-  <div class="level-item has-text-centered">
-    {% include 'notemaker/ratebar/edit_button.html' %}
-  </div>
-  <div class="level-item has-text-centered">
-    {% include 'notemaker/ratebar/delete_button.html' %}
+  <div class="level-item is-fullwidth pl-6 pr-5"></div>
+  <div class="level-item is-fullwidth pl-2 pr-2"></div>
+  <div class="level-right is-pulled-right">
+    <p class="level-item">
+      {% include 'notemaker/ratebar/edit_button.html' %}
+    </p>
+    <p class="level-item">
+      {% include 'notemaker/ratebar/delete_button.html' %}
+    </p>
   </div>
 </div>
