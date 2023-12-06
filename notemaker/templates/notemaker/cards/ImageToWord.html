@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block title %}
-What word goes with this image?
+<span class="front" x-show="flipped == false">What word goes with this image?</span>
+<span class="front" x-show="flipped == true">This word goes with the image...</span>
 {% endblock %}
 
 {% block front %}

@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block title %}
-What does this word mean?
+<span class="front" x-show="flipped == false">What does this word mean?</span>
+<span class="front" x-show="flipped == true">It means...</span>
 {% endblock %}
 
 {% block front %}
