@@ -1,0 +1,13 @@
+{% extends "notemaker/cards/BasicNoteBase.html" %}
+{% load static %}
+
+{% block title %}
+<span class="front" x-show="flipped == false">What word goes with this definition?</span>
+<span class="front" x-show="flipped == true">The word is...</span>
+{% endblock %}
+
+{% block front %}
+<div class="has-text-centered">
+    {{ card.note.definition }}
+</div>
+{% endblock %}
