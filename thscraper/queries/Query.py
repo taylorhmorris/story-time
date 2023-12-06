@@ -1,8 +1,6 @@
 import os
 
-import json
 import logging
-from pathlib import Path
 from bs4 import BeautifulSoup
 
 import requests
@@ -23,17 +21,19 @@ class Query():
         self.logger = logging.getLogger(f"{self.service_name}")
         self.logger.setLevel(logging.DEBUG)
 
+    def get_full_cache_path(self, filename: str):
+        return os.path.join(self.cache_path, self.service_name, filename)
+
     def retrieve_cache(self, search_string):
         """Retrieve query data from cache"""
         if len(''.join(e for e in search_string if e.isalnum())) < 1:
             self.logger.debug('Invalid search string')
             return False
-        cache_file_path = os.path.join(self.cache_path, self.service_name)
-        return retrieve_from_cache(cache_file_path, f"{search_string}.json")
+        cache_file_path = self.get_full_cache_path(f"{search_string}.json")
+        return retrieve_from_cache(cache_file_path)
 
     def store_in_cache(self, search_string, data):
         """Store query data in cache"""
-        cache_file_dir = os.path.join(self.cache_path, self.service_name)
         if len(''.join(e for e in search_string if e.isalnum())) < 1:
             return False
         try:
@@ -43,7 +43,8 @@ class Query():
         except KeyError as e:
             word = search_string
             self.logger.warn(f'{e}')
-        return store_in_cache(cache_file_dir, f'{word}.json', data)
+        cache_file_path = self.get_full_cache_path(f"{word}.json")
+        return store_in_cache(cache_file_path, data)
 
     def query(self, search_string: str):
         """Query the site with search_string"""
