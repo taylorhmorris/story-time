@@ -3,9 +3,7 @@ import os
 import logging
 from bs4 import BeautifulSoup
 
-import requests
-
-from thscraper.cache import retrieve_from_cache, store_in_cache
+from thscraper.cache import retrieve_from_cache, retrieve_or_request, store_in_cache
 
 class Query():
     """Query Class to be extended for use with specific sites"""
@@ -58,8 +56,10 @@ class Query():
         else:
             self.logger.info('Skipping Cache as requested')
         url = self.url.format(search_string=search_string, api_key=self.api_key)
-        webpage = requests.get(url)
-        soup = BeautifulSoup(webpage.content, features="html.parser")
+        self.logger.debug(f'querying {url}')
+        webpage = retrieve_or_request(url, self.get_full_cache_path(f"{search_string}.html"))
+        self.logger.debug(f'retrieved: {webpage}')
+        soup = BeautifulSoup(webpage, features="html.parser")
         results = self.parse_soup(soup)
         self.logger.debug("Results received from soup parser")
         if "word" not in results or results["word"] is None:
