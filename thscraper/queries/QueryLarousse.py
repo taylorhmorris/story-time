@@ -47,7 +47,7 @@ class QueryLarousse(Query):
                 express = dict()
                 expression_text = x.find(class_="AdresseLocution").find(text=True, recursive=False)
                 expression_defintion = x.find(class_="TexteLocution").text
-                express['expression'] = expression_text
+                express['expression'] = expression_text.strip(', ')
                 express['definition'] = expression_defintion
                 expressions.append(express)
 
