@@ -7,6 +7,8 @@ from bs4 import BeautifulSoup
 
 import requests
 
+from thscraper.cache import retrieve_from_cache, store_in_cache
+
 class Query():
     """Query Class to be extended for use with specific sites"""
     def __init__(self, url, auth=None, check_cache=True, api_key=None, cache_path="cache"):
@@ -26,21 +28,12 @@ class Query():
         if len(''.join(e for e in search_string if e.isalnum())) < 1:
             self.logger.debug('Invalid search string')
             return False
-        try:
-            cache_file_path = os.path.join(self.cache_path, self.service_name, f"{search_string}.json")
-            with open(cache_file_path, "r") as json_file:
-                data = json.load(json_file)
-            return data
-        except FileNotFoundError:
-            self.logger.debug('File Not Found')
-            return False
-        return False
+        cache_file_path = os.path.join(self.cache_path, self.service_name)
+        return retrieve_from_cache(cache_file_path, f"{search_string}.json")
 
     def store_in_cache(self, search_string, data):
         """Store query data in cache"""
         cache_file_dir = os.path.join(self.cache_path, self.service_name)
-        Path(cache_file_dir).mkdir(parents=True, exist_ok=True)
-        self.logger.debug(f"Storing '{search_string}' in cache")
         if len(''.join(e for e in search_string if e.isalnum())) < 1:
             return False
         try:
@@ -49,14 +42,8 @@ class Query():
                 return False
         except KeyError as e:
             word = search_string
-        try:
-            cache_file_path = os.path.join(self.cache_path, self.service_name, f"{word}.json")
-            with open(cache_file_path, "w") as json_file:
-                json.dump(data, json_file)
-        except TypeError as e:
-            logging.error("Could not serialize data")
-            raise e
-        return True
+            self.logger.warn(f'{e}')
+        return store_in_cache(cache_file_dir, f'{word}.json', data)
 
     def query(self, search_string: str):
         """Query the site with search_string"""
