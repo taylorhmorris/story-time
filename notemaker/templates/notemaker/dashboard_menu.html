@@ -28,7 +28,7 @@
         hx-swap="outerHTML"
         x-on:htmx:after-settle.window="reviewModalToggle = true;"
         @click="addWordToggle = false"
-        class="button is-primary navbar-item"
+        class="button is-info navbar-item"
         :class="menuToggle ? 'has-tooltip-right' : 'has-tooltip-bottom'"
         data-tooltip="Review Saved Cards"
       >
@@ -36,11 +36,11 @@
       </button>
       <button
         @click="addWordToggle = !addWordToggle; $nextTick(() => { $refs.boxu.focus() })"
-        class="button is-info has-tooltip-bottom ml-1"
+        class="button is-info has-tooltip-bottom ml-1 navbar-item"
         :class="menuToggle ? 'has-tooltip-right' : 'has-tooltip-bottom'"
         data-tooltip="Search a word to create a new note"
       >
-        Search
+        Create Note
       </button>
       <div
         class="control"
@@ -60,7 +60,15 @@
         >
       </div>
       <button
-        class="button is-info has-tooltip-bottom ml-1"
+        class="button is-primary navbar-item"
+        @click="checkSubmission({key: 'Enter'})"
+        x-show="addWordToggle"
+        x-cloak
+      >
+        Search
+      </button>
+      <button
+        class="button is-info has-tooltip-bottom ml-1 navbar-item"
         data-tooltip="Copy a story"
         @click="storyModeToggle = !storyModeToggle; $nextTick(() => { $refs.storyBox.focus() })"
       >
