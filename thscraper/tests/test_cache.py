@@ -8,7 +8,7 @@ from thscraper.cache import retrieve_or_request
 
 class Test(unittest.TestCase):
     def tearDown(self) -> None:
-        # shutil.rmtree('./cache/test')
+        shutil.rmtree('./cache/test')
         return super().tearDown()
     
     def test_retrieve_or_request(self):
