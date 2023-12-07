@@ -1,3 +1,4 @@
+import os
 import shutil
 import unittest
 from bs4 import BeautifulSoup
@@ -8,12 +9,13 @@ from thscraper.cache import retrieve_or_request
 
 class Test(unittest.TestCase):
     def tearDown(self) -> None:
-        shutil.rmtree('./cache/test')
+        path = os.path.join('.', 'cache', 'test', 'html')
+        shutil.rmtree(path)
         return super().tearDown()
     
     def test_retrieve_or_request(self):
         url = 'https://example.com/'
-        filepath = './cache/test/test_file_html.html'
+        filepath = os.path.join('.', 'cache', 'test', 'html', 'test_file_html.html')
         text_response = retrieve_or_request(url, filepath)
         manual_request = requests.get(url)
         self.assertEqual(text_response, manual_request.text)
