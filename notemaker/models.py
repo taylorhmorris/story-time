@@ -10,6 +10,7 @@ class Note(models.Model):
         on_delete=models.CASCADE,
         blank=False,
     )
+    language = models.CharField(max_length=10, default='fr')
     word = models.CharField(max_length=50)
     ipa = models.CharField(max_length=50, blank=True)
     grammar = models.CharField(max_length=50, blank=True)
@@ -37,6 +38,7 @@ class Note(models.Model):
 class SearchResult(models.Model):
     word = models.CharField(max_length=50, unique=True)
     data = models.TextField(null=True, blank=True)
+    language = models.CharField(max_length=5, default='fr')
     
     def __str__(self):
         return self.word
