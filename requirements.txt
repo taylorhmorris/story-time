@@ -7,3 +7,4 @@ python-dotenv==1.0.*
 django-widget-tweaks==1.5.*
 jamo==0.4.*
 g2pk==0.9.*
+panphon==0.20.0
