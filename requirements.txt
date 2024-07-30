@@ -1,5 +1,5 @@
 beautifulsoup4==4.12.*
-Django==4.2.13
+Django==4.2.14
 requests==2.32.*
 Pillow==10.*
 epitran==1.*
@@ -7,3 +7,4 @@ python-dotenv==1.0.*
 django-widget-tweaks==1.5.*
 jamo==0.4.*
 g2pk==0.9.*
+panphon==0.20.0
