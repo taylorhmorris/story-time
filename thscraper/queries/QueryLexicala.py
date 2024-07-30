@@ -25,6 +25,8 @@ class QueryLexicala(Query):
 
             if response.status_code == 200:
                 data = json.loads(response.content.decode('utf-8'))
+                if data.get('word') == None:
+                    data['word'] = search_string
                 self.store_in_cache(search_string, data)
                 return data
             self.logger.debug(f"Unknown API Error (status code:{response.status_code})")

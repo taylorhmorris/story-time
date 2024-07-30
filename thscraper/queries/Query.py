@@ -58,7 +58,6 @@ class Query():
         url = self.url.format(search_string=search_string, api_key=self.api_key)
         self.logger.debug(f'querying {url}')
         webpage = retrieve_or_request(url, self.get_full_cache_path(f"{search_string}.html"))
-        self.logger.debug(f'retrieved: {webpage}')
         soup = BeautifulSoup(webpage, features="html.parser")
         results = self.parse_soup(soup)
         self.logger.debug("Results received from soup parser")
