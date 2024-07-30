@@ -15,5 +15,9 @@ class Test(unittest.TestCase):
             self.assertTrue(expression['expression'][-1] != ' ')
             self.assertTrue(expression['expression'][-1] != ',')
 
+    def test_query_larousse_viens_venir(self):
+        results = QueryLarousse(True).query('viens')
+        self.assertEqual(results.get('word'), 'venir')
+
 if __name__ == '__main__':
     unittest.main()

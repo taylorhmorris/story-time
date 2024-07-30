@@ -6,15 +6,13 @@ from epitran import Epitran
 import logging
 from dotenv import load_dotenv
 
+from thscraper.queries.QueryLexicala import QueryLexicala
 from thscraper.queries.QueryLarousse import QueryLarousse
 from thscraper.queries.QueryLinguee import QueryLinguee
 from thscraper.queries.QueryPixabay import QueryPixabay
 
 def query_all(word):
     """Queries all sites using word parameter"""
-    #ipa, mp3_url = "DUMMY_IPA", "MP3_URL"
-    #ipa, mp3_url = query_collins(word)
-    ## collins is blocking scraping
     load_dotenv()
     try:
         logger = logging.getLogger("th_scraper")
@@ -28,6 +26,22 @@ def query_all(word):
             word = larousse['word']
         except Exception as e:
             logger.error(f"Exception Encountered: {e}")
+
+        logger.debug("Querying Lexicala")
+        lexicala_api_key = os.getenv("RAPID_API_KEY", None)
+        logger.debug(f"Lexicala API Key =? None: {lexicala_api_key is None}")
+        query_lexicala = QueryLexicala(lang='fr', api_key=lexicala_api_key)
+        logger.debug("Query Lexicala created")
+        lexicala = query_lexicala.query(word)
+        logger.debug("Done Querying Lexicala")
+        lexicala_definitions = []
+        if lexicala and lexicala['results']:
+            for result in lexicala['results']:
+                if result['language'] == 'fr':
+                    for sense in result['senses']:
+                        definition = sense.get("definition", None)
+                        if definition:
+                            lexicala_definitions.append(definition)
 
         logger.debug("Querying Linguee")
         linguee = QueryLinguee().query(word)
@@ -48,7 +62,7 @@ def query_all(word):
         data = {
             'word': word,
             'ipa': ipa,
-            'definitions': larousse['definitions'],
+            'definitions': larousse['definitions'] + lexicala_definitions,
             'grammar': larousse['grammar'],
             'examples': linguee['examples'],
             'expressions': larousse['expressions'] + linguee['expressions'],
