@@ -30,7 +30,7 @@ class QueryLarousse(Query):
         except IndexError as e:
             word = None
         try:
-            grammar = soup(class_="CatgramDefinition")[0].find(text=True, recursive=False)
+            grammar = soup(class_="CatgramDefinition")[0].find(string=True, recursive=False)
         except IndexError:
             grammar = None
         try:
@@ -45,7 +45,7 @@ class QueryLarousse(Query):
             expressions = []
             for x in locutions:
                 express = dict()
-                expression_text = x.find(class_="AdresseLocution").find(text=True, recursive=False)
+                expression_text = x.find(class_="AdresseLocution").find(string=True, recursive=False)
                 expression_defintion = x.find(class_="TexteLocution").text
                 express['expression'] = expression_text.strip(', ')
                 express['definition'] = expression_defintion
