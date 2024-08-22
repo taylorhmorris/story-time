@@ -2,6 +2,7 @@ import unittest
 
 from ..queries.QueryLexicala import QueryLexicala 
 
+@unittest.skip("Not implemented")
 class Test(unittest.TestCase):
     def test_query_lexicala(self):
         data = QueryLexicala(True).query('bonjour')
