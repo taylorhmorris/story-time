@@ -94,11 +94,19 @@ Notemaker
         wordClickHandler(event) {
           this.queryWord(event.target.textContent);
         },
+        wordHoverInHandler(event) {
+          event.target.classList.add('tag');
+          event.target.classList.add('is-primary');
+        },
+        wordHoverOutHandler(event) {
+          event.target.classList.remove('tag');
+          event.target.classList.remove('is-primary');
+        },
         spanifyStory() {
           const text = this.rawStory;
 
-          this.spannedStory = text.split(/\s/).filter((word) => word.length > 0).join("</span>&nbsp;<span class='content is-clickable' @click='wordClickHandler'>");
-          this.spannedStory = "<span class='content is-clickable' @click='wordClickHandler'>" + this.spannedStory;
+          this.spannedStory = text.split(/\s/).filter((word) => word.length > 0).join("</span>&nbsp;<span class='content is-clickable' @click='wordClickHandler' @mouseenter='wordHoverInHandler' @mouseleave='wordHoverOutHandler'>");
+          this.spannedStory = "<span class='content is-clickable' @click='wordClickHandler' @mouseenter='wordHoverInHandler' @mouseleave='wordHoverOutHandler'>" + this.spannedStory;
         },
 			}
 		}
