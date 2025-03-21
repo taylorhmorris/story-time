@@ -10,6 +10,7 @@ from thscraper.queries.QueryLexicala import QueryLexicala
 from thscraper.queries.QueryLarousse import QueryLarousse
 from thscraper.queries.QueryLinguee import QueryLinguee
 from thscraper.queries.QueryPixabay import QueryPixabay
+from thscraper.queries.QueryHuggingFace import QueryHFTTI
 
 def query_all(word):
     """Queries all sites using word parameter"""
@@ -56,6 +57,14 @@ def query_all(word):
             for hit in pixabay['hits']:
                 images.append(hit['previewURL'])
 
+        logger.debug("Querying HuggingFaceTextToImage")
+        hf_api_key = os.getenv("HF_API_KEY", None)
+        hf = QueryHFTTI(api_key=hf_api_key).query(word)
+        logger.debug("Done Querying HuggingFaceTextToImage")
+        ai_images = []
+        if hf:
+            ai_images.append(hf)
+
         ipa = Epitran('fra-Latn').transliterate(word)
         logger.info(f"ipa found by Epitran == {ipa}")
 
@@ -66,7 +75,8 @@ def query_all(word):
             'grammar': larousse['grammar'],
             'examples': linguee['examples'],
             'expressions': larousse['expressions'] + linguee['expressions'],
-            'images': images
+            'images': images,
+            'ai_images': ai_images
         }
         logger.info("Return data")
         logger.debug(f"{data}")

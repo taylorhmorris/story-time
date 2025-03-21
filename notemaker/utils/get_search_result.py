@@ -20,6 +20,8 @@ def get_search_result(word: str) -> dict | None:
             b64images = [base64.b64encode(requests.get(img).content).decode()
                         for img in data['images']]
             data['images'] = b64images
+            data['ai_images'] = [base64.b64encode(img).decode() for img in data['ai_images']]
+            data['images'].extend(data['ai_images'])
             new_search = SearchResult(word=word)
             new_search.data = json.dumps(data)
             new_search.save()
