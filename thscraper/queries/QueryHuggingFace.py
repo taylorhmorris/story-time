@@ -1,5 +1,7 @@
 
 import requests
+import io
+from PIL import Image
 
 from thscraper.queries.Query import Query
 
@@ -15,8 +17,9 @@ class QueryHFTTI(Query):
         data = None
         if self.check_cache:
             cached = self.retrieve_cache(search_string)
-            if cached:
-                data = cached["image"]
+            if cached and cached.get("image"):
+                with open(cached["image"], "rb") as image:
+                    data = image.read()
         if data is None:
             url = self.url
             headers = {"Authorization": f"Bearer {self.api_key}"}
@@ -31,7 +34,10 @@ class QueryHFTTI(Query):
             if response.status_code == 200:
                 image_bytes = response.content
                 data = image_bytes
-                self.store_in_cache(search_string, {"word": search_string, "image": image_bytes})
+                image = Image.open(io.BytesIO(image_bytes))
+                imagePath = self.get_full_cache_path(f"{search_string}.png")
+                image.save(imagePath)
+                self.store_in_cache(search_string, {"word": search_string, "image": imagePath})
                 return data
             self.logger.debug(f"Unknown API Error (status code:{response.status_code})")
             return None
