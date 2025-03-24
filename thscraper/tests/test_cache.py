@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 import requests
 
-from thscraper.cache import retrieve_or_request
+from query_and_cache.cache import retrieve_or_request
 
 class Test(unittest.TestCase):
     def tearDown(self) -> None:
@@ -20,6 +20,8 @@ class Test(unittest.TestCase):
         manual_request = requests.get(url)
         self.assertEqual(text_response, manual_request.text)
         soup = BeautifulSoup(text_response, features="html.parser")
+        if not soup.title:
+            self.fail('No title tag found')
         self.assertEqual(soup.title.text, 'Example Domain')
 
 if __name__ == '__main__':

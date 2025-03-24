@@ -19,7 +19,7 @@ def query_all(word):
         logger = logging.getLogger("th_scraper")
         logger.setLevel(logging.DEBUG)    
         logger.info("Running Scraper")
-        
+                
         logger.debug("Querying Larousse")
         larousse = QueryLarousse().query(word)
         logger.debug("Done Querying Larousse")
@@ -87,9 +87,12 @@ def query_all(word):
 
 def run():
     """Run demo query to test query_all function"""
-    data = query_all("manger")
-    print(data)
-    return data
+    while True:
+        s = input("Enter a word: ")
+        if s == "exit":
+            break
+        data = query_all(s)
+        print(data)
 
 if __name__ == '__main__':
     run()

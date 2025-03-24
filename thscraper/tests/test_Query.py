@@ -1,10 +1,12 @@
 import unittest
 
-from ..queries.Query import Query
+from query_and_cache.query import Query, QueryConfig
 
 class Test(unittest.TestCase):
     def test_query_respects_params(self):
-        query = Query('localhost', 'auth_type', False, 'fakekey', 'new_cache')
+        config: QueryConfig = {"auth": "auth_type", "check_cache": False, "api_key":
+        "fakekey", "cache_path": "new_cache"}
+        query = Query('localhost', config)
         self.assertEqual(query.url, 'localhost')
         self.assertEqual(query.auth, 'auth_type')
         self.assertEqual(query.check_cache, False)

@@ -2,14 +2,15 @@ import logging
 import unicodedata
 
 import bs4
-from thscraper.queries.Query import Query
+from query_and_cache.query import Query, QueryConfig
 
 
 class QueryLarousse(Query):
     """Query Configured to send queries to Larousse"""
     def __init__(self, check_cache=True, cache_path="cache"):
+        config: QueryConfig = { "check_cache": check_cache, "cache_path": cache_path }
         url = "https://www.larousse.fr/dictionnaires/francais/{search_string}/"
-        super().__init__(url, check_cache=check_cache, cache_path=cache_path)
+        super().__init__(url, config)
 
     def parse_soup(self, soup):
         if isinstance(soup, dict):

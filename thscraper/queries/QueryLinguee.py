@@ -1,5 +1,5 @@
 
-from thscraper.queries.Query import Query
+from query_and_cache.query import Query
 
 
 class QueryLinguee(Query):

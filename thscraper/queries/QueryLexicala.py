@@ -2,7 +2,7 @@
 import json
 import requests
 
-from thscraper.queries.Query import Query
+from query_and_cache.query import Query, QueryConfig
 
 
 class QueryLexicala(Query):
@@ -10,7 +10,8 @@ class QueryLexicala(Query):
     def __init__(self, lang='fr', api_key=''):
         url = "https://lexicala1.p.rapidapi.com/search?source=global&language={lang}&text={search_string}"
         self.lang = lang
-        super().__init__(url, api_key=api_key)
+        config: QueryConfig = {"api_key": api_key}
+        super().__init__(url, config)
 
     def query(self, search_string):
         self.logger.info(f"Querying Lexicala for {search_string}")

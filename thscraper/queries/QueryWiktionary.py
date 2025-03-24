@@ -2,9 +2,9 @@
 import json
 
 from bs4 import BeautifulSoup
-from thscraper.queries.Query import Query
+from query_and_cache.query import Query
 
-from thscraper.cache import retrieve_or_request
+from query_and_cache.cache import retrieve_or_request
 
 def parse_wiktionary_search_word(json):
     results = dict()

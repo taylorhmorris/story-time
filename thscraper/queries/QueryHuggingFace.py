@@ -3,7 +3,7 @@ import requests
 import io
 from PIL import Image
 
-from thscraper.queries.Query import Query
+from query_and_cache.query import Query, QueryConfig
 
 
 class QueryHFTTI(Query):
@@ -11,7 +11,8 @@ class QueryHFTTI(Query):
     def __init__(self, lang='French', api_key=''):
         url = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev"
         self.lang = lang
-        super().__init__(url, api_key=api_key)
+        config: QueryConfig = {"api_key": api_key}
+        super().__init__(url, config=config)
 
     def query(self, search_string):
         data = None
@@ -34,9 +35,9 @@ class QueryHFTTI(Query):
             if response.status_code == 200:
                 image_bytes = response.content
                 data = image_bytes
-                image = Image.open(io.BytesIO(image_bytes))
-                imagePath = self.get_full_cache_path(f"{search_string}.png")
-                image.save(imagePath)
+                image_file  = Image.open(io.BytesIO(image_bytes))
+                imagePath: str = self.get_full_cache_path(f"{search_string}.png")
+                image_file.save(imagePath)
                 self.store_in_cache(search_string, {"word": search_string, "image": imagePath})
                 return data
             self.logger.debug(f"Unknown API Error (status code:{response.status_code})")
@@ -61,7 +62,8 @@ class QueryHFLLM(Query):
             'Authorization': f'Bearer {api_key}',
             'Content-Type': 'application/json'
         }
-        super().__init__(url, api_key=api_key)
+        config: QueryConfig = {"api_key": api_key}
+        super().__init__(url, config)
 
     def query(self, search_string) -> str | None:
         self.logger.debug("Querying HuggingFaceLargeLanguageModel")

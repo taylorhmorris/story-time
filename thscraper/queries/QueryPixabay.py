@@ -2,7 +2,7 @@
 import json
 import requests
 
-from thscraper.queries.Query import Query
+from query_and_cache.query import Query, QueryConfig
 
 
 class QueryPixabay(Query):
@@ -10,7 +10,8 @@ class QueryPixabay(Query):
     def __init__(self, lang='fr', api_key=''):
         url = "https://pixabay.com/api/?key={api_key}&q={search_string}&lang={lang}&image_type=photo&safesearch=true"
         self.lang = lang
-        super().__init__(url, api_key=api_key)
+        config: QueryConfig = {"api_key": api_key}
+        super().__init__(url, config)
 
     def query(self, search_string):
         data = None
