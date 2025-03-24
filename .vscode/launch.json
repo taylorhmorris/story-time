@@ -3,7 +3,7 @@
     "configurations": [
         {
             "name": "Python: thscraper",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "thscraper.thscraper",
             "console": "integratedTerminal",
