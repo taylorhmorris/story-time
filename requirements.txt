@@ -8,4 +8,4 @@ django-widget-tweaks==1.5.*
 jamo==0.4.*
 g2pk==0.9.*
 panphon==0.20.*
-query_and_cache @ git+ssh://git@github.com/taylorhmorris/query_and_cache.git@698486e1fd82aec845b1cf33d27b6fddf4cc192e
+query_and_cache @ git+ssh://git@github.com/taylorhmorris/query_and_cache.git@v0.0.3
