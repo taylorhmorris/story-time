@@ -1,20 +1,21 @@
 import unittest
 
-from pyquaca.query import Query
+from pyquaca import Query, JSONCache
 
 class Test(unittest.TestCase):
     def test_store_cache_with_newline_word(self):
         q = Query('')
+        q.cache = JSONCache('cache')
         response_data = { 'word': "\n" }
         try:
             res = q.cache.store('test', response_data)
         except:
             self.assertEqual(False, True)
-        self.assertEqual(res, False)
+        self.assertEqual(res, True)
 
     def test_store_cache_with_newline_search_string(self):
         q = Query('')
-        response_data = { 'word': "blob" }
+        response_data = 'blahblah'
         try:
             res = q.cache.store('\n', response_data)
         except:
