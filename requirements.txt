@@ -8,4 +8,5 @@ django-widget-tweaks==1.5.*
 jamo==0.4.*
 g2pk==0.9.*
 panphon==0.20.*
-query_and_cache @ git+ssh://git@github.com/taylorhmorris/query_and_cache.git@v0.0.3
+pyquaca==0.0.4
+storyqueries @ git+https://github.com/taylorhmorris/storyqueries.git@dev
