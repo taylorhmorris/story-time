@@ -7,7 +7,7 @@ Welcome to the StoryTime project! This is a Django-based web application designe
 1. Clone the repository:
   ```bash
   git clone https://github.com/taylorhmorris/story-time.git
-  cd storytimeinc
+  cd story-time
   ```
 
 2. Create and activate a virtual environment:
