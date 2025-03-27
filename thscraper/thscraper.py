@@ -6,11 +6,11 @@ from epitran import Epitran
 import logging
 from dotenv import load_dotenv
 
-from thscraper.queries.QueryLexicala import QueryLexicala
-from thscraper.queries.QueryLarousse import QueryLarousse
-from thscraper.queries.QueryLinguee import QueryLinguee
-from thscraper.queries.QueryPixabay import QueryPixabay
-from thscraper.queries.QueryHuggingFace import QueryHFTTI
+from storyqueries.lexicala import QueryLexicala
+from storyqueries.larousse import QueryLarousse
+from storyqueries.linguee import QueryLinguee
+from storyqueries.pixabay import QueryPixabay
+# from thscraper.queries.QueryHuggingFace import QueryHFTTI
 
 def query_all(word):
     """Queries all sites using word parameter"""
@@ -57,13 +57,13 @@ def query_all(word):
             for hit in pixabay['hits']:
                 images.append(hit['previewURL'])
 
-        logger.debug("Querying HuggingFaceTextToImage")
-        hf_api_key = os.getenv("HF_API_KEY", None)
-        hf = QueryHFTTI(api_key=hf_api_key).query(word)
-        logger.debug("Done Querying HuggingFaceTextToImage")
         ai_images = []
-        if hf:
-            ai_images.append(hf)
+        # logger.debug("Querying HuggingFaceTextToImage")
+        # hf_api_key = os.getenv("HF_API_KEY", None)
+        # hf = QueryHFTTI(api_key=hf_api_key).query(word)
+        # logger.debug("Done Querying HuggingFaceTextToImage")
+        # if hf:
+        #     ai_images.append(hf)
 
         ipa = Epitran('fra-Latn').transliterate(word)
         logger.info(f"ipa found by Epitran == {ipa}")
