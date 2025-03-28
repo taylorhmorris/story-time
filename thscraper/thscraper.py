@@ -6,10 +6,11 @@ from epitran import Epitran
 import logging
 from dotenv import load_dotenv
 
-from thscraper.queries.QueryLexicala import QueryLexicala
-from thscraper.queries.QueryLarousse import QueryLarousse
-from thscraper.queries.QueryLinguee import QueryLinguee
-from thscraper.queries.QueryPixabay import QueryPixabay
+from storyqueries.lexicala import QueryLexicala
+from storyqueries.larousse import QueryLarousse
+from storyqueries.linguee import QueryLinguee
+from storyqueries.pixabay import QueryPixabay
+# from thscraper.queries.QueryHuggingFace import QueryHFTTI
 
 def query_all(word):
     """Queries all sites using word parameter"""
@@ -18,7 +19,7 @@ def query_all(word):
         logger = logging.getLogger("th_scraper")
         logger.setLevel(logging.DEBUG)    
         logger.info("Running Scraper")
-        
+                
         logger.debug("Querying Larousse")
         larousse = QueryLarousse().query(word)
         logger.debug("Done Querying Larousse")
@@ -56,6 +57,14 @@ def query_all(word):
             for hit in pixabay['hits']:
                 images.append(hit['previewURL'])
 
+        ai_images = []
+        # logger.debug("Querying HuggingFaceTextToImage")
+        # hf_api_key = os.getenv("HF_API_KEY", None)
+        # hf = QueryHFTTI(api_key=hf_api_key).query(word)
+        # logger.debug("Done Querying HuggingFaceTextToImage")
+        # if hf:
+        #     ai_images.append(hf)
+
         ipa = Epitran('fra-Latn').transliterate(word)
         logger.info(f"ipa found by Epitran == {ipa}")
 
@@ -66,7 +75,8 @@ def query_all(word):
             'grammar': larousse['grammar'],
             'examples': linguee['examples'],
             'expressions': larousse['expressions'] + linguee['expressions'],
-            'images': images
+            'images': images,
+            'ai_images': ai_images
         }
         logger.info("Return data")
         logger.debug(f"{data}")
@@ -77,9 +87,12 @@ def query_all(word):
 
 def run():
     """Run demo query to test query_all function"""
-    data = query_all("manger")
-    print(data)
-    return data
+    while True:
+        s = input("Enter a word: ")
+        if s == "exit":
+            break
+        data = query_all(s)
+        print(data)
 
 if __name__ == '__main__':
     run()

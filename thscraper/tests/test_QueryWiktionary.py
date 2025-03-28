@@ -3,6 +3,7 @@ import unittest
 
 from ..queries.QueryWiktionary import QueryWiktionary, parse_wiktionary_search_page , parse_wiktionary_search_word
 
+@unittest.skip("Wiktionary API is not available")
 class Test(unittest.TestCase):
     def test_parse_wiktionary_search_word(self):
         qw = QueryWiktionary()

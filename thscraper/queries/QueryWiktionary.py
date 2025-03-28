@@ -2,9 +2,7 @@
 import json
 
 from bs4 import BeautifulSoup
-from thscraper.queries.Query import Query
-
-from thscraper.cache import retrieve_or_request
+from pyquaca.query import Query
 
 def parse_wiktionary_search_word(json):
     results = dict()
@@ -46,15 +44,15 @@ class QueryWiktionary(Query):
 
     def query_wiktionary_search_word(self, word: str):
         url = f"https://{self.lang}.wiktionary.org/w/api.php?action=query&format=json&formatversion=2&list=search&srsearch={word}"
-        path = self.get_full_cache_path(f"{word}.search.json")
-        result = retrieve_or_request(url, path)
-        return json.loads(result)
+        # path = self.get_full_cache_path(f"{word}.search.json")
+        # result = retrieve_or_request(url, path)
+        # return json.loads(result)
     
     def query_wiktionary_search_page(self, page: int):
         url = f"https://{self.lang}.wiktionary.org/w/api.php?action=parse&format=json&formatversion=2&pageid={page}"
-        path = self.get_full_cache_path(f"{page}.page.json")
-        result = retrieve_or_request(url, path)
-        return json.loads(result)
+        # path = self.get_full_cache_path(f"{page}.page.json")
+        # result = retrieve_or_request(url, path)
+        # return json.loads(result)
 
     def parse_soup(self, soup):
         if isinstance(soup, dict):

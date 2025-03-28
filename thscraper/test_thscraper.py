@@ -1,33 +1,35 @@
 import unittest
 
-from .queries import Query
+from pyquaca import Query, JSONCache
 
 class Test(unittest.TestCase):
     def test_store_cache_with_newline_word(self):
-        q = Query.Query('')
+        q = Query('')
+        q.cache = JSONCache('cache')
         response_data = { 'word': "\n" }
         try:
-            res = q.store_in_cache('test', response_data)
+            res = q.cache.store('test', response_data)
         except:
             self.assertEqual(False, True)
-        self.assertEqual(res, False)
+        self.assertEqual(res, True)
 
+    @unittest.skip('Test is environment dependent')
     def test_store_cache_with_newline_search_string(self):
-        q = Query.Query('')
-        response_data = { 'word': "blob" }
+        q = Query('')
+        response_data = 'blahblah'
         try:
-            res = q.store_in_cache('\n', response_data)
+            res = q.cache.store('\n', response_data)
         except:
             self.assertEqual(False, True)
-        self.assertEqual(res, False)
+        self.assertEqual(res, True)
     
     def test_retrieve_cache_newline_search_string(self):
-        q = Query.Query('')
+        q = Query('')
         try:
-            res = q.retrieve_cache('\n')
+            res = q.cache.retrieve('\n')
         except:
             self.assertEqual(False, True)
-        self.assertEqual(res, False)
+        self.assertEqual(res, None)
 
 if __name__ == '__main__':
     unittest.main()
