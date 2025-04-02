@@ -1,6 +1,6 @@
-# StoryTime
+# L'heure du conte
 
-Welcome to the StoryTime project! This is a Django-based web application designed to help users improve their vocabulary and learn to read in a foreign language.
+Bienvenue à l'heure du conte !! This is a Django-based web application designed to help users improve their vocabulary and learn to read in French.
 
 ## Installation
 
